@@ -23,15 +23,6 @@ func UserRegister(c *gin.Context) {
 		return
 	}
 
-	//db, _ := c.Get("db")
-	//conn := db.(sql.DB)
-	//err = user.Register(&conn)
-	//if err != nil {
-	//	fmt.Println("Error in user.Register()")
-	//	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	//	return
-	//}
-
 	token, err := user.GetAuthToken()
 	if err == nil {
 		c.JSON(http.StatusOK, gin.H{

@@ -7,15 +7,17 @@ import (
 	_ "github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"os"
+	"regexp"
+	_ "regexp"
 	"strings"
 	"time"
 )
 
 //type user User
-
 var (
 	tokenSecret = []byte(os.Getenv("TOKEN_SECRET"))
 )
+
 
 func (u *User) Register() error {
 
@@ -28,18 +30,30 @@ func (u *User) Register() error {
 	query := "SELECT user_pw FROM user_info WHERE user_id=$1"
 	err = db.QueryRow(query, u.Password).Scan(&u.Password, &u.PasswordConfirm)
 
+	//이메일 형식을 검사하는 정규식
+	var validEmail, _ = regexp.MatchString(
+		"^[_a-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", u.Email)
 
-	if len(u.Password) < 4 || len(u.PasswordConfirm) < 4 {
-		return fmt.Errorf(" 비밀번호는 적어도 4 글자 이상이어야 합니다. ")
+	if len(u.Password) > 16 || len(u.PasswordConfirm) > 16 {
+		return fmt.Errorf(" 비밀번호는 16 글자 이하여야 합니다. ")
+	}
+
+	if len(u.Password) < 8 || len(u.PasswordConfirm) < 8 {
+		return fmt.Errorf(" 비밀번호는 적어도 8글자 이상이어야 합니다. ")
 	}
 
 	if u.Password != u.PasswordConfirm {
 		return fmt.Errorf(" 비밀번호가 일치하지 않습니다. ")
 	}
 
-	//추후 Email 형식검사에 대한 부분을 보강할 예정입니다.
-	if len(u.Email) < 4 {
-		return fmt.Errorf(" 이메일은 적어도 4 글자 이상이어야 합니다. ")
+	if CheckPassword(u.Password) != nil {
+		return CheckPassword(u.Password)
+		return fmt.Errorf(" 비밀번호 형식이 올바르지 않습니다. ")
+	}
+
+	//이메일형식검사
+	if validEmail != true {
+		return fmt.Errorf(" 이메일 형식이 올바르지 않습니다. ")
 	}
 
 	//사용자가 보낸 이메일을 모두 소문자로 변경한다.
@@ -68,7 +82,7 @@ func (u *User) Register() error {
 	return err
 }
 
-// JW 토큰은 일정시간이지나면 만료된다. 사용될 토큰을 반환하는 메서드
+// JW 토큰을 반환해 주는 메서드
 func (u *User) GetAuthToken() (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
@@ -78,3 +92,27 @@ func (u *User) GetAuthToken() (string, error) {
 	authToken, err := token.SignedString(tokenSecret)
 	return authToken, err
  }
+
+ // 비밀번호를 검사하는 메서드 -> 대소문자 구분없이 1개이상 들어가도록 변경하겠습니다.
+func CheckPassword(pw string) error {
+	if len(pw) < 8 {
+		return fmt.Errorf(" 비밀번호는 적어도 8글자 이상이어야 합니다. ")
+	}
+	num := `[0-9]{1}`
+	a_z := `[a-z]{1}`
+	A_Z := `[A-Z]{1,}`
+	symbol := `[!@#~$%^&*()+|_]{1,}`
+	if b, err := regexp.MatchString(num, pw); !b || err != nil {
+		return fmt.Errorf("비밀번호는 적어도 숫자를 하나 이상 포함해야 합니다. ")
+	}
+	if b, err := regexp.MatchString(a_z, pw); !b || err != nil {
+		return fmt.Errorf("비밀번호는 적어도 소문자를 하나 이상 포함해야 합니다. ")
+	}
+	if b, err := regexp.MatchString(A_Z, pw); !b || err != nil {
+		return fmt.Errorf("비밀번호는 적어도 대문자를 하나 이상 포함해야 합니다. ")
+	}
+	if b, err := regexp.MatchString(symbol, pw); !b || err != nil {
+		return fmt.Errorf("비밀번호는 적어도 특수문자를 하나 이상 포함해야 합니다. ")
+	}
+	return nil
+}
