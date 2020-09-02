@@ -1,8 +1,11 @@
 package main
 
 import (
+	_ "net/http"
+
+	"redteam/backend/route"
+
 	"github.com/gin-gonic/gin"
-	"redteam/route"
 )
 
 func main() {
@@ -10,3 +13,9 @@ func main() {
 	route.RegisterRoute(gin.Default())
 
 }
+
+
+
+
+
+
