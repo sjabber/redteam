@@ -15,7 +15,8 @@ create table user_info
 	is_enabled smallint default 1
 );
 
-alter table user_info owner to redteamadmin;
+--owner to redteamadmin -> postgres 로 변경되었음
+alter table user_info owner to postgres;
 
 create unique index user_info_email_uindex
 	on user_info (user_id);
@@ -42,7 +43,8 @@ create table smtp_info
 	modify timestamp default now()
 );
 
-alter table smtp_info owner to redteamadmin;
+--owner to redteamadmin -> postgres 로 변경되었음
+alter table smtp_info owner to postgres;
 
 create unique index smtp_info_smtp_no_uindex
 	on smtp_info (smtp_no);
@@ -67,10 +69,11 @@ create table target_info
 
 comment on column target_info.target_position is '//직급';
 
-alter table target_info owner to redteamadmin;
+--owner to redteamadmin -> postgres 로 변경되었음
+alter table target_info owner to postgres;
 
 create unique index target_info_target_no_uindex
 	on target_info (target_no);
 
 -- CREATE INDEX target_info_target_classify_idx_gin ON target_info USING gin (target_classify gin_trgm_ops);
-CREATE INDEX target_info_tag_no_idx ON target_info USING btree (tag_no);
+-- CREATE INDEX target_info_tag_no_idx ON target_info USING btree (tag_no);
