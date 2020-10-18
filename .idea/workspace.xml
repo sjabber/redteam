@@ -65,6 +65,7 @@
     <property name="GO_FMT" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="true" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
@@ -92,7 +93,7 @@
       <recent name="C:\Users\Taeho\go\src\redteam\backend" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build redteam">
+  <component name="RunManager" selected="Database Script.redteam_v0.1.sql">
     <configuration name="redteam_v0.1.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
       <script-file value="$PROJECT_DIR$/SQL/redteam_v0.1.sql" />
       <script-mode>FILE</script-mode>
@@ -145,6 +146,18 @@
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4eefb2e6-5d34-4383-a6ba-d812d7a3eea8" name="Default Changelist" comment="#3 | 프로젝트 시작" />
+      <created>1603003470845</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603003470845</updated>
+      <workItem from="1603003472468" duration="2166000" />
+      <workItem from="1603007560904" duration="4611000" />
+    </task>
+    <servers />
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
