@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#FFFFFF">
+<!--    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">-->
+<!--    &lt;!&ndash;        <title>REDTEAM | 대시보드</title>&ndash;&gt;-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="/ui/public/css/sport.css" type="text/css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
+</head>
+<body>
+
+<div class="sidebar-header"><a href="#">
+    <img src="../public/image/intro_icon.png" style="max-width: 80%; height: auto;">
+</a>
+    <div class="sidebar-control"><i class="la la-navicon"></i></div>
+</div>
+<div class="sidebar-wrapper">
+    <ul class="list-menu">
+        <li class="header">Total Info</li>
+        <li class="has-children active"><a href="javascript:;"><i
+                class="la la-dashboard"></i><span>대시보드</span>
+            <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
+        </a>
+            <ul class="tree">
+                <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
+                <li class="tree-item"><a href="./dashboard/main.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
+                <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
+                <li class="tree-item"><a href="./dashboard/project-detail.html"><i class="la la-circle"></i><span
+                        style="font-size:0.8em;">프로젝트상세</span></a>
+                </li>
+            </ul>
+        </li>
+        <li class="header">Project Info</li>
+        <li class="has-children"><a href="javascript:;"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
+            <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+        </a>
+            <ul class="tree">
+                <li class="tree-item"><a href="../base/colors.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
+                <li class="tree-item"><a href="../base/icons.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
+                <li class="tree-item"><a href="../base/buttons.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
+            </ul>
+        </li>
+        <li class="tree-item"><a href="javascript:;"><i class="la la-group"></i><span>대상관리</span>
+            <div class="right-container"></div>
+        </a>
+
+        </li>
+        <li class="tree-item"><a href="javascript:;"><i class="la la-file-text"></i><span>템플릿관리</span>
+            <div class="right-container"></div>
+        </a>
+        </li>
+        <li class="tree-item"><a href="javascript:;"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>
+            <div class="right-container"></div>
+        </a>
+        </li>
+        <li class="header">Setting</li>
+        <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
+            <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+        </a>
+            <ul class="tree">
+                <li class="tree-item"><a href="./setting/person-setting.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
+                <li class="tree-item"><a href="../pages/register.html"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+</body>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="./public/js/jquery.serialize-object.min.js"></script>
+<script src="./public/js/main.js"></script>
+<script src="./public/js/demo.js"></script>
+<script src="./public/js/script.js"></script>
+<script>
+    function click(){
+        console.log("this.name11")
+        // $(this).addClass("active")
+    }
+
+
+
+</script>
+</html>
