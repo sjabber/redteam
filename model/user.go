@@ -12,14 +12,13 @@ import (
 	"log"
 )
 
-
 type User struct {
-	UserNo   int
-	Email    string `json:"email"`
-	PasswordHash string `json:"-"`
-	Password string `json:"password"`
+	UserNo          int    `json:"user_no"`
+	Email           string `json:"email"`
+	PasswordHash    string `json:"-"`
+	Password        string `json:"password"`
 	PasswordConfirm string `json:"password_confirm"`
-	Name     string `json:"name"`
+	Name            string `json:"name"`
 }
 
 func (u *User) Login() error {
@@ -35,7 +34,6 @@ func (u *User) Login() error {
 	//	return err
 	//}
 
-
 	db, err := ConnectDb()
 	if err != nil {
 		return fmt.Errorf("db connection error")
@@ -47,6 +45,7 @@ func (u *User) Login() error {
 
 	if err == nil {
 		log.Println("login true")
+
 		return nil
 	} else {
 		log.Println("login false")
@@ -59,6 +58,8 @@ func (u *User) GetAuthToken() (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_id"] = u.Email
+	claims["user_name"] = u.Name
+	claims["user_no"] = u.UserNo
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	authToken, err := token.SignedString(tokenSecret)
@@ -67,7 +68,7 @@ func (u *User) GetAuthToken() (string, error) {
 
 //패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
 func (u *User) IsAuthenticated(conn *sql.DB) error {
-	row := conn.QueryRowContext(context.Background(),"SELECT user_pw_hash FROM user_info WHERE user_id = $1", u.Email)
+	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_id = $1", u.Email)
 	err := row.Scan(&u.PasswordHash)
 
 	if err == pgx.ErrNoRows {
@@ -83,7 +84,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) error {
 	return nil
 }
 
-func IsTokenValid(tokenString string) (bool, string) {
+func IsTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// fmt.Printf("Parsing: %v \n", token)
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
@@ -99,20 +100,25 @@ func IsTokenValid(tokenString string) (bool, string) {
 
 	if err != nil {
 		fmt.Printf("에러내용 %v \n", err)
-		return false, ""
+		return false, User{}
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		// MapClaims 는 JSON 디코딩을 위해 map[string]interface{}를 사용함.
 		// 디폴트 claims 타입임. map 은 java 의 해시같은 개념.
 		// fmt.Println(claims)
-
-		userID := claims["user_id"]
-		return true, userID.(string)
+		user := User{
+			Email: claims["user_id"].(string),
+			Name: claims["user_name"].(string),
+			UserNo: int(claims["user_no"].(float64)),
+		}
+		//user := claims["user_id"]
+		//userNo := claims["user_no"]
+		return true, user
 	} else { // 토큰인증에 문제가 발생한 경우 오류메시지
 		fmt.Printf("The alg header %v \n", claims["alg"])
 		fmt.Println(err)
-		return false, "ID"
+		return false, User{}
 	}
 }
 
@@ -123,6 +129,3 @@ func (u *User) GetName() string {
 func (u *User) GetID() string {
 	return u.Email
 }
-
-
-
