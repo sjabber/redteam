@@ -1,9 +1,6 @@
-const rootUrl = 'http://localhost:5000';
-
-
 function Logout() {
     const r = new XMLHttpRequest();
-    r.open('GET', rootUrl + '/logout', true);
+    r.open('GET', 'http://localhost:5000/logout', true);
     // r.setRequestHeader("Content-Type", "application/json");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -22,7 +19,7 @@ function Logout() {
 
 function CheckLogin() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/checklogin', true);
+    r.open('GET', 'http://localhost:5000/checklogin', true);
     r.withCredentials = true;
     r.onreadystatechange = function () {
         let responseObj;
@@ -67,7 +64,7 @@ function CheckLoginInLoginPage() {
 
 function Login() {
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/api/login', true);
+    r.open('POST', 'http://192.168.11.94:5000/api/Login', true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -89,7 +86,7 @@ function GetDashBoard() {
     const user_id = document.getElementById("user_id");
     const user_name = document.getElementById("user_name");
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/api/dashboard', true);
+    r.open('GET', 'http://192.168.11.94:5000/api/dashboard', true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -102,7 +99,7 @@ function GetDashBoard() {
                 $('#user_name').text(responseObj.name);
             } else {
                 document.location.href = "../index.html";
-            }/checklogin
+            }
         }
     };
 
@@ -115,7 +112,7 @@ function Register() {
         return;
     }
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/api/createUser', true);
+    r.open('POST', 'http://localhost:5000/createUser', true);
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {

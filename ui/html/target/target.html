@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>REDTEAM | 대상관리</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../public/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="../public/css/choices.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!--    <script src="/ui/public/js/main.min.js"></script>-->
+</head>
+
+<body>
+<!--네이게이터-->
+<div class="sidebar">
+    <div class="sidebar-header"><a href="#">
+        <img src="../public/image/intro_icon.png" style="max-width: 80%; height: auto;">
+    </a>
+        <div class="sidebar-control"><i class="la la-navicon"></i></div>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="list-menu">
+            <li class="header">Total Info</li>
+            <li class="has-children"><a href="javascript:;"><i
+                    class="la la-dashboard"></i><span>대시보드</span>
+                <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
+                    <li class="tree-item"><a href="../dashboard/main.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
+                    <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
+                    <li class="tree-item"><a href="../dashboard/project-detail.html"><i
+                            class="la la-circle"></i><span
+                            style="font-size:0.8em;">프로젝트상세</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="header">Project Info</li>
+            <li class="has-children"><a href="javascript:;"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="../project/project-ing.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
+                    <li class="tree-item"><a href="../project/project-ed.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
+                    <li class="tree-item"><a href="../project/project-booking.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
+                </ul>
+            </li>
+            <li class="tree-item active"><a href="../target/target.html"><i
+                    class="la la-group"></i><span>대상관리</span>
+                <div class="right-container"></div>
+            </a>
+
+            </li>
+            <li class="tree-item"><a href="../templates/template.html"><i
+                    class="la la-file-text"></i><span>템플릿관리</span>
+                <div class="right-container"></div>
+            </a>
+            </li>
+            <li class="tree-item"><a href="../project/project-making.html"><i
+                    class="la la-pencil-square"></i><span>프로젝트 생성</span>
+                <div class="right-container"></div>
+            </a>
+            </li>
+            <li class="header">Setting</li>
+            <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="../setting/person-setting.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
+                    <li class="tree-item"><a href="../setting/smtp-setting.html"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--네이게이터-->
+
+
+<div class="main-content">
+    <div class="header">
+        <div class="left">
+            <p>대상관리</p>
+            <div class="breadcrumb"><span>대상관리</span></div>
+        </div>
+        <ul class="right">
+            <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
+                                                                                                   src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
+                <div class="dropdown-box with-header">
+                    <div class="dropdown-header"><img class="user-img user-img--lg"
+                                                      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/>
+                        <div class="user-info">
+                            <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
+                        </div>
+                    </div>
+                    <ul class="dropdown-body">
+                        <li><a href="../setting/person-setting.html" target="_blank"><i
+                                class="la la-user"></i><span>사용자 정보</span></a></li>
+                        <li><a href="../setting/smtp-setting.html"><i class="la la-cogs"></i><span>SMTP 설정</span></a>
+                        </li>
+                        <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
+                class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
+                class="la la-ellipsis-v"></i></a></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3>모든 대상자</h3>
+                        <div class="toolbox">
+                            <div class="row p-3">
+                                <button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
+                                        data-modal="#tag_registry">태그 관리
+                                </button>
+                                <div class="btn-group" style="margin-left: 10px;">
+                                    <button class="btn btn-primary active" id="reg_target"
+                                            data-modal="#target_registry">
+                                        <span>대상자 등록</span></button>
+                                    <button class="btn btn-primary" id="del_target"><span>대상자 삭제</span></button>
+                                </div>
+                                <div class="btn-group" style="margin-left: 10px;">
+                                    <button class="btn btn-primary active" id="reg_targets"
+                                            data-modal="#registry_targets"><span>대상자 일괄등록</span>
+                                    </button>
+                                    <button class="btn btn-primary" id="export_targets" data-modal="#exported_targets">
+                                        <span>대상자 내보내기</span></button>
+                                </div>
+                                <form class="searchbox" style="margin-left: 20px;"><input type="text" name=""></form>
+                                <!--                                <a><i class="la la-plus"></i></a>-->
+                                <a class="trigger-dropdown"><i
+                                        class="la la-ellipsis-h"></i></a>
+                                <ul class="dropdown-box">
+                                    <li><a><i class="la la-sort-alpha-asc"></i><span>a to z</span></a></li>
+                                    <li><a><i class="la la-sort-alpha-desc"></i><span>z to a</span></a></li>
+                                    <li><a><i class="la la-filter"></i><span>Custom filter</span></a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="pgn-modal" id="tag_registry">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>태그 관리</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss"><i class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="tag_name"><label>태그명</label>
+                                </div>
+                                <div class="box-body pt-0 px-0 responsive">
+                                    <table id="tag_menage">
+                                        <thead>
+                                        <tr>
+                                            <th>태그명</th>
+                                            <th>등록날짜</th>
+                                            <th>삭제</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-ghost modal-dismiss">취소</button>
+                                <button class="btn btn-primary pull-right" id="tag_reg">등록</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pgn-modal" id="target_registry">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>대상자 등록</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss"><i class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group label--floating"><input type="email"
+                                                                               id="target_email"><label>이메일</label>
+                                </div>
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="target_name"><label>이름</label></div>
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="target_phone"><label>전화번호</label>
+                                </div>
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="target_organ"><label>소속</label></div>
+                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급</label>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_selector">태그</label><select id="tag_selector">
+                                </select>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-ghost modal-dismiss">취소</button>
+                                <button class="btn btn-primary pull-right" id="target_reg">등록</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pgn-modal" id="registry_targets">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>대상자 일괄등록</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss"><i class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="row p-3 form-group">
+                                    <label>엑셀 양식으로 한번에 여러 대상자를 추가</label>
+                                    <button id="excelDownload" class="btn btn-secondary btn-lg btn-block">엑셀 양식 다운로드
+                                    </button>
+                                </div>
+                                <div class="form-group"><label>양식 업로드</label>
+                                    <div class="form-file">
+                                        <button class="btn-file"><i class="la la-upload"></i></button>
+                                        <input type="file" id="file" name="file">
+                                        <div class="file-container">
+                                            <p id="uploadFileName">TargetUpload.xlsx</p>
+                                            <progress value="22" max="100"></progress>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-ghost modal-dismiss" id="cancel-btn">취소</button>
+                                <button class="btn btn-primary pull-right" id="excelUpload-btn">등록</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pgn-modal" id="exported_targets">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>대상자 내보내기</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss"><i class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group w-50">
+                                    <label for="tag_selector">태그 선택</label><select id="tag_selector2">
+                                    <option value=0 selected>전체</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-ghost modal-dismiss">취소</button>
+                                <button class="btn btn-primary pull-right" id="btn_export">내보내기</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body pt-0 px-0 responsive">
+                        <table id="targets">
+                            <thead>
+                            <tr>
+                                <th style="visibility:hidden;position:absolute;"></th>
+                                <th>
+                                    <div class="pgn-checkbox"><input type="checkbox" id="all_select"><span></span>
+                                    </div>
+                                </th>
+                                <th>이름(이메일)</th>
+                                <th>연락처</th>
+                                <th>소속</th>
+                                <th>직급</th>
+                                <th>등록일</th>
+                                <th>태그</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-wrapper clearfix">
+                        <ul class="pagination float--right" id="pages">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="../public/js/main.js"></script>
+<script src="../public/js/script.js"></script>
+<script src="../public/js/demo.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="../public/js/jquery.serialize-object.min.js"></script>
+<script src="../public/js/lib/Sortable.min.js"></script>
+<script>
+    function GetTarget(page) {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/target/getTarget?page=' + page, true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    if (rObj.targets.length > 0) {
+                        // table 비워주기
+                        $('#targets > tbody').empty();
+                        for (let i = 0; i < rObj.targets.length; i++) {
+                            if (rObj.targets[i].tg_tag.length === 0) {
+                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
+                                    '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
+                                    '<td></td></tr>');
+                            } else {
+                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
+                                    '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
+                                    '<td><label class="badge badge-green">' + rObj.targets[i].tg_tag + '</label></td></tr>');
+                            }
+
+
+                        }
+                    } else {
+                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
+
+                    paging(rObj.total, page);
+
+                    if (rObj.tags.length > 0) {
+                        $('#tag_menage > tbody').empty();
+                        $('#tag_select').empty();
+                        for (let j = 0; j < rObj.tags.length; j++) {
+                            $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
+                                "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
+                                "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
+                                "                        <td>\n" +
+                                "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
+                                "                        </td>\n" +
+                                "                        </tr>");
+
+                            if (j === 0) {
+                                // const option = ;
+                                console.log(rObj.tags[j].tag_no);
+                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "' selected>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                            } else {
+                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                            }
+
+                        }
+                    } else {
+                        $('#tag_menage > tbody:last').append('<tr><td colspan="3"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
+
+
+                } else {
+                    document.location.href = "../index.html";
+                }
+            }
+        };
+        r.send();
+    }
+
+    function deleteTag(tagNo) {
+        const r = new XMLHttpRequest();
+        r.open('POST', 'http://localhost:5000/target/delTag', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    $('#tag_' + tagNo).remove();
+                } else {
+                    document.location.href = "../index.html";
+                }
+            }
+        };
+        r.send(JSON.stringify({"tag_no": tagNo}));
+    }
+
+    function paging(totalData, currentPage) {
+        const dataPerPage = 10;
+        const pageCount = 5;
+
+        // console.log("currentPage : " + currentPage);
+        // console.log("totalData : " + totalData);
+        const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
+        const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
+
+        // console.log("pageGroup : " + pageGroup);
+        // console.log("totalPage : " + totalPage);
+
+        let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
+        if (last > totalPage)
+            last = totalPage;
+        let first = last - (pageCount - 1);    // 화면에 보여질 첫번째 페이지 번호
+        const next = last + 1;
+        const prev = first - 1;
+
+        // console.log("last : " + last);
+        // console.log("first : " + first);
+        // console.log("next : " + next);
+        // console.log("prev : " + prev);
+
+        if (totalPage < 1) {
+            first = last;
+        }
+        const pages = $("#pages");
+        pages.empty();
+        if (first > 5) {
+            pages.append("<li class=\"pagination-item\">" +
+                "<a onclick=\"GetTarget(" + (prev) + ");\" style='margin-left: 2px'>prev</a></li>");
+        }
+        for (let j = first; j <= last; j++) {
+            if (currentPage === (j)) {
+                pages.append("<li class=\"pagination-item\">" +
+                    "<a class='active' onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
+            } else if (j > 0 ) {
+                pages.append("<li class=\"pagination-item\">" +
+                    "<a onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
+            }
+        }
+        if (next > 5 && next < totalPage) {
+            pages.append("<li class=\"pagination-item\">" +
+                "<a onclick=\"GetTarget(" + (next) + ");\" style='margin-left: 2px'>next</a></li>");
+        }
+    }
+
+
+    $(function () {
+        $('#all_select').click(function () {
+            if ($("input:checkbox[id='all_select']").prop("checked")) {
+                $("input[type=checkbox]").prop("checked", true);
+            } else {
+                $("input[type=checkbox]").prop("checked", false);
+            }
+        });
+        $('#del_target').click(function () {
+            let tbodyTr = $('tbody tr');
+            const tdArr = [];	// 배열 선언
+            const td = tbodyTr.children();
+
+            td.each(function (i) {
+                if (td.eq(i).children().children().prop("checked")) {
+                    tdArr.push(td.eq(i - 1).text());
+                }
+            });
+            if (confirm("선택된 대상자를 삭제하시겠습니까 ?") === true) {
+                if (tdArr.length !== 0) {
+                    const r = new XMLHttpRequest();
+                    r.open('POST', 'http://localhost:5000/target/delTarget', true);
+                    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    r.withCredentials = true;
+                    r.onreadystatechange = function () {
+                        if (r.readyState === 4) {
+                            if (r.status === 200) {
+                                alert("삭제가 완료되었습니다.");
+                                location.reload();
+                            } else {
+                                alert("삭제 실패했습니다.");
+                            }
+                        }
+                    };
+                    r.send(JSON.stringify({target_list: tdArr}))
+                } else {
+                    alert("삭제할 대상을 선택해주세요.")
+                }
+
+            }
+        });
+
+        $('#tag_reg').click(function () {
+            const r = new XMLHttpRequest();
+            r.open('POST', 'http://localhost:5000/target/regTag', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            r.withCredentials = true;
+            r.onreadystatechange = function () {
+                let rObj;
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        rObj = JSON.parse(r.responseText);
+
+                        $('#tag_menage >tbody').append("<tr id='tag_" + rObj.tags.tag_no + "'>" +
+                            "                        <td>" + rObj.tags.tag_name + "</td>\n" +
+                            "                        <td>" + rObj.tags.created_t + "</td>\n" +
+                            "                        <td>\n" +
+                            "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags.tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
+                            "                        </td>\n" +
+                            "                        </tr>");
+                    } else {
+                        rObj = JSON.parse(r.responseText);
+                        alert(rObj.err);
+                        // document.location.href = "../index.html";
+                    }
+                }
+            };
+            r.send(JSON.stringify({"tag_name": $('#tag_name').val()}));
+        });
+
+        $('#target_reg').click(function () {
+            const tg_email = $('#target_email').val();
+            const tg_name = $('#target_name').val();
+            const tg_phone = $('#target_phone').val();
+            const tg_organ = $('#target_organ').val();
+            const tg_position = $('#target_position').val();
+            const tag_no = $('#tag_selector').val();
+            const formData = {
+                tg_email: tg_email,
+                tg_name: tg_name,
+                tg_phone: tg_phone,
+                tg_organ: tg_organ,
+                tg_position: tg_position,
+                tag_no: tag_no
+            };
+            // console.log(formData);
+
+            const r = new XMLHttpRequest();
+            r.open('POST', 'http://localhost:5000/target/regTarget', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            r.withCredentials = true;
+            r.onreadystatechange = function () {
+                let rObj;
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        document.location.reload();
+                    } else {
+                        rObj = JSON.parse(r.responseText);
+                        alert(rObj.err);
+                    }
+                }
+            };
+            r.send(JSON.stringify(formData));
+        });
+        $('#btn_export').click(function () {
+            const tag_no = $('#tag_selector2').val();
+            const r = new XMLHttpRequest();
+            r.open('GET', 'http://localhost:5000/target/exportTarget?tag_no=' + tag_no, true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            let fileName = null; //if you have the fileName header available
+            r.withCredentials = true;
+            r.responseType = "blob";
+            r.onreadystatechange = function () {
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        const blob = r.response;
+                        if (r.getResponseHeader("content-disposition")) {
+                            var contentDisposition = r.getResponseHeader("content-disposition");
+                            fileName = contentDisposition.substring(contentDisposition.indexOf("=") + 1);
+                        } else {
+                            fileName = "unnamed.xlsx";
+                        }
+
+                        console.log(fileName);
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = fileName;
+                        link.click();
+                    }
+                }
+            };
+            r.send();
+
+        });
+        $('#excelDownload').click(function () {
+            const r = new XMLHttpRequest();
+            r.open('GET', 'http://localhost:5000/target/downloadExcel', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            let fileName = null; //if you have the fileName header available
+            r.withCredentials = true;
+            r.responseType = "blob";
+            r.onreadystatechange = function () {
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        const blob = r.response;
+                        if (r.getResponseHeader("content-disposition")) {
+                            var contentDisposition = r.getResponseHeader("content-disposition");
+                            fileName = contentDisposition.substring(contentDisposition.indexOf("=") + 1);
+                        } else {
+                            fileName = "unnamed.xlsx";
+                        }
+                        console.log(fileName);
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = fileName;
+                        link.click();
+                    }
+                }
+            };
+            r.send();
+        });
+        $('input[type="file"]').change(function (e) {
+            const fileName = e.target.files[0].name;
+            $('#uploadFileName').text(fileName);
+        });
+        $('#excelUpload-btn').click(function () {
+            if (confirm('대상자 일괄 등록 시에는\n기 등록된 태그 외에는 태그설정이 되지 않습니다.\n대상자 정보를 보내시겠습니까?')) {
+                var data = new FormData();
+                data.append("file", $('#file').prop('files')[0]);
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "http://localhost:5000/target/importTargets",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (result) {
+                        console.log("SUCCESS : ", result.data);
+                        alert('전송이 완료되었습니다.');
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('파일을 확인해주세요');
+                    }
+                });
+            }
+        });
+
+    });
+
+    CheckLogin();
+    GetTarget(1);
+</script>
+</body>
+
+</html>
