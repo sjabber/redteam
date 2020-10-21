@@ -21,59 +21,14 @@
   <component name="ChangeListManager">
     <list default="true" id="4eefb2e6-5d34-4383-a6ba-d812d7a3eea8" name="Default Changelist" comment="#3 | 프로젝트 시작">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-grid.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-grid.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-grid.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-grid.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-reboot.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-reboot.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-reboot.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap-reboot.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/bootstrap.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/candy.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/candy.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/choices.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/comfort.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/comfort.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/default.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/default.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/jquery.modal.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/jquery.modal.theme-atlant.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/jquery.modal.theme-xenon.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/mint.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/mint.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/sport.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/sport.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/css/tagInput.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/image/big_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/image/intro_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/image/no_simbol.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/demo.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/demo.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/jquery.modal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/jquery.modal.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/jquery.serialize-object.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/Sortable.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.bundle.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.bundle.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.bundle.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.bundle.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/bootstrap.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/choices.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/jquery.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/lib/tagInput.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/main.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/js/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/api_Template.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_Template.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/api_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/httpheader.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/httpheader.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/route/dev" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/route/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/route/route.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,6 +99,15 @@
       <script-mode>FILE</script-mode>
       <method v="2" />
     </configuration>
+    <configuration name="go build api_DashBoard.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="redteam" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/api/api_DashBoard.go" />
+      <package value="redteam" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build redteam" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="redteam" />
       <working_directory value="$PROJECT_DIR$" />
@@ -168,9 +132,15 @@
     </configuration>
     <list>
       <item itemvalue="Database Script.redteam_v0.1.sql" />
+      <item itemvalue="Go Build.go build redteam" />
+      <item itemvalue="Go Build.redteam" />
+      <item itemvalue="Go Build.go build api_DashBoard.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build redteam" />
+        <item itemvalue="Go Build.go build api_DashBoard.go" />
+        <item itemvalue="Go Build.redteam" />
         <item itemvalue="Database Script.redteam_v0.1.sql" />
       </list>
     </recent_temporary>
@@ -237,46 +207,46 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="591" y="235" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1602417875734" />
-    <state width="1493" height="163" key="GridCell.Tab.0.bottom" timestamp="1602418843722">
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom" timestamp="1603014330298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="216" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1599941555202" />
     <state width="1877" height="290" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598698225481" />
-    <state width="1493" height="163" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="163" key="GridCell.Tab.0.center" timestamp="1602418843722">
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1603014330298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.center" timestamp="1603014330298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="216" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1599941555202" />
     <state width="1877" height="290" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598698225481" />
-    <state width="1493" height="163" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="163" key="GridCell.Tab.0.left" timestamp="1602418843722">
+    <state width="1493" height="237" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1603014330298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.left" timestamp="1603014330298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="216" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1599941555202" />
     <state width="1877" height="290" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598698225481" />
-    <state width="1493" height="163" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="163" key="GridCell.Tab.0.right" timestamp="1602418843722">
+    <state width="1493" height="237" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1603014330298" />
+    <state width="1493" height="237" key="GridCell.Tab.0.right" timestamp="1603014330298">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="216" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1599941555202" />
     <state width="1877" height="290" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598698225481" />
-    <state width="1493" height="163" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="267" key="GridCell.Tab.1.bottom" timestamp="1602418843722">
+    <state width="1493" height="237" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1603014330298" />
+    <state width="1493" height="254" key="GridCell.Tab.1.bottom" timestamp="1603013139479">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="267" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="267" key="GridCell.Tab.1.center" timestamp="1602418843722">
+    <state width="1493" height="254" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1603013139479" />
+    <state width="1493" height="254" key="GridCell.Tab.1.center" timestamp="1603013139479">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="267" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="267" key="GridCell.Tab.1.left" timestamp="1602418843722">
+    <state width="1493" height="254" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1603013139479" />
+    <state width="1493" height="254" key="GridCell.Tab.1.left" timestamp="1603013139479">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="267" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
-    <state width="1493" height="267" key="GridCell.Tab.1.right" timestamp="1602418843722">
+    <state width="1493" height="254" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1603013139479" />
+    <state width="1493" height="254" key="GridCell.Tab.1.right" timestamp="1603013139479">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="267" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1602418843722" />
+    <state width="1493" height="254" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1603013139479" />
     <state x="263" y="42" key="SettingsEditor" timestamp="1597320473453">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -306,5 +276,85 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-6" y="0" width="781" height="830" key="dock-window-2/0.0.1536.824@0.0.1536.824" timestamp="1602319252900" />
+    <state x="475" y="10" width="585" height="804" key="find.popup" timestamp="1603010636551">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="475" y="10" width="585" height="804" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1603010636551" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1603012781579">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1603012781579" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_Template.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/TemplateItems.go</url>
+          <line>20</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_Createusers.go</url>
+          <line>10</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/TemplateItems.go</url>
+          <line>28</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_auth.go</url>
+          <line>42</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_auth.go</url>
+          <line>31</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_auth.go</url>
+          <line>9</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/api_Template.go</url>
+          <line>35</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/user.go</url>
+          <line>105</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/user.go</url>
+          <line>43</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/model/user.go</url>
+          <line>110</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/middleware/httpheader.go</url>
+          <line>50</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="GoApplicationRunConfiguration">
+        <watch expression="" />
+        <watch expression="c.Keys" language="go" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

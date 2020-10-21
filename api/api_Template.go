@@ -17,7 +17,7 @@ import (
 
 func PostTemplateList(c *gin.Context) {
 	userID := c.GetString("email") // httpheader.go 의 AuthMiddleware 에 셋팅되어있음
-	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware에 셋팅되어있음.
+	db, _ := c.Get("db")           // httpheader.go 의 DBMiddleware에 셋팅되어있음.
 	conn := db.(sql.DB)
 
 	tmp := model.Template{}
@@ -37,6 +37,6 @@ func GetTemplateList(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	c.JSON(http.StatusOK, gin.H{"템플릿 목록" : tmps})
+	c.JSON(http.StatusOK, gin.H{"템플릿 목록": tmps, "email": c.Keys["email"]})
 
 }
