@@ -7,11 +7,7 @@ import (
 )
 
 func main() {
-
-
 	route.RegisterRoute(gin.Default())
-
-
 }
 
 

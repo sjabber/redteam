@@ -17,39 +17,35 @@ type User struct {
 	Email           string `json:"email"`
 	PasswordHash    string `json:"-"`
 	Password        string `json:"password"`
-	PasswordConfirm string `json:"password_confirm"`
+	PasswordCheck string `json:"password_check"`
 	Name            string `json:"name"`
 }
 
-func (u *User) Login() error {
-	// 자바에서 클래스 선언할때 변수들 public, private 그 밑에 메서드
-	// 한 클래스안에 들어가야 메서드
-	// User를 클래스로 보면 login()이 User의 메서드로 작용하는 느낌이다.
-	// 디비와 커넥션을 해서 로그인을 확인하는 로직을 구현
 
-	//user := models.User{}
-	//err := l.ShouldBindJSON(&user)
-	//if err != nil {
-	//	l.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	//	return err
-	//}
-
-	db, err := ConnectDb()
+// 자바에서 클래스 선언할때 변수들 public, private 그 밑에 메서드
+// 한 클래스안에 들어가야 메서드
+// User를 클래스로 보면 login()이 User의 메서드로 작용하는 느낌이다.
+// 디비와 커넥션을 해서 로그인을 확인하는 로직을 구현
+func (u *User) Login() (int, error) {
+	// 경우(case)를 나눈다.
+	// num == 0 -> 로그인 성공
+	// num == 1 -> 로그인 실패
+	num := 0
+	db, err := ConnectDB()
 	if err != nil {
-		return fmt.Errorf("db connection error")
+		return num, fmt.Errorf("db connection error")
 	}
 	defer db.Close()
 
-	query := "select user_no, user_name from user_info where user_id=$1 and user_pw=$2"
+	query := "select user_no, user_name from user_info where user_email=$1 and user_pw=$2"
 	err = db.QueryRow(query, u.Email, u.Password).Scan(&u.UserNo, &u.Name) //쿼리의 내용을 err 에 저장
 
 	if err == nil {
 		log.Println("login true")
-
-		return nil
+		return num, nil
 	} else {
-		log.Println("login false")
-		return fmt.Errorf("login fail")
+		num = 1 //로그인에 실패했으므로 num은 1이 된다.
+		return num, fmt.Errorf("login fail")
 	}
 }
 
@@ -57,7 +53,7 @@ func (u *User) Login() error {
 func (u *User) GetAuthToken() (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = u.Email
+	claims["user_email"] = u.Email
 	claims["user_name"] = u.Name
 	claims["user_no"] = u.UserNo
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
@@ -66,9 +62,9 @@ func (u *User) GetAuthToken() (string, error) {
 	return authToken, err
 }
 
-//패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
+// 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
 func (u *User) IsAuthenticated(conn *sql.DB) error {
-	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_id = $1", u.Email)
+	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.PasswordHash)
 
 	if err == pgx.ErrNoRows {
@@ -84,6 +80,8 @@ func (u *User) IsAuthenticated(conn *sql.DB) error {
 	return nil
 }
 
+// 토큰이 유효한지 검사하는 메서드
+// 미들웨어의 TokenAuthMiddleWare() 에서 사용된다.
 func IsTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// fmt.Printf("Parsing: %v \n", token)
@@ -108,7 +106,7 @@ func IsTokenValid(tokenString string) (bool, User) {
 		// 디폴트 claims 타입임. map 은 java 의 해시같은 개념.
 		// fmt.Println(claims)
 		user := User{
-			Email: claims["user_id"].(string),
+			Email: claims["user_email"].(string),
 			Name: claims["user_name"].(string),
 			UserNo: int(claims["user_no"].(float64)),
 		}

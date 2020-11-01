@@ -5,7 +5,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func ConnectDb() (*sql.DB, error) {
+func ConnectDB() (*sql.DB, error) {
 	db, err := sql.Open("postgres",
 		"user=postgres password=1673 dbname=postgres host=localhost sslmode=disable")
 	if db != nil {
