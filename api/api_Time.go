@@ -15,7 +15,7 @@ func Time(c *gin.Context) {
 		DB와 커넥션을 맺어 select now()로 디비의 시간을 가져온다.
 		그러면 DB와 api 서버 모두의 health check가 가능하다
 	*/
-	db, err := model.ConnectDb()
+	db, err := model.ConnectDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "db connection error")
 		return

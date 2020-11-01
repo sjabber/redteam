@@ -1,15 +1,16 @@
 function Logout() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/logout', true);
+    r.open('GET', 'http://localhost:5000/api/Logout', true);
     // r.setRequestHeader("Content-Type", "application/json");
     r.withCredentials = true;
     r.onreadystatechange = function () {
-        let responseObj;
+        // let responseObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
+                alert("로그아웃 되었습니다.");
                 document.location.href = "../index.html";
             } else {
-                console.log("로그아웃 실패")
+                console.log("로그아웃 실패");
             }
         }
     };
@@ -17,31 +18,31 @@ function Logout() {
     r.send();
 }
 
-function CheckLogin() {
-    const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/checklogin', true);
-    r.withCredentials = true;
-    r.onreadystatechange = function () {
-        let responseObj;
-        if (r.readyState === 4) {
-            if (r.status === 200) {
-                console.log("checkLogin 정상");
-                responseObj = JSON.parse(r.responseText);
-                $('#dropdown_id').text(responseObj.user_info.email);
-                $('#dropdown_name').text(responseObj.user_info.name);
-                // document.location.href = "./dashboard/main.html"
-            } else {
-                document.location.href = "../index.html";
-            }
-        }
-
-    };
-    r.send();
-}
+// function CheckLogin() {
+//     const r = new XMLHttpRequest();
+//     r.open('GET', 'http://localhost:5000/api/CheckLogin', true);
+//     r.withCredentials = true;
+//     r.onreadystatechange = function () {
+//         let responseObj;
+//         if (r.readyState === 4) {
+//             if (r.status === 200) {
+//                 console.log("checkLogin 정상");
+//                 responseObj = JSON.parse(r.responseText);
+//                 $('#dropdown_id').text(responseObj.user_info.email);
+//                 $('#dropdown_name').text(responseObj.user_info.name);
+//                 document.location.href = "./dashboard/main.html"
+//             } else {
+//                 document.location.href = "../index.html";
+//             }
+//         }
+//
+//     };
+//     r.send();
+// }
 
 function CheckLoginInLoginPage() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/checklogin', true);
+    r.open('GET', 'http://localhost:5000/api/checklogin', true);
     r.withCredentials = true;
     r.onreadystatechange = function () {
         // let responseObj;
@@ -64,7 +65,7 @@ function CheckLoginInLoginPage() {
 
 function Login() {
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://192.168.11.94:5000/api/Login', true);
+    r.open('POST', 'http://localhost:5000/api/Login', true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -74,7 +75,7 @@ function Login() {
             } else if (r.status === 400) {
                 alert("계정 정보를 입력해주세요");
             } else if (r.status === 401) {
-                alert("인증 실패했습니다.");
+                alert("아이디나 비밀번호가 올바르지 않습니다.");
             }
         }
     };
@@ -83,20 +84,22 @@ function Login() {
 }
 
 function GetDashBoard() {
-    const user_id = document.getElementById("user_id");
-    const user_name = document.getElementById("user_name");
+    const user_id = document.getElementById("dropdown_id");
+    const user_name = document.getElementById("dropdown_name");
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://192.168.11.94:5000/api/dashboard', true);
+    r.open('GET', 'http://localhost:5000/api/dashboard', true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
         let responseObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
-                // console.log(r.responseText);
+                console.log(r.responseText);
                 responseObj = JSON.parse(r.responseText);
-                $('#user_id').text(responseObj.email);
-                $('#user_name').text(responseObj.name);
+                user_id.innerHTML = responseObj.email
+                user_name.innerHTML = responseObj.name
+                // user_id.text(responseObj.email);
+                // user_name.text(responseObj.name);
             } else {
                 document.location.href = "../index.html";
             }
@@ -112,7 +115,7 @@ function Register() {
         return;
     }
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/createUser', true);
+    r.open('POST', 'http://localhost:5000/api/createUser', true);
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
@@ -123,10 +126,13 @@ function Register() {
             } else if (r.status === 403) {
                 alert("이미 존재하는 이메일 입니다.");
             } else if (r.status === 401) {
-                alert("비밀번호가 틀렸습니다.");
+                alert("비밀번호가 일치하지 않습니다.");
             } else if (r.status === 402) {
-                alert("비밀번호는 8자리 이상 입력해주세요.");
+                alert("비밀번호나 이메일 형식이 올바르지 않습니다.");
+            } else if (r.status === 405) {
+                alert("계정 생성 오류")
             }
+
         }
     };
     const formData = $('#register_form').serializeObject();

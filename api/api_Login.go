@@ -8,8 +8,7 @@ import (
 )
 
 func Login(c *gin.Context) {
-
-
+	num := 0
 	user := model.User{}
 	err := c.BindJSON(&user)
 	if err != nil {
@@ -29,16 +28,23 @@ func Login(c *gin.Context) {
 	//}
 	// 1800 -> 30분
 
-	err = user.Login()
-	if err != nil {
+	num, err = user.Login()
+	if err != nil && num == 0 {
+		// num 0 이면서 err == nil 이어야만 로그인에 성공한다.
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest,
+			gin.H{"오류": err.Error()})
+		return
+	} else if err != nil && num == 1 {
+		// 로그인이 실패한 경우
+		log.Println(err.Error())
+		c.JSON(http.StatusUnauthorized,
 			gin.H{"오류": err.Error()})
 		return
 	}
 
 	token, err := user.GetAuthToken()
-	if err == nil {
+	if err == nil { //여기서 토큰을 쿠키에 붙인다.
 		c.SetCookie("access-token", token, 1800, "", "", false, false)
 		c.JSON(http.StatusOK, gin.H{
 			"isOk": true,

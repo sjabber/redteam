@@ -17,11 +17,32 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	err = user.CreateUser()
+	num := 7
+	num, err = user.CreateUsers()
 	if err != nil { //user.CreateUser 에 대한 오류검사
-		log.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"오류": err.Error()})
+		switch num {
+		case 0:
+			log.Println(err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"오류": err.Error()})
+
+		case 1:
+			log.Println(err.Error())
+			c.JSON(http.StatusUnauthorized, gin.H{"오류": err.Error()})
+
+		case 2:
+			log.Println(err.Error())
+			c.JSON(http.StatusPaymentRequired, gin.H{"오류": err.Error()})
+
+		case 3:
+			log.Println(err.Error())
+			c.JSON(http.StatusForbidden, gin.H{"오류": err.Error()})
+
+		case 5:
+			log.Println(err.Error())
+			c.JSON(http.StatusMethodNotAllowed, gin.H{"오류": err.Error()})
+		}
 		return
+
 	}
 
 	token, err := user.GetAuthToken()
