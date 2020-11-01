@@ -24,7 +24,6 @@
       <change afterPath="$PROJECT_DIR$/api/api_Target.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/model/Target.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api_Createusers.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_CreateUsers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_Template.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_Template.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_Login.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/api_checkLogin.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api_CheckLogin.go" afterDir="false" />
@@ -39,9 +38,6 @@
       <change beforePath="$PROJECT_DIR$/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/Login.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/route/dev" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/route/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/route/route.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/public/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/public/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/templates/template.html" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/templates/template.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,6 +154,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Database Script.redteam_v0.1.sql" />
       <item itemvalue="Go Build.go build redteam" />
       <item itemvalue="Go Build.go build main.go" />
       <item itemvalue="Go Build.go build api_auth.go" />
@@ -167,10 +164,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build redteam" />
-        <item itemvalue="Go Build.go build api_Target.go" />
-        <item itemvalue="Go Build.go build api_Login.go" />
-        <item itemvalue="Go Build.go build main.go" />
-        <item itemvalue="Go Build.go build api_auth.go" />
+        <item itemvalue="Go Build.go build api_DashBoard.go" />
+        <item itemvalue="Go Build.redteam" />
+        <item itemvalue="Database Script.redteam_v0.1.sql" />
       </list>
     </recent_temporary>
   </component>
