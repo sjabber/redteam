@@ -60,6 +60,8 @@ func RegisterRoute(r *gin.Engine) {
 	target := apiV1.Group("/target")
 	target.Use(middleware.TokenAuthMiddleWare())
 	{
+		//localhost:5000/api/target/getTarget
+
 		target.GET("/getTarget", api.GetTarget)
 		target.POST("/delTarget", api.DeleteTarget)
 		target.POST("/regTarget", api.RegTarget)

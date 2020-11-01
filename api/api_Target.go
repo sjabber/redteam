@@ -16,9 +16,9 @@ func RegTarget(c *gin.Context) {
 	c.ShouldBindJSON(&target)
 	err := target.CreateTarget(&conn)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"훈련대상 등록 오류": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"대상 등록 성공, 등록한 관리자" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"target_registration_error, register_account" : c.Keys["email"]})
 	}
 }
 
@@ -28,7 +28,7 @@ func GetTarget(c *gin.Context) {
 		fmt.Println(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"훈련 대상 목록": target, "등록한 관리자 계정": c.Keys["email"]})
+	c.JSON(http.StatusOK, gin.H{"target_list": target, "register_account": c.Keys["email"]})
 }
 
 func DeleteTarget(c *gin.Context) {
@@ -39,17 +39,17 @@ func DeleteTarget(c *gin.Context) {
 	c.ShouldBindJSON(&target)
 	err := target.DeleteTarget(&conn)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"훈련대상 삭제 오류": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"target_deleting_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"대상 삭제 성공, 삭제한 관리자" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account" : c.Keys["email"]})
 	}
 }
 
 func DownloadExcel(c *gin.Context) {
 	err := model.Download()
 	if err != nil{
-		c.JSON(http.StatusBadRequest, gin.H{"파일 다운로드 오류": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"file_download_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"파일 다운로드 성공, 다운로드 계정": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"file_down_err, download_account": c.Keys["email"]})
 	}
 }
