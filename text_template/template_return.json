@@ -1,0 +1,142 @@
+{
+  "email": "test@naver.com",
+  "템플릿 목록": [
+    {
+      "tmp_no": 13,
+      "user_no": 2,
+      "division": "사원1",
+      "kind": "B",
+      "file_info": "마케팅 계획목록",
+      "tmp_name": "훈련템플릿2",
+      "mail_title": "마케팅 부서입니다.",
+      "sender_name": "test@naver.com",
+      "download_type": "xlxs"
+    },
+    {
+      "tmp_no": 14,
+      "user_no": 2,
+      "division": "사원2",
+      "kind": "A",
+      "file_info": "보안프로그램",
+      "tmp_name": "훈련템플릿1",
+      "mail_title": "보안담당자입니다.",
+      "sender_name": "test@naver.com",
+      "download_type": "html"
+    },
+    {
+      "tmp_no": 21,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwp"
+    },
+    {
+      "tmp_no": 22,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwp"
+    },
+    {
+      "tmp_no": 23,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwps"
+    },
+    {
+      "tmp_no": 25,
+      "user_no": 2,x
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "test@naver.com",
+      "download_type": "hwp"
+    }
+  ]
+},
+{
+  "email": "test@naver.com",
+  "템플릿 목록": [
+    {
+      "tmp_no": 13,
+      "user_no": 2,
+      "division": "사원1",
+      "kind": "B",
+      "file_info": "마케팅 계획목록",
+      "tmp_name": "훈련템플릿2",
+      "mail_title": "마케팅 부서입니다.",
+      "sender_name": "test@naver.com",
+      "download_type": "xlxs"
+    },
+    {
+      "tmp_no": 14,
+      "user_no": 2,
+      "division": "사원2",
+      "kind": "A",
+      "file_info": "보안프로그램",
+      "tmp_name": "훈련템플릿1",
+      "mail_title": "보안담당자입니다.",
+      "sender_name": "test@naver.com",
+      "download_type": "html"
+    },
+    {
+      "tmp_no": 21,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwp"
+    },
+    {
+      "tmp_no": 22,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwp"
+    },
+    {
+      "tmp_no": 23,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "sjabber@naver.com",
+      "download_type": "hwps"
+    },
+    {
+      "tmp_no": 25,
+      "user_no": 2,
+      "division": "사원3",
+      "kind": "C",
+      "file_info": "악성파일",
+      "tmp_name": "훈련템플릿3",
+      "mail_title": "명절 보너스",
+      "sender_name": "test@naver.com",
+      "download_type": "hwp"
+    }
+  ]
+}

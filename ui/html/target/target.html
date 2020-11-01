@@ -314,7 +314,7 @@
 <script>
     function GetTarget(page) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/target/getTarget?page=' + page, true);
+        r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -327,17 +327,17 @@
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj.targets.length; i++) {
                             if (rObj.targets[i].tg_tag.length === 0) {
-                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
+                                $('#targets > tbody:last').append('<tr><td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td></td></tr>');
                             } else {
                                 $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td><label class="badge badge-green">' + rObj.targets[i].tg_tag + '</label></td></tr>');
                             }
@@ -383,7 +383,7 @@
 
 
                 } else {
-                    document.location.href = "../index.html";
+                    // document.location.href = "../index.html";
                 }
             }
         };
@@ -477,7 +477,7 @@
             if (confirm("선택된 대상자를 삭제하시겠습니까 ?") === true) {
                 if (tdArr.length !== 0) {
                     const r = new XMLHttpRequest();
-                    r.open('POST', 'http://localhost:5000/target/delTarget', true);
+                    r.open('POST', 'http://localhost:5000/api/target/delTarget', true);
                     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     r.withCredentials = true;
                     r.onreadystatechange = function () {
@@ -490,6 +490,7 @@
                             }
                         }
                     };
+                    console.log({target_list: tdArr})
                     r.send(JSON.stringify({target_list: tdArr}))
                 } else {
                     alert("삭제할 대상을 선택해주세요.")
@@ -525,7 +526,6 @@
             };
             r.send(JSON.stringify({"tag_name": $('#tag_name').val()}));
         });
-
         $('#target_reg').click(function () {
             const tg_email = $('#target_email').val();
             const tg_name = $('#target_name').val();
@@ -537,14 +537,14 @@
                 tg_email: tg_email,
                 tg_name: tg_name,
                 tg_phone: tg_phone,
-                tg_organ: tg_organ,
+                tg_organize: tg_organ,
                 tg_position: tg_position,
                 tag_no: tag_no
             };
             // console.log(formData);
 
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://localhost:5000/target/regTarget', true);
+            r.open('POST', 'http://localhost:5000/api/target/regTarget', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -651,7 +651,7 @@
 
     });
 
-    CheckLogin();
+    // CheckLogin();
     GetTarget(1);
 </script>
 </body>

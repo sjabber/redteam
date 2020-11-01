@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="box-body pt-0 px-0 responsive">
-                        <table id="targets">
+                        <table id="tmpls">
                             <thead>
                             <tr>
                                 <th style="visibility:hidden;position:absolute;"></th>
@@ -162,85 +162,77 @@
 
 <script>
 
-  function GetTemplates() {
-    const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
-    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    r.withCredentials = true;
-    r.onreadystatechange = function () {
-      let rObj;
-      if (r.readyState === 4) {
-        if (r.status === 200) {
-          rObj = JSON.parse(r.responseText);
-          console.log(r.responseText);
-          if (rObj.targets.length > 0) {
-            // table 비워주기
-            $('#targets > tbody').empty();
-            for (let i = 0; i < rObj.targets.length; i++) {
-              if (rObj.targets[i].tg_tag.length === 0) {
-                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
-                        '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                        '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
-                        rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
-                        '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
-                        '<td></td></tr>');
-              } else {
-                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
-                        '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                        '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
-                        rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organ +
-                        '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
-                        '<td><label class="badge badge-green">' + rObj.targets[i].tg_tag + '</label></td></tr>');
-              }
+    function GetTemplates() {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText);
+                    if (rObj.tmpls.length > 0) {
+                        // table 비워주기
+                        $('#tmpls > tbody').empty();
+                        // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 드운로드 유형, 등록일
+                        // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
+                        for (let i = 0; i < rObj.tmpls.length; i++) {
+                            $('#tmpls > tbody:last').append('<tr>'+'<td>'+rObj.tmpls[i].tmp_no+'</td>'+'<td id="tmpls_' + rObj.tmpls[i].tmp_no +
+                                '" style="visibility:hidden;position:absolute;">' + rObj.tmpls[i].tmp_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                '<span></span></div></td><td>' + rObj.tmpls[i].division + '</td><td>' + rObj.tmpls[i].kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].mail_title + '</td><td>' +
+                                rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td><td>'+
+                                '<td>' + rObj.tmpls[i].created_t + '</td></tr>');
+                        }
+                    } else {
+                        $('#tmpls > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
+
+                    paging(rObj.total, page);
+
+                    if (rObj.tags.length > 0) {
+                        $('#tag_menage > tbody').empty();
+                        $('#tag_select').empty();
+                        for (let j = 0; j < rObj.tags.length; j++) {
+                            $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
+                                "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
+                                "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
+                                "                        <td>\n" +
+                                "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
+                                "                        </td>\n" +
+                                "                        </tr>");
+
+                            if (j === 0) {
+                                // const option = ;
+                                console.log(rObj.tags[j].tag_no);
+                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "' selected>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                            } else {
+                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                            }
+
+                        }
+                    } else {
+                        $('#tag_menage > tbody:last').append('<tr><td colspan="3"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
 
 
+                } else {
+                    document.location.href = "../index.html";
+                }
             }
-          } else {
-            $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                    '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
-                    '                </div></tr></td>');
-          }
+        };
+        r.send();
+    }
 
-          paging(rObj.total, page);
-
-          if (rObj.tags.length > 0) {
-            $('#tag_menage > tbody').empty();
-            $('#tag_select').empty();
-            for (let j = 0; j < rObj.tags.length; j++) {
-              $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
-                      "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
-                      "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
-                      "                        <td>\n" +
-                      "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
-                      "                        </td>\n" +
-                      "                        </tr>");
-
-              if (j === 0) {
-                // const option = ;
-                console.log(rObj.tags[j].tag_no);
-                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "' selected>" + rObj.tags[j].tag_name + "</option>");
-                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
-              } else {
-                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
-                $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
-              }
-
-            }
-          } else {
-            $('#tag_menage > tbody:last').append('<tr><td colspan="3"><div class="alert alert">\n' +
-                    '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
-                    '                </div></tr></td>');
-          }
-
-
-        } else {
-          document.location.href = "../index.html";
-        }
-      }
-    };
-    r.send();
-  }
-  GetTemplates();
+    GetTemplates();
 </script>
 
 </body>

@@ -39,7 +39,7 @@ func GetTemplateList(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	c.JSON(http.StatusOK, gin.H{"템플릿 목록": tmp, "email": c.Keys["email"]})
+	c.JSON(http.StatusOK, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
 }
 
 // 템플릿 수정하기
@@ -50,7 +50,7 @@ func PutTemplateList(c *gin.Context) {
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
 	err := tmp.Update(&conn)
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"템플릿 수정 오류": err.Error()})
 		return
 	}
@@ -64,11 +64,10 @@ func DeleteTemplateList(c *gin.Context) {
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
 	err := tmp.Update(&conn)
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"템플릿 삭제 오류": err.Error()})
 		return
-	}  else {
-		c.JSON(http.StatusOK, gin.H{"삭제 성공, 삭제한 관리자" : c.Keys["email"]})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"삭제 성공, 삭제한 관리자": c.Keys["email"]})
 	}
 }
-
