@@ -8,14 +8,14 @@ import (
 )
 
 type Target struct {
-	TargetNo    int    `json:"target_no"`
-	TargetName  string `json:"target_name"`
-	TargetEmail string `json:"target_email"`
-	TargetPhone	string `json:"target_phone"`
-	TargetOrganize string `json:"target_organize"` //소속
-	TargetPosition string `json:"target_position"` //직급
-	TargetClassify string `json:"target_classify"` //태그
-	TargetCreateTime string
+	TargetNo         int    `json:"tg_no"`
+	TargetName       string `json:"tg_name"`
+	TargetEmail      string `json:"tg_email"`
+	TargetPhone      string `json:"tg_phone"`
+	TargetOrganize   string `json:"tg_organize"` //소속
+	TargetPosition   string `json:"tg_position"` //직급
+	TargetClassify   string `json:"tg_tag"`      //태그
+	TargetCreateTime string `json:"created_t"`
 }
 
 func (t *Target) CreateTarget(conn *sql.DB) error {
@@ -79,13 +79,12 @@ func ReadTarget() ([]Target, error) {
 			fmt.Printf("훈련대상 스캐닝 오류 : %v", err)
 			continue
 		}
-		 targets = append(targets, tg)
+		targets = append(targets, tg)
 
 	}
 
 	return targets, nil
 }
-
 
 func (t *Target) DeleteTarget(conn *sql.DB) error {
 	str := string(t.TargetNo) // int -> string 형변환
@@ -93,7 +92,7 @@ func (t *Target) DeleteTarget(conn *sql.DB) error {
 		return fmt.Errorf("삭제할 대상의 번호를 입력해 주세요. ")
 	}
 	_, err := conn.Exec("DELETE FROM target_info WHERE target_no = $1", t.TargetNo)
-	if err != nil{
+	if err != nil {
 		//fmt.Printf("Error deleting target: (%v)", err)
 		return fmt.Errorf("Error deleting target ")
 	}
@@ -107,8 +106,8 @@ func Download() error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	categories := map[string]string{"A1":"이름", "B1":"이메일", "C1":"연락처", "D1":"소속",
-		"E1":"직급", "F1":"태그"}
+	categories := map[string]string{"A1": "이름", "B1": "이메일", "C1": "연락처", "D1": "소속",
+		"E1": "직급", "F1": "태그"}
 	for k, v := range categories {
 		f.SetCellValue("Sheet1", k, v)
 		f.SetCellStyle("Sheet1", k, v, style)
@@ -116,4 +115,3 @@ func Download() error {
 	f.SaveAs("./훈련대상.xlsx")
 	return nil
 }
-
