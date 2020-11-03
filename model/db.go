@@ -7,7 +7,7 @@ import (
 
 func ConnectDB() (*sql.DB, error) {
 	db, err := sql.Open("postgres",
-		"user=postgres password=1673 dbname=postgres host=192.168.11.61 sslmode=disable port=5432")
+		"user=postgres password=1673 dbname=postgres host=localhost sslmode=disable port=5432")
 	if db != nil {
 		db.SetMaxOpenConns(100)
 		db.SetMaxIdleConns(10)

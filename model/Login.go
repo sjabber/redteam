@@ -1,12 +1,8 @@
 package model
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/jackc/pgx/v4"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 
 	"log"
@@ -50,7 +46,7 @@ func (u *User) Login() (int, error) {
 }
 
 // JWT 토큰을 반환해 주는 메서드
-func (u *User) GetAuthToken() (string, error) {
+func (u *User) GetAuthToken() (string, string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_email"] = u.Email
@@ -59,26 +55,37 @@ func (u *User) GetAuthToken() (string, error) {
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	authToken, err := token.SignedString(tokenSecret)
-	return authToken, err
+
+	rfClaims := jwt.MapClaims{}
+	rfClaims["user_email"] = u.Email
+	rfClaims["user_name"] = u.Name
+	rfClaims["user_no"] = u.UserNo
+	rfClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+	rfToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &rfClaims)
+	refreshToken, err := rfToken.SignedString(tokenRefresh)
+
+
+	return authToken, refreshToken, err
 }
+
 
 // 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
-func (u *User) IsAuthenticated(conn *sql.DB) error {
-	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
-	err := row.Scan(&u.PasswordHash)
-
-	if err == pgx.ErrNoRows {
-		fmt.Println("해당 계정이 존재하지 않습니다.")
-		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
-	if err != nil {
-		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
-	}
-
-	return nil
-}
+//func (u *User) IsAuthenticated(conn *sql.DB) error {
+//	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
+//	err := row.Scan(&u.PasswordHash)
+//
+//	if err == pgx.ErrNoRows {
+//		fmt.Println("해당 계정이 존재하지 않습니다.")
+//		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
+//	}
+//
+//	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
+//	if err != nil {
+//		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
+//	}
+//
+//	return nil
+//}
 
 // 토큰이 유효한지 검사하는 메서드
 // 미들웨어의 TokenAuthMiddleWare() 에서 사용된다.
@@ -86,7 +93,7 @@ func IsTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// fmt.Printf("Parsing: %v \n", token)
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
-			return nil, fmt.Errorf("토큰 서명이 유요하지 않습니다. : %v",
+			return nil, fmt.Errorf("unexpected signing method : %v",
 				token.Header["alg"])
 			// HMAC 을 사용하는 이유
 			// REST API(표현상태 전송 API)가 요청을 받았을 때,
@@ -101,6 +108,7 @@ func IsTokenValid(tokenString string) (bool, User) {
 		return false, User{}
 	}
 
+	//위에서 ok가 true, token 의 valid 값이 true 면 여기서 true 를 반환하며 검증을 완료
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		// MapClaims 는 JSON 디코딩을 위해 map[string]interface{}를 사용함.
 		// 디폴트 claims 타입임. map 은 java 의 해시같은 개념.

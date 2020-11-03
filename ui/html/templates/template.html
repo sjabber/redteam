@@ -161,7 +161,6 @@
 <script src="../public/js/lib/Sortable.min.js"></script>
 
 <script>
-
     function GetTemplates() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
@@ -173,10 +172,11 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     console.log(r.responseText);
+
                     if (rObj.tmpls.length > 0) {
                         // table 비워주기
                         $('#tmpls > tbody').empty();
-                        // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 드운로드 유형, 등록일
+                        // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
                         for (let i = 0; i < rObj.tmpls.length; i++) {
                             $('#tmpls > tbody:last').append('<tr>'+'<td>'+rObj.tmpls[i].tmp_no+'</td>'+'<td id="tmpls_' + rObj.tmpls[i].tmp_no +

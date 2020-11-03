@@ -11,7 +11,8 @@ func Logout(c *gin.Context) {
 	_, err := c.Cookie("access-token")
 	if err == nil {
 		log.Println("logout true")
-		c.SetCookie("access-token", "", -1, "", "", false, false)
+		c.SetCookie("access-token", "", -1, "", "", false, true)
+		c.SetCookie("refresh-token", "", -1, "", "",false, true)
 		c.JSON(http.StatusOK, gin.H{
 			"LogoutSuccess" : true,
 		})
@@ -22,5 +23,7 @@ func Logout(c *gin.Context) {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
+
+
 }
 

@@ -29,7 +29,7 @@ func RegisterRoute(r *gin.Engine) {
 		// 우리가 데시보드라는 화면을 들어갔다 -> 데이터를
 
 		apiV1.POST("/createUser", api.CreateUser)
-		//apiV1.GET("/RefreshToken", api.RefreshToken)
+		apiV1.GET("/RefreshToken", api.RefreshToken)
 	}
 
 	setting := r.Group("/setting")

@@ -112,6 +112,8 @@ func Download() error {
 		f.SetCellValue("Sheet1", k, v)
 		f.SetCellStyle("Sheet1", k, v, style)
 	}
-	f.SaveAs("./훈련대상.xlsx")
+	f.SaveAs("C:/Users/Taeho/Downloads/훈련대상.xlsx")
 	return nil
 }
+
+

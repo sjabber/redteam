@@ -138,3 +138,21 @@ function Register() {
     const formData = $('#register_form').serializeObject();
     r.send(JSON.stringify(formData));
 }
+
+// function Refresh() {
+//     const r = new XMLHttpRequest();
+//     r.open('GET', 'http://localhost:5000/api/RefreshToken', true);
+//     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//     r.withCredentials = true;
+//     r.onreadystatechange = function () {
+//         if (r.readyState === 4) {
+//             if (r.status === 200) {
+//                 console.log(r.responseText);
+//             } else {
+//                 document.location.href = "../index.html";
+//             }
+//         }
+//     };
+//     const formData = $('form').serializeObject();
+//     r.send(JSON.stringify(formData));
+// }

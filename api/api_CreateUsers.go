@@ -45,10 +45,11 @@ func CreateUser(c *gin.Context) {
 
 	}
 
-	token, err := user.GetAuthToken()
+	accessToken, refreshToken, err := user.GetAuthToken()
 	if err == nil { // JWToken 에 대한 오류검사
 		c.JSON(http.StatusOK, gin.H{
-			"token": token,
+			"access-token": accessToken,
+			"refresh-token": refreshToken,
 		})
 		return
 	}

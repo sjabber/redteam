@@ -13,6 +13,7 @@ import (
 
 var (
 	tokenSecret = []byte(os.Getenv("TOKEN_SECRET"))
+	tokenRefresh = []byte(os.Getenv("TOKEN_REFRESH"))
 )
 
 func (u *User) CreateUsers() (int, error) {

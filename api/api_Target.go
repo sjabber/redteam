@@ -28,7 +28,7 @@ func GetTarget(c *gin.Context) {
 		fmt.Println(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"target_list": target, "register_account": c.Keys["email"]})
+	c.JSON(http.StatusOK, gin.H{"targets": target, "register_account": c.Keys["email"]})
 }
 
 func DeleteTarget(c *gin.Context) {
@@ -50,6 +50,7 @@ func DownloadExcel(c *gin.Context) {
 	if err != nil{
 		c.JSON(http.StatusBadRequest, gin.H{"file_download_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"file_down_err, download_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"file_down_OK, download_account": c.Keys["email"]})
 	}
 }
+

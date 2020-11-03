@@ -43,9 +43,12 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := user.GetAuthToken()
+	accessToken, refreshToken, err := user.GetAuthToken()
 	if err == nil { //여기서 토큰을 쿠키에 붙인다.
-		c.SetCookie("access-token", token, 1800, "", "", false, false)
+		c.SetCookie("access-token", accessToken, 900, "", "", false, true)
+		c.SetCookie("refresh-token", refreshToken, 86400, "", "",false, true)
+		//https 사용시 refresh-token 의 secure -> true 로 변경한다.
+
 		c.JSON(http.StatusOK, gin.H{
 			"isOk": true,
 		})
@@ -54,8 +57,7 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusBadRequest, gin.H{
 		"isOk": false,
-		"오류":   "인증에 오류가 발생하였습니다. ",
-		//
+		"error":   "authentication error occurred. ",
 	})
 	//
 	//c.JSON(http.StatusOK,
