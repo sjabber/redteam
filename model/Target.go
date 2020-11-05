@@ -26,6 +26,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 	t.TargetPhone = strings.Trim(t.TargetPhone, " ")
 	t.TargetOrganize = strings.Trim(t.TargetOrganize, " ")
 	t.TargetPosition = strings.Trim(t.TargetPosition, " ")
+	t.TargetTag = strings.Trim(t.TargetTag, " ")
 
 	if len(t.TargetName) < 1 {
 		return fmt.Errorf("이름이 비어있습니다. ")
@@ -37,13 +38,21 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 		return fmt.Errorf(" 소속이 비어있습니다. ")
 	} else if len(t.TargetPosition) < 1 {
 		return fmt.Errorf(" 직급이 비어있습니다. ")
+	} else if len(t.TargetTag) < 1 {
+		t.TargetTag = "Null" //태그가 없으면 "Null"을 집어넣는다.
 	}
 
-	query := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position) " +
-		"VALUES ($1, $2, $3, $4, $5) WHERE user_no = $6" +
+	// 추후 조건 좀더 꼼꼼하게 만들기..
+	// ex) 엑셀파일 중간에 값이 비워져있는 경우 채워넣을 Default 값에 대한 조건 등...
+	// 엑셀파일의 중간에 값이 없는 경우, 잘못된 형식이 들어가 있을경우 이를 검사할 필요가 있음.
+
+	query := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position, target_tag, user_no) " +
+		"VALUES ($1, $2, $3, $4, $5, $6, $7)" +
 		"RETURNING target_no"
 
-	row := conn.QueryRow(query, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition, num)
+
+
+	row := conn.QueryRow(query, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition, t.TargetTag, num)
 
 	err := row.Scan(&t.TargetNo)
 
@@ -55,6 +64,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 	return nil
 }
 
+// todo 보완필요!!! -> 현재 이름, 이메일, 태그 중 하나라도 값이 없으면 리스트목록에 뜨지않는 오류가 존재한다. 태그값이 없어도 표시되도록 해야함.
 func ReadTarget(num int) ([]Target, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -63,7 +73,6 @@ func ReadTarget(num int) ([]Target, error) {
 
 	query := "SELECT target_no, target_name, target_email, target_phone, target_organize, target_position, target_tag, modified_time from target_info where user_no = $1"
 	rows, err := db.Query(query, num)
-
 	if err != nil {
 		fmt.Println(err)
 		return nil, fmt.Errorf("대상자들을 불러오는데 오류가 발생하였습니다. ")
@@ -78,13 +87,9 @@ func ReadTarget(num int) ([]Target, error) {
 		if err != nil {
 			fmt.Printf("훈련대상 스캐닝 오류 : %v", err)
 			continue
-		} else if len(tg.TargetTag) < 1{
-			tg.TargetTag = " "
 		}
-		// 여기 조건 좀더 꼼꼼하게 만들어야함.
 
 		targets = append(targets, tg)
-
 	}
 
 	return targets, nil
@@ -97,7 +102,6 @@ func (t *Target) DeleteTarget(conn *sql.DB, num int) error {
 	}
 	_, err := conn.Exec("DELETE FROM target_info WHERE target_no = $1 && user_no = $2", t.TargetNo, num)
 	if err != nil {
-		//fmt.Printf("Error deleting target: (%v)", err)
 		return fmt.Errorf("Error deleting target ")
 	}
 
@@ -108,7 +112,7 @@ func (t *Target) DeleteTarget(conn *sql.DB, num int) error {
 func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정, api_Target.go 파일의 todo 2 참고)
-	f, err := excelize.OpenFile("C:/Users/Taeho/Downloads/"+ str)
+	f, err := excelize.OpenFile("C:/Users/Taeho/go/src/redteam/Spreadsheet/"+ str)
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -124,16 +128,20 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 		t.TargetPhone = f.GetCellValue("Sheet1", "C"+str)
 		t.TargetOrganize = f.GetCellValue("Sheet1", "D"+str)
 		t.TargetPosition = f.GetCellValue("Sheet1", "E"+str)
+		t.TargetTag	= f.GetCellValue("Sheet1", "F"+str)
 
 		if t.TargetName == "" {
 			break
+		} else if len(t.TargetTag) < 1 {
+			t.TargetTag = "Null"
 		}
-		//	todo 4 : 추후 해당 목록에 적힌 글들의 값이 올바른 형식이 아닐경우 제외하도록 하는 코드도 삽입한다.
-		query := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position) " +
-			"VALUES ($1, $2, $3, $4, $5) WHERE user_no = &6" +
+
+		//	todo 4 : 추후 해당 목록에 적힌 글들의 값이 올바른 형식이 아닐경우 제외하도록 하는 코드도 삽입한다. -> 정규식 사용.
+		query := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position, target_tag, user_no) " +
+			"VALUES ($1, $2, $3, $4, $5, $6, $7)" +
 			"RETURNING target_no"
 
-		row := conn.QueryRow(query, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition, num)
+		row := conn.QueryRow(query, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition, t.TargetTag, num)
 		err := row.Scan(&t.TargetNo)
 		if err != nil {
 			fmt.Println(err)
@@ -177,11 +185,11 @@ func ExportTargets(num int) error {
 		if err != nil {
 			fmt.Printf("Targets scanning error : %v", err)
 			continue
-		} else if len(tg.TargetTag) < 1{
-			tg.TargetTag = " "
 		}
 
-
+		if len(tg.TargetTag) < 1{
+			tg.TargetTag = "Null"
+		}
 
 		str := strconv.Itoa(i)
 		f.SetCellValue("Sheet1", "A"+str, tg.TargetName)
@@ -191,8 +199,6 @@ func ExportTargets(num int) error {
 		f.SetCellValue("Sheet1", "E"+str, tg.TargetPhone)
 		f.SetCellValue("Sheet1", "F"+str, tg.TargetTag)
 		f.SetCellValue("Sheet1", "G"+str, tg.TargetCreateTime)
-
-
 
 		i++
 	}

@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"redteam/model"
+	"strconv"
 )
 
 func RegTarget(c *gin.Context) {
@@ -69,7 +70,7 @@ func DownloadExcel(c *gin.Context) {
 	header["content-disposition"] = []string{"attachment; filename=" + "Target.xlsx"}
 
 	// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
-	// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
+	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
 	destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
@@ -81,7 +82,7 @@ func DownloadExcel(c *gin.Context) {
 	io.Copy(c.Writer, file)
 }
 
-// 다운받은 엑셀파일의 형식에 맞게 작성할 경우 DB에 일괄등록한다.
+// 업로드한 엑셀파일의 형식에 맞게 작성한 경우 DB에 일괄등록한다.
 func ImportTargets(c *gin.Context) {
 	// 단일 파일 전송
 	file, err := c.FormFile("file")
@@ -90,18 +91,24 @@ func ImportTargets(c *gin.Context) {
 		return
 	}
 
+	// num (계정번호) => 해당 계정에 속한 정보들만 추출할 수 있다.
+	num := c.Keys["number"].(int)
+
+	// num (int) -> str (string) 변환
+	str := strconv.Itoa(num)
+
 	// 파일을 구체적인 장소로 업로드한다. (서버에 파일을 저장할 장소)
 	filename := filepath.Base(file.Filename)
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트로부터 다운로드받을 파일을 하나 만든다.)
 	// 현재는 컴퓨터의 다운로드파일로 업로드 받는다.
-	uploadPath := "C:/Users/Taeho/Downloads/" + filename
+	uploadPath := "C:/Users/Taeho/go/src/redteam/Spreadsheet/" + filename + str
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
 		return
 	} else {
-		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename))
+		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename +str))
 	} // 파일 전송이 완료됨.
 
 	/////////////////아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.////////////////////////////
@@ -111,8 +118,6 @@ func ImportTargets(c *gin.Context) {
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
-	// num (계정번호) => 해당 계정에 속한 정보들만 추출할 수 있다.
-	num := c.Keys["number"].(int)
 
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
 	err = target.ImportTargets(&conn, filename, num)
@@ -124,11 +129,10 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("C:/Users/Taeho/Downloads/"+filename)
+	err2 := os.Remove("C:/Users/Taeho/go/src/redteam/Spreadsheet/" + filename + str)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
-
 }
 
 //사용자가 등록한 대상들을 엑셀파일로 추출한다.
@@ -141,30 +145,30 @@ func ExportTarget(c *gin.Context) {
 	header["content-disposition"] = []string{"attachment; filename=" + "Registered_Targets.xlsx"}
 
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
-	err := model.ExportTargets(num)
+	err := model.ExportTargets(num) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Export error ": err.Error()})
 	}
 
-
+	str := strconv.Itoa(num)
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
-	// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
-	//str := strconv.Itoa(num)
-	//destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets"+ str +".xlsx"
-	destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets.xlsx"
+	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
+	destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets" + str + ".xlsx"
+	//destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
 		c.String(http.StatusOK, "%v", err)
 		return
 	}
-	defer file.Close()
-
 	io.Copy(c.Writer, file)
+	file.Close()
 
 	// 사용자가 파일을 다운로드받으면 생성한 파일은 다시 지운다.
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정)
-	err2 := os.Remove("C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets.xlsx")
-	if err2 != nil {
-		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
+	err3 := os.Remove("C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets" + str + ".xlsx")
+	if err3 != nil {
+		//현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
+		panic(err3)
 	}
+	os.Clearenv()
 }
