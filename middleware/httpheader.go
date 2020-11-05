@@ -58,6 +58,7 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 			//access-token을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
 			c.Abort()
 		} else {
+			c.Set("number", user.UserNo)
 			c.Set("email", user.Email)
 			c.Set("name", user.Name)
 			c.Next()

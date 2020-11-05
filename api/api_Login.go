@@ -46,7 +46,7 @@ func Login(c *gin.Context) {
 	accessToken, refreshToken, err := user.GetAuthToken()
 	if err == nil { //여기서 토큰을 쿠키에 붙인다.
 		c.SetCookie("access-token", accessToken, 900, "", "", false, true)
-		c.SetCookie("refresh-token", refreshToken, 86400, "", "",false, true)
+		c.SetCookie("refresh-token", refreshToken, 86400, "", "", false, true)
 		//https 사용시 refresh-token 의 secure -> true 로 변경한다.
 
 		c.JSON(http.StatusOK, gin.H{

@@ -287,8 +287,8 @@
                                 <th>연락처</th>
                                 <th>소속</th>
                                 <th>직급</th>
-                                <th>태그</th>
                                 <th>등록일</th>
+                                <th>태그</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -564,7 +564,7 @@
         $('#btn_export').click(function () {
             const tag_no = $('#tag_selector2').val();
             const r = new XMLHttpRequest();
-            r.open('GET', 'http://localhost:5000/target/exportTarget?tag_no=' + tag_no, true);
+            r.open('GET', 'http://localhost:5000/api/target/exportTarget?tag_no=' + tag_no, true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             let fileName = null; //if you have the fileName header available
             r.withCredentials = true;
@@ -577,7 +577,7 @@
                             var contentDisposition = r.getResponseHeader("content-disposition");
                             fileName = contentDisposition.substring(contentDisposition.indexOf("=") + 1);
                         } else {
-                            fileName = "unnamed.xlsx";
+                            fileName = "Registered_Targets.xlsx";
                         }
 
                         console.log(fileName);
@@ -593,24 +593,24 @@
         });
         $('#excelDownload').click(function () {
             const r = new XMLHttpRequest();
-            r.open('GET', 'http://localhost:5000/target/downloadExcel', true);
+            r.open('GET', 'http://localhost:5000/api/target/downloadExcel', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             let fileName = null; //if you have the fileName header available
             r.withCredentials = true;
-            r.responseType = "blob";
+            r.responseType = "blob"; // 받을 파일의 타입을 blob으로 정의한다.
             r.onreadystatechange = function () {
                 if (r.readyState === 4) {
                     if (r.status === 200) {
-                        const blob = r.response;
+                        const blob = r.response; //서버에서 받아온 데이터를 여기에 집어넣는다.
                         if (r.getResponseHeader("content-disposition")) {
-                            var contentDisposition = r.getResponseHeader("content-disposition");
+                            let contentDisposition = r.getResponseHeader("content-disposition");
                             fileName = contentDisposition.substring(contentDisposition.indexOf("=") + 1);
                         } else {
-                            fileName = "unnamed.xlsx";
+                            fileName = "Target.xlsx";
                         }
                         console.log(fileName);
-                        const link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a'); // a라는 html 객체를 생성하고
+                        link.href = window.URL.createObjectURL(blob); //그 안에다 다운로드할 파일의 내용을 집어넣는다.
                         link.download = fileName;
                         link.click();
                     }
@@ -629,7 +629,7 @@
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: "http://localhost:5000/target/importTargets",
+                    url: "http://localhost:5000/api/target/importTargets",
                     data: data,
                     processData: false,
                     contentType: false,
@@ -643,7 +643,8 @@
                         alert('전송이 완료되었습니다.');
                         location.reload();
                     },
-                    error: function () {
+                    error: function (result) {
+                        console.log("ERROR : ", result.data);
                         alert('파일을 확인해주세요');
                     }
                 });
@@ -653,6 +654,7 @@
     });
 
     // CheckLogin();
+    GetDashBoard();
     GetTarget(1);
 </script>
 </body>

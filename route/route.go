@@ -17,7 +17,6 @@ func RegisterRoute(r *gin.Engine) {
 
 	r.Use(middleware.DBMiddleware(*conn))
 	r.Use(middleware.SetHeader)
-
 	apiV1 := r.Group("/api")
 	{
 		apiV1.GET("/Time", api.Time)
@@ -57,19 +56,22 @@ func RegisterRoute(r *gin.Engine) {
 		//apiV2.GET("/bookingProjectList", api.BookingProjectList)
 	}
 
+	r.LoadHTMLGlob("./ui/html/target/*")
 	target := apiV1.Group("/target")
 	target.Use(middleware.TokenAuthMiddleWare())
+	target.Static("/files", "C:/Users/Taeho/go/src/redteam")
 	{
 		//localhost:5000/api/target/getTarget
 
 		target.GET("/getTarget", api.GetTarget)
 		target.POST("/delTarget", api.DeleteTarget)
 		target.POST("/regTarget", api.RegTarget)
-		//target.GET("/exportTarget", api.ExportTarget)
+		target.GET("/exportTarget", api.ExportTarget)
 		//target.POST("/delTag", api.DeleteTag)
 		//target.POST("/regTag", api.RegTag)
-		target.GET("downloadExcel", api.DownloadExcel)
-		//target.POST("importTargets", api.ImportTargets)
+
+		target.GET("/downloadExcel", api.DownloadExcel)
+		target.POST("/importTargets", api.ImportTargets)
 	}
 
 	r.Run(":5000")

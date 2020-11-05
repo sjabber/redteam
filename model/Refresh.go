@@ -7,7 +7,7 @@ import (
 )
 
 // Refresh 토큰을 검사하는데 사용할 메서드
-//  Login.go 의 IsTokenValid 와 반환값 빼고는 동일함.
+// Login.go 의 IsTokenValid 와 반환값 빼고는 동일함.
 func RefreshTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
