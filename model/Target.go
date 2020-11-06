@@ -196,7 +196,7 @@ func ExportTargets(num int) error {
 		f.SetCellValue("Sheet1", "B"+str, tg.TargetEmail)
 		f.SetCellValue("Sheet1", "C"+str, tg.TargetPhone)
 		f.SetCellValue("Sheet1", "D"+str, tg.TargetOrganize)
-		f.SetCellValue("Sheet1", "E"+str, tg.TargetPhone)
+		f.SetCellValue("Sheet1", "E"+str, tg.TargetPosition)
 		f.SetCellValue("Sheet1", "F"+str, tg.TargetTag)
 		f.SetCellValue("Sheet1", "G"+str, tg.TargetCreateTime)
 
