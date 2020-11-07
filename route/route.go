@@ -67,8 +67,8 @@ func RegisterRoute(r *gin.Engine) {
 		target.POST("/delTarget", api.DeleteTarget)
 		target.POST("/regTarget", api.RegTarget)
 		target.GET("/exportTarget", api.ExportTarget)
-		//target.POST("/delTag", api.DeleteTag)
-		//target.POST("/regTag", api.RegTag)
+		target.POST("/delTag", api.DeleteTag)
+		target.POST("/regTag", api.RegTag)
 
 		target.GET("/downloadExcel", api.DownloadExcel)
 		target.POST("/importTargets", api.ImportTargets)

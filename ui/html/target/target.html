@@ -383,6 +383,8 @@
                     }
 
 
+                } else if (r.status === 403) {
+                    Refresh();
                 } else {
                     document.location.href = "../index.html";
                 }
@@ -393,18 +395,23 @@
 
     function deleteTag(tagNo) {
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/target/delTag', true);
+        r.open('POST', 'http://localhost:5000/api/target/delTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
                 if (r.status === 200) {
+                    alert('태그가 삭제되었습니다.');
+                    document.location.reload();
+
                     $('#tag_' + tagNo).remove();
                 } else {
                     document.location.href = "../index.html";
                 }
             }
         };
+
+        console.log(tagNo);
         r.send(JSON.stringify({"tag_no": tagNo}));
     }
 
@@ -492,6 +499,7 @@
                         }
                     };
                     console.log({target_list: tdArr})
+                    console.log(tdArr[0])
                     r.send(JSON.stringify({target_list: tdArr}))
                 } else {
                     alert("삭제할 대상을 선택해주세요.")
@@ -502,22 +510,25 @@
 
         $('#tag_reg').click(function () {
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://localhost:5000/target/regTag', true);
+            r.open('POST', 'http://localhost:5000/api/target/regTag', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
                 let rObj;
                 if (r.readyState === 4) {
                     if (r.status === 200) {
-                        rObj = JSON.parse(r.responseText);
+                        alert('태그가 등록되었습니다.');
+                        document.location.reload();
 
-                        $('#tag_menage >tbody').append("<tr id='tag_" + rObj.tags.tag_no + "'>" +
+                        rObj = JSON.parse(r.responseText);
+                        $('#tag_menage > tbody').append("<tr id='tag_" + rObj.tags.tag_no + "'>" +
                             "                        <td>" + rObj.tags.tag_name + "</td>\n" +
                             "                        <td>" + rObj.tags.created_t + "</td>\n" +
                             "                        <td>\n" +
                             "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags.tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
                             "                        </td>\n" +
                             "                        </tr>");
+
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);

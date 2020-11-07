@@ -16,7 +16,6 @@ import (
 func RegTarget(c *gin.Context) {
 	// interface{} -> int 로 형변환하여 num 에 저장한다.
 	// num (계정번호) => 등록한 정보를 관리자 번호로 관리하기 위해 사용함.
-
 	num := c.Keys["number"].(int)
 
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
@@ -24,6 +23,7 @@ func RegTarget(c *gin.Context) {
 
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
+
 	err := target.CreateTarget(&conn, num)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
@@ -36,25 +36,28 @@ func GetTarget(c *gin.Context) {
 	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
 	num := c.Keys["number"].(int)
 
-
-	target, err := model.ReadTarget(num) //DB에 저장된 대상들을 읽어오는 메서드
+	target, tag, err := model.ReadTarget(num) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"targets": target, "register_account": c.Keys["email"]})
+	c.JSON(http.StatusOK, gin.H{"targets": target, "tags": tag, "register_account": c.Keys["email"]})
 }
 
 // 헤더를 먼저 정의한다음 파일 다운로드 메서드를 이용하여 파일을 다운로드받도록 한다.
 func DeleteTarget(c *gin.Context) {
+
 	// num (계정번호) => 해당 계정에 속한 정보들만 삭제할 수 있다.
 	num := c.Keys["number"].(int)
 
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
-	target := model.Target{}
+	//JSON 이 아닌 배열로 받아온다.
+
+	target := model.TargetNumber{}
 	c.ShouldBindJSON(&target)
+
 	err := target.DeleteTarget(&conn, num)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"target_deleting_error": err.Error()})
@@ -102,7 +105,7 @@ func ImportTargets(c *gin.Context) {
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트로부터 다운로드받을 파일을 하나 만든다.)
 	// 현재는 컴퓨터의 다운로드파일로 업로드 받는다.
-	uploadPath := "C:/Users/Taeho/go/src/redteam/Spreadsheet/" + filename + str
+	uploadPath := "./Spreadsheet/" + filename + str
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
@@ -129,7 +132,7 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("C:/Users/Taeho/go/src/redteam/Spreadsheet/" + filename + str)
+	err2 := os.Remove("./Spreadsheet/" + filename + str)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
@@ -153,7 +156,7 @@ func ExportTarget(c *gin.Context) {
 	str := strconv.Itoa(num)
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
 	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
-	destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets" + str + ".xlsx"
+	destFile := "./Spreadsheet/Registered_Targets" + str + ".xlsx"
 	//destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
@@ -165,10 +168,41 @@ func ExportTarget(c *gin.Context) {
 
 	// 사용자가 파일을 다운로드받으면 생성한 파일은 다시 지운다.
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정)
-	err3 := os.Remove("C:/Users/Taeho/go/src/redteam/Spreadsheet/Registered_Targets" + str + ".xlsx")
+	err3 := os.Remove("./Spreadsheet/Registered_Targets" + str + ".xlsx")
 	if err3 != nil {
 		//현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 		panic(err3)
 	}
 	os.Clearenv()
+}
+
+func RegTag(c *gin.Context) {
+
+	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
+	conn := db.(sql.DB)
+
+	tag := model.Tag{}
+	c.ShouldBindJSON(&tag)
+	err := tag.CreateTag(&conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"registering_success, register_account" : c.Keys["email"]})
+	}
+
+}
+
+func DeleteTag(c *gin.Context) {
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+
+	tag := model.Tag{}
+	c.ShouldBindJSON(&tag)
+
+	err := tag.DeleteTag(&conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"tag_deleting_error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account" : c.Keys["email"]})
+	}
 }
