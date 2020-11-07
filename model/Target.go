@@ -18,7 +18,7 @@ type Target struct {
 	TargetPosition   string `json:"tg_position"` //직급
 	TargetTag		 string `json:"tg_tag"`      //태그
 	TargetCreateTime string `json:"created_t"`
-	TagNo			 int 	`json:"tag_no"`
+	TagNo			 string	`json:"tag_no"`
 }
 
 // 삭제할 Target(훈련대상)의 시퀀스 넘버를 프론트엔드로 부터 받아오기 위한 변수
@@ -58,7 +58,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 
 	TagName := conn.QueryRow("SELECT tag_name FROM tag_info WHERE tag_no = $1", t.TagNo)
 	errs := TagName.Scan(&t.TargetTag)
-	if t.TagNo == 0 {
+	if t.TagNo == "" {
 		t.TargetTag = "Null"
 	} else if errs != nil{
 		fmt.Println(errs)
