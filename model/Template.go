@@ -8,13 +8,13 @@ import (
 )
 
 type Template struct {
-	TmpNo        int	`json:"tmp_no"`
-	UserNo       int	`json:"user_no"`		   // 사용자(사원) 번호
+	TmpNo int `json:"tmp_no"`
+	//UserNo       int	`json:"user_no"`		   // 사용자(사원) 번호
 	Division     string `json:"division"`      // 구분
-	Kind 		 string `json:"kind"` // 훈련유형
+	Kind         string `json:"kind"`          // 훈련유형
 	FileInfo     string `json:"file_info"`     // 첨부파일 정보
-	TmpName      string `json:"tmp_name"`	   // 템플릿 이름
-	MailTitle    string `json:"mail_title"`	   // 메일 제목
+	TmpName      string `json:"tmp_name"`      // 템플릿 이름
+	MailTitle    string `json:"mail_title"`    // 메일 제목
 	SenderName   string `json:"sender_name"`   // 보낸 사람
 	DownloadType string `json:"download_type"` // 다운로드 파일 타입
 }
@@ -31,10 +31,11 @@ func (t *Template) Create(conn *sql.DB, userID string) error {
 		" VALUES ($1, $2, $3, $4, $5, $6, $7, $8)" +
 		" RETURNING tmp_no, user_no"
 
-	row := conn.QueryRow(query, t.UserNo, t.Division, t.Kind, t.FileInfo, t.TmpName,
+	row := conn.QueryRow(query, //t.UserNo,
+		t.Division, t.Kind, t.FileInfo, t.TmpName,
 		t.MailTitle, userID, t.DownloadType)
 
-	err := row.Scan(&t.TmpNo, &t.UserNo)
+	err := row.Scan(&t.TmpNo)//&t.UserNo
 
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +54,7 @@ func ReadAll() ([]Template, error) {
 	}
 	//defer db.Close()
 
-	query := "SELECT tmp_no, user_no, tmp_division, tmp_kind, file_info, tmp_name," +
+	query := "SELECT tmp_no, tmp_division, tmp_kind, file_info, tmp_name," +
 		" mail_title, sender_name, download_type FROM template_info"
 
 	rows, err := db.Query(query)
@@ -66,7 +67,7 @@ func ReadAll() ([]Template, error) {
 	var templates []Template
 	for rows.Next() {
 		tmp := Template{}
-		err = rows.Scan(&tmp.TmpNo, &tmp.UserNo, &tmp.Division, &tmp.Kind,
+		err = rows.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind,
 			&tmp.FileInfo, &tmp.TmpName, &tmp.MailTitle, &tmp.SenderName,
 			&tmp.DownloadType)
 
@@ -84,12 +85,12 @@ func ReadAll() ([]Template, error) {
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
 func (t *Template) Update(conn *sql.DB) error {
 	str := string(t.TmpNo) // int -> string 형변환
-	if str == ""  {
+	if str == "" {
 		return fmt.Errorf("수정할 템플릿 번호를 입력해 주세요. ")
 	}
 	now := time.Now()
-	_, err := conn.Exec("UPDATE template_info SET tmp_division=$1, tmp_kind=$2," +
-		"file_info=$3, tmp_name=$4, mail_title=$5, sender_name=$6, download_type=$7, modify_t=$8 " +
+	_, err := conn.Exec("UPDATE template_info SET tmp_division=$1, tmp_kind=$2,"+
+		"file_info=$3, tmp_name=$4, mail_title=$5, sender_name=$6, download_type=$7, modify_t=$8 "+
 		"WHERE tmp_no = $9", t.Division, t.Kind, t.FileInfo,
 		t.TmpName, t.MailTitle, t.SenderName, t.DownloadType, now, t.TmpNo)
 
@@ -127,7 +128,3 @@ func (t *Template) DeleteAll(conn *sql.DB) error {
 	return nil
 
 }
-
-
-
-

@@ -16,9 +16,9 @@ type Target struct {
 	TargetPhone      string `json:"tg_phone"`
 	TargetOrganize   string `json:"tg_organize"` //소속
 	TargetPosition   string `json:"tg_position"` //직급
-	TargetTag		 string `json:"tg_tag"`      //태그
+	TargetTag        string `json:"tg_tag"`      //태그
 	TargetCreateTime string `json:"created_t"`
-	TagNo			 string	`json:"tag_no"`
+	TagNo            string `json:"tag_no"`
 }
 
 // 삭제할 Target(훈련대상)의 시퀀스 넘버를 프론트엔드로 부터 받아오기 위한 변수
@@ -27,9 +27,9 @@ type TargetNumber struct {
 }
 
 type Tag struct {
-	TagNo			int 	`json:"tag_no"`
-	TagName			string	`json:"tag_name"`
-	TagCreateTime	string	`json:"created_t"`
+	TagNo         int    `json:"tag_no"`
+	TagName       string `json:"tag_name"`
+	TagCreateTime string `json:"created_t"`
 }
 
 func (t *Target) CreateTarget(conn *sql.DB, num int) error {
@@ -60,7 +60,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 	errs := TagName.Scan(&t.TargetTag)
 	if t.TagNo == "" {
 		t.TargetTag = "Null"
-	} else if errs != nil{
+	} else if errs != nil {
 		fmt.Println(errs)
 		return fmt.Errorf("Tag's name Inquirying error. ")
 	}
@@ -77,8 +77,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 	}
 
 	return nil
-	}
-
+}
 
 // todo 보완필요!!! -> 현재 이름, 이메일, 태그 중 하나라도 값이 없으면 리스트목록에 뜨지않는 오류가 존재한다. 태그값이 없어도 표시되도록 해야함.
 func ReadTarget(num int) ([]Target, []Tag, error) {
@@ -87,9 +86,21 @@ func ReadTarget(num int) ([]Target, []Tag, error) {
 		return nil, nil, fmt.Errorf("데이터베이스 연결 오류")
 	}
 
-	query := "SELECT target_name, target_email, target_phone, target_organize, target_position, target_tag, modified_time, target_no FROM target_info WHERE user_no = $1 ORDER BY target_no asc "
+	//query := "SELECT target_name, target_email, target_phone, target_organize, target_position, target_tag, modified_time, target_no FROM target_info WHERE user_no = $1 ORDER BY target_no asc "
 	// ROW_NUMBER() over (ORDER BY target_no) RNUM FROM target_info WHERE user_no = $1 ORDER BY target_no asc
-
+	query := `
+SELECT target_name,
+    target_email,
+    target_phone,
+    target_organize,
+    target_position,
+    target_tag,
+    modified_time,
+    target_no
+FROM target_info
+WHERE user_no = $1
+ORDER BY target_no ASC
+`
 	rows, err := db.Query(query, num)
 	if err != nil {
 		fmt.Println(err)
@@ -112,7 +123,7 @@ func ReadTarget(num int) ([]Target, []Tag, error) {
 
 	query2 := "SELECT tag_no, tag_name, modify_t FROM tag_info ORDER BY tag_no asc"
 	tags, err2 := db.Query(query2)
-	if err2 != nil{
+	if err2 != nil {
 		fmt.Println(err2)
 		return nil, nil, fmt.Errorf("Tag query error. ")
 	}
@@ -155,13 +166,13 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정, api_Target.go 파일의 todo 2 참고)
-	f, err := excelize.OpenFile("C:/Users/Taeho/go/src/redteam/Spreadsheet/"+ str)
+	f, err := excelize.OpenFile(str)
 	if err != nil {
 		fmt.Println(err)
 		return nil
 	}
 
-	i  := 2
+	i := 2
 
 	for {
 		str := strconv.Itoa(i)
@@ -171,7 +182,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 		t.TargetPhone = f.GetCellValue("Sheet1", "C"+str)
 		t.TargetOrganize = f.GetCellValue("Sheet1", "D"+str)
 		t.TargetPosition = f.GetCellValue("Sheet1", "E"+str)
-		t.TargetTag	= f.GetCellValue("Sheet1", "F"+str)
+		t.TargetTag = f.GetCellValue("Sheet1", "F"+str)
 
 		if t.TargetName == "" {
 			break
@@ -209,11 +220,10 @@ func ExportTargets(num int) error {
 		return fmt.Errorf("Database error. ")
 	}
 
-
-	i  := 2
+	i := 2
 	// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 	// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
-	f, err := excelize.OpenFile("C:/Users/Taeho/go/src/redteam/Spreadsheet/sample.xlsx")
+	f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 	if err != nil {
 		fmt.Println(err)
 		return fmt.Errorf("Open Spreadsheet Error. ")
@@ -224,13 +234,13 @@ func ExportTargets(num int) error {
 	for rows.Next() {
 		tg := Target{}
 		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
-			&tg.TargetPosition, &tg.TargetTag , &tg.TargetCreateTime)
+			&tg.TargetPosition, &tg.TargetTag, &tg.TargetCreateTime)
 		if err != nil {
 			fmt.Printf("Targets scanning error : %v", err)
 			continue
 		}
 
-		if len(tg.TargetTag) < 1{
+		if len(tg.TargetTag) < 1 {
 			tg.TargetTag = "Null"
 		}
 

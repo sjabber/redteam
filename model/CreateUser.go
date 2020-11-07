@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	tokenSecret = []byte(os.Getenv("TOKEN_SECRET"))
+	tokenSecret  = []byte(os.Getenv("TOKEN_SECRET"))
 	tokenRefresh = []byte(os.Getenv("TOKEN_REFRESH"))
 )
 
@@ -26,7 +26,7 @@ func (u *User) CreateUsers() (int, error) {
 	defer db.Close()
 
 	// 셋중 아무것도 입력하지 않았을 경우
-	if len(u.Password) < 1 || len(u.PasswordCheck) < 1 || len(u.Email) < 1 || len(u.Name) < 1{
+	if len(u.Password) < 1 || len(u.PasswordCheck) < 1 || len(u.Email) < 1 || len(u.Name) < 1 {
 		num = 0
 		return num, fmt.Errorf(" 정보를 입력해 주세요. ")
 	}
@@ -66,7 +66,7 @@ func (u *User) CreateUsers() (int, error) {
 		return num, fmt.Errorf(" 비밀번호가 일치하지 않습니다. ")
 	}
 
-		//사용자가 보낸 이메일을 모두 소문자로 변경한다.
+	//사용자가 보낸 이메일을 모두 소문자로 변경한다.
 	u.Email = strings.ToLower(u.Email)
 
 	query := "SELECT user_email FROM user_info WHERE user_email = $1"
@@ -87,14 +87,14 @@ func (u *User) CreateUsers() (int, error) {
 	}
 	u.PasswordHash = string(pwdHash)
 
-	_, err = db.Exec("INSERT INTO user_info " +
-		"(user_name, user_email, user_pw, user_pw_hash, created_time) " +
+	_, err = db.Exec("INSERT INTO user_info "+
+		"(user_name, user_email, user_pw, user_pw_hash, created_time) "+
 		"VALUES($1, $2, $3, $4, $5)", u.Name, u.Email, u.Password, u.PasswordHash, time.Now())
 
 	return num, err
 }
 
- // 비밀번호 형식을 검사하는 메서드
+// 비밀번호 형식을 검사하는 메서드
 func CheckPassword(pw string) error {
 	if len(pw) < 8 {
 		return fmt.Errorf(" 비밀번호는 적어도 8글자 이상이어야 합니다. ")

@@ -28,7 +28,7 @@ func RegTarget(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"target_registration_error, register_account" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"target_registration_error, register_account": c.Keys["email"]})
 	}
 }
 
@@ -62,7 +62,7 @@ func DeleteTarget(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"target_deleting_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}
 }
 
@@ -74,7 +74,7 @@ func DownloadExcel(c *gin.Context) {
 
 	// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
 	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
-	destFile := "C:/Users/Taeho/go/src/redteam/Spreadsheet/sample.xlsx"
+	destFile := "./Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
 		c.String(http.StatusOK, "%v", err)
@@ -111,7 +111,7 @@ func ImportTargets(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
 		return
 	} else {
-		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename +str))
+		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename+str))
 	} // 파일 전송이 완료됨.
 
 	/////////////////아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.////////////////////////////
@@ -121,13 +121,12 @@ func ImportTargets(c *gin.Context) {
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
-
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
-	err = target.ImportTargets(&conn, filename, num)
+	err = target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Batch registration error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"Batch registration success" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"Batch registration success": c.Keys["email"]})
 	}
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
@@ -187,7 +186,7 @@ func RegTag(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"registering_success, register_account" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
 	}
 
 }
@@ -203,6 +202,6 @@ func DeleteTag(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"tag_deleting_error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account" : c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}
 }
