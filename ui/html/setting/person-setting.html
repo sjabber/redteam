@@ -160,7 +160,7 @@
 <script type="text/javascript">
     function GetUserSetting() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/userSetting', true);
+        r.open('GET', 'http://localhost:5001/setting/userSetting', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -180,7 +180,7 @@
         };
         r.send();
     }
-    CheckLogin();
+    // CheckLogin();
     GetUserSetting();
 
     function SetUserSetting() {
@@ -198,8 +198,8 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/userSetting', true);
-        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.open('POST', 'http://localhost:5001/setting/userSetting', true);
+        r.setRequestHeader("Content-Type", "application/json");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {

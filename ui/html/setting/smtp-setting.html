@@ -179,7 +179,7 @@
 <script type="text/javascript">
     function GetSmtpSetting() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/smtpSetting', true);
+        r.open('GET', 'http://localhost:5001/setting/smtpSetting', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -203,7 +203,7 @@
         r.send();
     }
 
-    CheckLogin();
+    // CheckLogin();
     GetSmtpSetting();
 
     function SetSmtpSetting() {
@@ -225,8 +225,8 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/smtpSetting', true);
-        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.open('POST', 'http://localhost:5001/setting/smtpSetting', true);
+        r.setRequestHeader("Content-Type", "application/json");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
@@ -263,8 +263,8 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/smtpConnectCheck', true);
-        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.open('POST', 'http://localhost:5001/setting/smtpConnectCheck', true);
+        r.setRequestHeader("Content-Type", "application/json");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
@@ -299,7 +299,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/smtpSendTest', true);
+        r.open('POST', 'http://localhost:5001/setting/smtpSendTest', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
