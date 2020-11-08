@@ -3,3 +3,10 @@
 #백엔드
 김민석
 김태호
+김광채
+
+
+
+java spring-framework 실행 방법
+
+java -Xmx100m -jar spring.jar
