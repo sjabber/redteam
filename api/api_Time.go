@@ -26,7 +26,7 @@ func Time(c *gin.Context) {
 	query := "SELECT now()"
 	err = db.QueryRow(query).Scan(&time)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "db connection error")
+		c.JSON(http.StatusNotImplemented, "db connection error")
 		return
 	}
 

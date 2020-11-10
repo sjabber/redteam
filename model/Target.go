@@ -17,7 +17,7 @@ type Target struct {
 	TargetOrganize   string `json:"tg_organize"` //소속
 	TargetPosition   string `json:"tg_position"` //직급
 	TargetTag        string `json:"tg_tag"`      //태그
-	TargetCreateTime string `json:"created_t"`
+	TargetCreateTime string `json:"created_time"`
 	TagNo            string `json:"tag_no"`
 }
 
@@ -83,10 +83,9 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 func ReadTarget(num int) ([]Target, []Tag, error) {
 	db, err := ConnectDB()
 	if err != nil {
-		return nil, nil, fmt.Errorf("데이터베이스 연결 오류")
+		return nil, nil, fmt.Errorf("DB connection error")
 	}
 
-	//query := "SELECT target_name, target_email, target_phone, target_organize, target_position, target_tag, modified_time, target_no FROM target_info WHERE user_no = $1 ORDER BY target_no asc "
 	// ROW_NUMBER() over (ORDER BY target_no) RNUM FROM target_info WHERE user_no = $1 ORDER BY target_no asc
 	query := `
 SELECT target_name,
@@ -121,7 +120,7 @@ ORDER BY target_no ASC
 		targets = append(targets, tg)
 	}
 
-	query2 := "SELECT tag_no, tag_name, modify_t FROM tag_info ORDER BY tag_no asc"
+	query2 := "SELECT tag_no, tag_name, modified_time FROM tag_info ORDER BY tag_no asc"
 	tags, err2 := db.Query(query2)
 	if err2 != nil {
 		fmt.Println(err2)
@@ -165,7 +164,7 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 // 반복해서 읽고 값을 넣는것을 메서드로 구현하고 API는 이걸 그냥 사용하기만 하면됨.
 func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 
-	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정, api_Target.go 파일의 todo 2 참고)
+	// str -> 일괄등록하기 위한 업로드 경로가 담기는 변수
 	f, err := excelize.OpenFile(str)
 	if err != nil {
 		fmt.Println(err)
@@ -191,6 +190,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 		}
 
 		//	todo 4 : 추후 해당 목록에 적힌 글들의 값이 올바른 형식이 아닐경우 제외하도록 하는 코드도 삽입한다. -> 정규식 사용.
+
 		query := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position, target_tag, user_no) " +
 			"VALUES ($1, $2, $3, $4, $5, $6, $7)" +
 			"RETURNING target_no"
@@ -223,6 +223,7 @@ func ExportTargets(num int) error {
 	i := 2
 	// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 	// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
+	// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 	f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 	if err != nil {
 		fmt.Println(err)

@@ -23,7 +23,8 @@ type Template struct {
 func (t *Template) Create(conn *sql.DB, userID string) error {
 	t.TmpName = strings.Trim(t.TmpName, " ")
 	if len(t.TmpName) < 1 {
-		return fmt.Errorf("템플릿 이름이 비어있습니다. ")
+		return fmt.Errorf("The template name is empty. ")
+		// 템플릿 이름이 비어있습니다.
 	}
 
 	query := "INSERT INTO template_info (user_no, tmp_division, tmp_kind, file_info," +
@@ -38,19 +39,23 @@ func (t *Template) Create(conn *sql.DB, userID string) error {
 	err := row.Scan(&t.TmpNo)//&t.UserNo
 
 	if err != nil {
-		fmt.Println(err)
-		return fmt.Errorf("템플릿 생성도중 오류가 발생하였습니다. ")
+		return fmt.Errorf("An error occurred while creating the template. ")
+		// 템플릿을 생성하던 중에 오류가 발생하였습니다.
 	}
 
 	return nil
 }
 
-//템플릿 조회 메서드, 템플릿 테이블(template_info)의 모든 템플릿을 조회한다.
-func ReadAll() ([]Template, error) {
+// 템플릿 조회 메서드, 템플릿 테이블(template_info)의 모든 템플릿을 조회한다.
+// 여기서 유일하게 솔루션을 사용하는 사용자들이 사용하게 되는 매서드
+// 사용자들을 위해 http status를 정의한다.
+func ReadAll() ([]Template, error, int) {
 
+	num := 200
 	db, err := ConnectDB()
 	if err != nil {
-		return nil, fmt.Errorf("데이터베이스 연결 오류")
+		return nil, fmt.Errorf("DB connecting error. "), num
+		// DB를 연결하던 중에 오류가 발생하였습니다.
 	}
 	//defer db.Close()
 
@@ -60,8 +65,9 @@ func ReadAll() ([]Template, error) {
 	rows, err := db.Query(query)
 
 	if err != nil {
-		fmt.Println(err)
-		return nil, fmt.Errorf("템플릿을 읽어오는데 오류가 발생하였습니다. ")
+		// 템플릿을 DB 로부터 읽어오는데 오류가 발생.
+		num = 401
+		return nil, fmt.Errorf("There was an error reading the template. "), num
 	}
 
 	var templates []Template
@@ -72,21 +78,22 @@ func ReadAll() ([]Template, error) {
 			&tmp.DownloadType)
 
 		if err != nil {
-			fmt.Printf("템플릿 스캐닝 오류 : %v", err)
-			continue
+			// 읽어온 정보를 바인딩하는데 오류가 발생.
+			num = 402
+			return nil, fmt.Errorf("Template scanning error : %v ", err), num
 		}
 		templates = append(templates, tmp)
 		// 읽어들인 값들을 전부 template 배열에 넣은 후에 반환하여 보여준다.
 	}
 
-	return templates, nil
+	return templates, nil, num
 }
 
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
 func (t *Template) Update(conn *sql.DB) error {
 	str := string(t.TmpNo) // int -> string 형변환
 	if str == "" {
-		return fmt.Errorf("수정할 템플릿 번호를 입력해 주세요. ")
+		return fmt.Errorf("Please enter the template number to be modified. ")
 	}
 	now := time.Now()
 	_, err := conn.Exec("UPDATE template_info SET tmp_division=$1, tmp_kind=$2,"+
@@ -95,8 +102,8 @@ func (t *Template) Update(conn *sql.DB) error {
 		t.TmpName, t.MailTitle, t.SenderName, t.DownloadType, now, t.TmpNo)
 
 	if err != nil {
-		fmt.Printf("Error updating template: (%v)", err)
 		return fmt.Errorf("Error updating template ")
+		// 템플릿 업데이트 오류
 	}
 
 	return nil
@@ -106,7 +113,8 @@ func (t *Template) Update(conn *sql.DB) error {
 func (t *Template) Delete(conn *sql.DB) error {
 	str := string(t.TmpNo) // int -> string 형변환
 	if str == "" {
-		return fmt.Errorf("삭제할 템플릿 번호를 입력해 주세요. ")
+		return fmt.Errorf("Please enter the template number to be deleted. ")
+		// 삭제할 템플릿 번호를 입력해주세요.
 	}
 	_, err := conn.Exec("DELETE ROWS FROM template_info WHERE tmp_no = $1", t.TmpNo)
 	if err != nil {

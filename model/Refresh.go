@@ -32,7 +32,7 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 		}
 		return true, user
 	} else {
-		fmt.Println("The alg header %v \n", claims["alg"])
+		fmt.Errorf("The alg header %v \n", claims["alg"])
 		fmt.Println(err)
 		return false, User{}
 	}

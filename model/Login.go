@@ -1,11 +1,12 @@
 package model
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 	"time"
-
-	"log"
 )
 
 type User struct {
@@ -13,37 +14,23 @@ type User struct {
 	Email           string `json:"email"`
 	PasswordHash    string `json:"-"`
 	Password        string `json:"password"`
-	PasswordCheck string `json:"password_check"`
+	PasswordCheck 	string `json:"password_check"` //회원가입에서 사용된다.
 	Name            string `json:"name"`
 }
 
 
-// 자바에서 클래스 선언할때 변수들 public, private 그 밑에 메서드
-// 한 클래스안에 들어가야 메서드
+// Go는 메서드, 변수 이름이 대문자로 시작 -> public, 소문자로 시작 -> private
 // User를 클래스로 보면 login()이 User의 메서드로 작용하는 느낌이다.
-// 디비와 커넥션을 해서 로그인을 확인하는 로직을 구현
-func (u *User) Login() (int, error) {
-	// 경우(case)를 나눈다.
-	// num == 0 -> 로그인 성공
-	// num == 1 -> 로그인 실패
-	num := 0
-	db, err := ConnectDB()
-	if err != nil {
-		return num, fmt.Errorf("db connection error")
-	}
-	defer db.Close()
+// 디비와 커넥션을 해서 로그인을 확인하는 로직 샘플
+//	db, err := ConnectDB()
+//	if err != nil {
+//		return num, fmt.Errorf("db connection error")
+//	}
+//	defer db.Close()
+//
+//	query := "select user_no, user_name from user_info where user_email=$1"
+//	err = db.QueryRow(query, u.Email).Scan(&u.UserNo, &u.Name) //쿼리의 내용을 err 에 저장
 
-	query := "select user_no, user_name from user_info where user_email=$1 and user_pw=$2"
-	err = db.QueryRow(query, u.Email, u.Password).Scan(&u.UserNo, &u.Name) //쿼리의 내용을 err 에 저장
-
-	if err == nil {
-		log.Println("login true")
-		return num, nil
-	} else {
-		num = 1 //로그인에 실패했으므로 num은 1이 된다.
-		return num, fmt.Errorf("login fail")
-	}
-}
 
 // JWT 토큰을 반환해 주는 메서드
 func (u *User) GetAuthToken() (string, string, error) {
@@ -70,22 +57,29 @@ func (u *User) GetAuthToken() (string, string, error) {
 
 
 // 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
-//func (u *User) IsAuthenticated(conn *sql.DB) error {
-//	row := conn.QueryRowContext(context.Background(), "SELECT user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
-//	err := row.Scan(&u.PasswordHash)
-//
-//	if err == pgx.ErrNoRows {
-//		fmt.Println("해당 계정이 존재하지 않습니다.")
-//		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
-//	}
-//
-//	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
-//	if err != nil {
-//		return fmt.Errorf("로그인 자격증명이 올바르지 않습니다. ")
-//	}
-//
-//	return nil
-//}
+func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
+	num := 200 // 기본적으로 200 (StatusOk의 값을 넣어놓는다.)
+
+	if u.Email == "" || u.Password == "" {
+		num = 400 // 아이디나 패스워드를 입력하지 않은경우.
+		return fmt.Errorf("Please enter your account information. "), num
+	}
+
+	row := conn.QueryRowContext(context.Background(), "SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
+	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
+	if err != nil || u.UserNo == 0 || u.Name == "" {
+		num = 401 // 일치하는 계정이 존재하지 않을 경우.
+		return fmt.Errorf("this account does not exist. "), num
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
+	if err != nil {
+		num = 402 // 패스워드가 일치하지 않을경우.
+		return fmt.Errorf("The password is incorrect. "), num
+	}
+
+	return nil, num
+}
 
 // 토큰이 유효한지 검사하는 메서드
 // 미들웨어의 TokenAuthMiddleWare() 에서 사용된다.
@@ -96,15 +90,14 @@ func IsTokenValid(tokenString string) (bool, User) {
 			return nil, fmt.Errorf("unexpected signing method : %v",
 				token.Header["alg"])
 			// HMAC 을 사용하는 이유
-			// REST API(표현상태 전송 API)가 요청을 받았을 때,
-			// 이 요청이 신뢰할 수 있는 호출인지 확인하는 기법으로
-			// 요청이 부적절한지 정상적인지 확인할 수 있다.
+			// REST API(표현상태 전송 API)가 요청을 받았을 때, 이 요청이 신뢰할 수 있는 호출인지
+			// 확인하는 기법으로 요청이 부적절한지 정상적인지 확인할 수 있다.
 		}
 		return tokenSecret, nil
 	})
 
 	if err != nil {
-		fmt.Printf("에러내용 %v \n", err)
+		fmt.Errorf("Error content : %v \n", err)
 		return false, User{}
 	}
 
