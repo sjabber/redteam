@@ -8,8 +8,8 @@
   <title>REDTEAM | 완료 프로젝트</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
   <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
-  <link rel="stylesheet" href="../public/css/sport.min.css" type="text/css">
-  <link rel="stylesheet" href="../public/css/choices.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 </head>
@@ -18,7 +18,7 @@
 <!--네이게이터-->
 <div class="sidebar">
   <div class="sidebar-header"><a href="#">
-    <img src="../public/image/intro_icon.png" style="max-width: 80%; height: auto;">
+    <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
   </a>
     <div class="sidebar-control"><i class="la la-navicon"></i></div>
   </div>
@@ -31,10 +31,10 @@
       </a>
         <ul class="tree">
           <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
-          <li class="tree-item"><a href="../dashboard/main.html"><i
+          <li class="tree-item"><a href="/dashboard/total"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
           <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
-          <li class="tree-item"><a href="../dashboard/project-detail.html"><i class="la la-circle"></i><span
+          <li class="tree-item"><a href="/dashboard/detail"><i class="la la-circle"></i><span
                   style="font-size:0.8em;">프로젝트상세</span></a>
           </li>
         </ul>
@@ -44,24 +44,24 @@
         <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
       </a>
         <ul class="tree">
-          <li class="tree-item"><a href="../project/project-ing.html"><i
+          <li class="tree-item"><a href="/project/ing"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
-          <li class="tree-item"><a class="active" href="../project/project-ed.html"><i
+          <li class="tree-item"><a class="active" href="/project/complete"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
-          <li class="tree-item"><a href="../project/project-booking.html"><i
+          <li class="tree-item"><a href="/project/book"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
         </ul>
       </li>
-      <li class="tree-item"><a href="../target/target.html"><i class="la la-group"></i><span>대상관리</span>
+      <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
         <div class="right-container"></div>
       </a>
 
       </li>
-      <li class="tree-item"><a href="../templates/template.html"><i class="la la-file-text"></i><span>템플릿관리</span>
+      <li class="tree-item"><a href="/manager/template"><i class="la la-file-text"></i><span>템플릿관리</span>
         <div class="right-container"></div>
       </a>
       </li>
-      <li class="tree-item"><a href="../project/project-making.html"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>
+      <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>
         <div class="right-container"></div>
       </a>
       </li>
@@ -70,9 +70,9 @@
         <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
       </a>
         <ul class="tree">
-          <li class="tree-item"><a href="../setting/person-setting.html"><i
+          <li class="tree-item"><a href="/setting/user"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
-          <li class="tree-item"><a href="../setting/smtp-setting.html"><i
+          <li class="tree-item"><a href="/setting/smtp"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
         </ul>
       </li>
@@ -98,9 +98,9 @@
               </div>
             </div>
             <ul class="dropdown-body">
-              <li><a href="../setting/person-setting.html" target="_blank"><i
+              <li><a href="/setting/user" target="_blank"><i
                       class="la la-user"></i><span>사용자 정보</span></a></li>
-              <li><a  href="../setting/smtp-setting.html"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
+              <li><a  href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
               <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
             </ul>
           </div>
@@ -527,13 +527,13 @@
     </div>
   </div>
   <script src="../public/js/main.min.js"></script>
-  <script src="../public/js/lib/Sortable.min.js"></script>
+  <script src="/js/lib/Sortable.min.js"></script>
   <script src="../public/js/demo.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="../public/js/jquery.serialize-object.min.js"></script>
-  <script src="../public/js/main.js"></script>
-  <script src="../public/js/demo.js"></script>
-  <script src="../public/js/script.js"></script>
+  <script src="/js/jquery.serialize-object.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/demo.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 
 </html>
