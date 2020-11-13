@@ -26,10 +26,12 @@ func RegTarget(c *gin.Context) {
 
 	err := target.CreateTarget(&conn, num)
 	if err != nil {
+		log.Println("RegTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"target_registration_error, register_account": c.Keys["email"]})
+		c.Status(http.StatusOK)
 	}
 }
 
@@ -39,11 +41,13 @@ func GetTarget(c *gin.Context) {
 
 	target, tag, err := model.ReadTarget(num) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
+		log.Println("GetTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusUnauthorized, gin.H{"Target read error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"targets": target, "tags": tag, "registered_account": c.Keys["email"]})
 	}
-
-	c.JSON(http.StatusOK, gin.H{"targets": target, "tags": tag, "register_account": c.Keys["email"]})
 }
 
 // 헤더를 먼저 정의한다음 파일 다운로드 메서드를 이용하여 파일을 다운로드받도록 한다.
@@ -56,14 +60,15 @@ func DeleteTarget(c *gin.Context) {
 	conn := db.(sql.DB)
 
 	//JSON 이 아닌 배열로 받아온다.
-
 	target := model.TargetNumber{}
 	c.ShouldBindJSON(&target)
 
 	err := target.DeleteTarget(&conn, num)
 	if err != nil {
+		log.Println("DeleteTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusPaymentRequired, gin.H{"target_deleting_error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}
@@ -80,8 +85,8 @@ func DownloadExcel(c *gin.Context) {
 	destFile := "./Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
-		log.Print(err.Error())
-		c.String(http.StatusMethodNotAllowed, "%v", err)
+		log.Println("DownloadExcel error occurred, account : ", c.Keys["email"])
+		c.String(http.StatusInternalServerError, "%v", err)
 		return
 	}
 	defer file.Close()
@@ -94,8 +99,8 @@ func ImportTargets(c *gin.Context) {
 	// 단일 파일 전송
 	file, err := c.FormFile("file")
 	if err != nil {
-		log.Print(err.Error())
-		c.String(http.StatusNotAcceptable, fmt.Sprintf("get form err: %s", err.Error()))
+		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
+		c.String(http.StatusInternalServerError, fmt.Sprintf("get form error: %s", err.Error()))
 		return
 	}
 
@@ -113,8 +118,8 @@ func ImportTargets(c *gin.Context) {
 	uploadPath := "./Spreadsheet/" + filename + str
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
-		log.Print(err.Error())
-		c.String(http.StatusNotAcceptable, fmt.Sprintf("upload file err: %s", err.Error()))
+		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
+		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file error: %s", err.Error()))
 		return
 	} else {
 		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename+str))
@@ -130,6 +135,7 @@ func ImportTargets(c *gin.Context) {
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
 	err = target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
+		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusNotAcceptable, gin.H{"Batch registration error": err.Error()})
 	} else {
@@ -156,8 +162,9 @@ func ExportTarget(c *gin.Context) {
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
 	err := model.ExportTargets(num) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
+		log.Println("ExportTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusProxyAuthRequired, gin.H{"Export error ": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error ": err.Error()})
 	}
 
 	str := strconv.Itoa(num)
@@ -190,6 +197,7 @@ func RegTag(c *gin.Context) {
 	c.ShouldBindJSON(&tag)
 	err := tag.CreateTag(&conn)
 	if err != nil {
+		log.Println("RegTag error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusRequestTimeout, gin.H{"target_registration_error": err.Error()})
 	} else {
@@ -207,6 +215,7 @@ func DeleteTag(c *gin.Context) {
 
 	err := tag.DeleteTag(&conn)
 	if err != nil {
+		log.Println("DeleteTag error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusConflict, gin.H{"tag_deleting_error": err.Error()})
 	} else {
