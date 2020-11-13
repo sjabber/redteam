@@ -54,7 +54,7 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 		}
 
 		isValid, user := model.IsTokenValid(bearer.Value)
-		if isValid == false {
+		if isValid == false || bearer == nil {
 			log.Println(err.Error())
 			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 			// access-token 을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
