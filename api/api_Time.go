@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"redteam/model"
 )
@@ -19,7 +18,6 @@ func Time(c *gin.Context) {
 	db, err := model.ConnectDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "db connection error")
-		log.Print("Health check error occurred, account : ", Account)
 		return
 	}
 	defer db.Close()
@@ -28,8 +26,7 @@ func Time(c *gin.Context) {
 	query := "SELECT now()"
 	err = db.QueryRow(query).Scan(&time)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "health check error")
-		log.Print("Health check error occurred, account : ", Account)
+		c.JSON(http.StatusNotImplemented, "db connection error")
 		return
 	}
 
