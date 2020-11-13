@@ -51,6 +51,7 @@ func (u *User) GetAuthToken() (string, string, error) {
 	rfToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &rfClaims)
 	refreshToken, err := rfToken.SignedString(tokenRefresh)
 
+
 	return authToken, refreshToken, err
 }
 
@@ -67,13 +68,13 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 	row := conn.QueryRowContext(context.Background(), "SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
 	if err != nil || u.UserNo == 0 || u.Name == "" {
-		num = 403 // 일치하는 계정이 존재하지 않을 경우.
+		num = 401 // 일치하는 계정이 존재하지 않을 경우.
 		return fmt.Errorf("this account does not exist. "), num
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
 	if err != nil {
-		num = 401 // 패스워드가 일치하지 않을경우.
+		num = 402 // 패스워드가 일치하지 않을경우.
 		return fmt.Errorf("The password is incorrect. "), num
 	}
 

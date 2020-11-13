@@ -137,7 +137,7 @@ func ImportTargets(c *gin.Context) {
 	if err != nil {
 		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"Batch registration error": err.Error()})
+		c.JSON(http.StatusNotAcceptable, gin.H{"Batch registration error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Batch registration success": c.Keys["email"]})
 	}
@@ -199,7 +199,7 @@ func RegTag(c *gin.Context) {
 	if err != nil {
 		log.Println("RegTag error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
+		c.JSON(http.StatusRequestTimeout, gin.H{"target_registration_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
 	}
@@ -217,7 +217,7 @@ func DeleteTag(c *gin.Context) {
 	if err != nil {
 		log.Println("DeleteTag error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"tag_deleting_error": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"tag_deleting_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}

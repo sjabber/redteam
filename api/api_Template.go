@@ -14,6 +14,7 @@ import (
 // - 먼저 리스트형태로 조회한다음
 // - todo 클릭하면 편집할 수 있는 팝업이 뜨도록 만든다.
 
+
 // 템플릿 등록하기
 func PostTemplateList(c *gin.Context) {
 	userID := c.GetString("email") // httpheader.go 의 AuthMiddleware 에 셋팅되어있음
@@ -25,23 +26,23 @@ func PostTemplateList(c *gin.Context) {
 	err := tmp.Create(&conn, userID)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Template creation error": err.Error()})
 		return
 	}
 
+	// 제대로 생성되면 statusOk 신호 (200번) 을 보낸다.
 	c.JSON(http.StatusOK, tmp)
 }
 
 // 템플릿 목록 가져오기
 func GetTemplateList(c *gin.Context) {
-	tmp, err := model.ReadAll()
+	tmp, err, num := model.ReadAll()
 	if err != nil {
-		// 템플릿을 읽어오는데 오류가 발생한 경우 500에러를 반환한다.
-		log.Print("GetTemplate error occurred, account : ",  c.Keys["email"])
-		c.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
-		return
+		log.Print(err.Error())
+		//case 400 : 템플릿을 DB 로부터 읽어오는데 오류가 발생.
+		//case 401 : 읽어온 정보를 바인딩하는데 오류가 발생.
 	}
-	c.JSON(http.StatusOK, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
+	c.JSON(num, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
 }
 
 // 템플릿 수정하기
@@ -54,7 +55,7 @@ func PutTemplateList(c *gin.Context) {
 	err := tmp.Update(&conn)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Template modification error": err.Error()})
 		return
 	}
 }
@@ -66,10 +67,12 @@ func DeleteTemplateList(c *gin.Context) {
 
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
-	err := tmp.Delete(&conn)
+	err := tmp.Update(&conn)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Template deletion error": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"Deleted successfully, account deleted": c.Keys["email"]})
 	}
 }
