@@ -84,16 +84,47 @@ func (u *User) CreateUsers() (int, error) {
 
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
-		num = 405 // 405에러, 계정생성 오류발생
+		num = 500 // 405에러, 계정생성 오류발생
 		return num, fmt.Errorf("There was an error creating an account. ")
 	}
 	u.PasswordHash = string(pwdHash)
 
-	_, err = db.Exec("INSERT INTO user_info "+
-		"(user_name, user_email, user_pw_hash, created_time) "+
-		"VALUES($1, $2, $3, $4)", u.Name, u.Email, u.PasswordHash, time.Now())
+	_, err = db.Exec(`INSERT INTO user_info (user_name, user_email, user_pw_hash, created_time)
+        VALUES ($1, $2, $3, $4)`, u.Name, u.Email, u.PasswordHash, time.Now())
+	if err != nil {
+		return 500, fmt.Errorf("A database error has occurred. (1)")
+	}
+
+	// Smtp 디폴트 정보 삽입
+	query = "SELECT user_no FROM user_info WHERE user_email = $1"
+	row = db.QueryRow(query, u.Email)
+
+	err = row.Scan(&u.UserNo)
+	_, err = db.Exec(`INSERT INTO smtp_info (user_no, smtp_id, smtp_pw)
+        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.Password)
+	if err != nil {
+		return 500, fmt.Errorf("A database error has occurred. (2)")
+	}
 
 	return num, err
+}
+
+func (u *User) InsertSmtp() error {
+	db, err := ConnectDB()
+	if err != nil {
+		return fmt.Errorf("db connection error")
+	}
+	defer db.Close()
+
+	query := "SELECT user_no FROM user_info WHERE user_email = $1"
+	row := db.QueryRow(query, u.Email)
+
+	err = row.Scan(u.UserNo)
+	if err != sql.ErrNoRows {
+
+	}
+
+	return nil
 }
 
 // 비밀번호 형식을 검사하는 메서드
