@@ -103,7 +103,11 @@ function GetDashBoard() {
                 // user_id.text(responseObj.email);
                 // user_name.text(responseObj.name);
             } else if (r.status === 403) {
-                Refresh();
+                const tokenResult = Refresh();
+                if (tokenResult){
+                    console.log("true")
+                }
+
             } else {
                 document.location.href = '/';
             }
@@ -158,6 +162,7 @@ function Refresh() {
         if (r.readyState === 4) {
             if (r.status === 200) {
                 console.log(r.responseText);
+                return true;
             } else {
                 document.location.href = "/";
             }
