@@ -1,7 +1,6 @@
 package api
 
 import (
-	"go.uber.org/zap"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -15,9 +14,6 @@ import (
 )
 
 func RegTarget(c *gin.Context) {
-	log, _ := zap.NewProduction()
-	defer log.Sync()
-
 	// interface{} -> int 로 형변환하여 num 에 저장한다.
 	// num (계정번호) => 등록한 정보를 관리자 번호로 관리하기 위해 사용함.
 	num := c.Keys["number"].(int)
@@ -30,10 +26,10 @@ func RegTarget(c *gin.Context) {
 
 	err := target.CreateTarget(&conn, num)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Print(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {
-		c.Status(http.StatusOK)
-		//c.JSON(http.StatusOK, gin.H{"registered_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{"target_registration_error, register_account": c.Keys["email"]})
 	}
 }
 
@@ -43,8 +39,8 @@ func GetTarget(c *gin.Context) {
 
 	target, tag, err := model.ReadTarget(num) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
-
-		c.JSON(http.StatusInternalServerError, gin.H{"Target read error": err.Error()})
+		log.Print(err.Error())
+		c.JSON(http.StatusUnauthorized, gin.H{"Target read error": err.Error()})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"targets": target, "tags": tag, "register_account": c.Keys["email"]})
@@ -67,7 +63,7 @@ func DeleteTarget(c *gin.Context) {
 	err := target.DeleteTarget(&conn, num)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"target_deleting_error": err.Error()})
+		c.JSON(http.StatusPaymentRequired, gin.H{"target_deleting_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}
@@ -85,7 +81,7 @@ func DownloadExcel(c *gin.Context) {
 	file, err := os.Open(destFile)
 	if err != nil {
 		log.Print(err.Error())
-		c.String(http.StatusInternalServerError, "%v", err)
+		c.String(http.StatusMethodNotAllowed, "%v", err)
 		return
 	}
 	defer file.Close()
@@ -99,7 +95,7 @@ func ImportTargets(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Print(err.Error())
-		c.String(http.StatusInternalServerError, fmt.Sprintf("get form err: %s", err.Error()))
+		c.String(http.StatusNotAcceptable, fmt.Sprintf("get form err: %s", err.Error()))
 		return
 	}
 
@@ -118,7 +114,7 @@ func ImportTargets(c *gin.Context) {
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		log.Print(err.Error())
-		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file err: %s", err.Error()))
+		c.String(http.StatusNotAcceptable, fmt.Sprintf("upload file err: %s", err.Error()))
 		return
 	} else {
 		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename+str))
@@ -135,7 +131,7 @@ func ImportTargets(c *gin.Context) {
 	err = target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"Batch registration error": err.Error()})
+		c.JSON(http.StatusNotAcceptable, gin.H{"Batch registration error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Batch registration success": c.Keys["email"]})
 	}
@@ -161,7 +157,7 @@ func ExportTarget(c *gin.Context) {
 	err := model.ExportTargets(num) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"Export error ": err.Error()})
+		c.JSON(http.StatusProxyAuthRequired, gin.H{"Export error ": err.Error()})
 	}
 
 	str := strconv.Itoa(num)
@@ -195,7 +191,7 @@ func RegTag(c *gin.Context) {
 	err := tag.CreateTag(&conn)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
+		c.JSON(http.StatusRequestTimeout, gin.H{"target_registration_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
 	}
@@ -212,7 +208,7 @@ func DeleteTag(c *gin.Context) {
 	err := tag.DeleteTag(&conn)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"tag_deleting_error": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"tag_deleting_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
 	}
