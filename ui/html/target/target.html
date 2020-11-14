@@ -372,7 +372,6 @@
                                 "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
                                 "                        </td>\n" +
                                 "                        </tr>");
-
                             if (j === 0) {
                                 // const option = ;
                                 console.log(rObj.tags[j].tag_no);
@@ -630,6 +629,7 @@
                     }
                 }
             };
+            //console.log(tag_no);
             r.send();
 
         });

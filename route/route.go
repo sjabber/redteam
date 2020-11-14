@@ -56,10 +56,10 @@ func RegisterRoute(r *gin.Engine) {
 		//apiV2.GET("/bookingProjectList", api.BookingProjectList)
 	}
 
-	r.LoadHTMLGlob("./ui/html/target/*")
+	//r.LoadHTMLGlob("./ui/html/target/*")
 	target := apiV1.Group("/target")
 	target.Use(middleware.TokenAuthMiddleWare())
-	target.Static("/files", "C:/Users/Taeho/go/src/redteam")
+	//target.Static("/files", "C:/Users/Taeho/go/src/redteam")
 	{
 		//localhost:5000/api/target/getTarget
 

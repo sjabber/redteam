@@ -32,8 +32,13 @@ func RefreshToken(c *gin.Context) {
 
 		// todo 여기에 위의 계정이 맞는지 검사하는 로직도 넣어주자.
 		accessToken, err := user.GetAccessToken()
+<<<<<<< HEAD
+		if err == nil {
+			c.SetCookie("access-token", accessToken, 5, "", "", false, true)
+=======
 		if err == nil { //여기서 토큰을 쿠키에 붙인다.
 			c.SetCookie("access-token", accessToken, 900, "", "", false, true)
+>>>>>>> 9a11b5c7bd79e3b4db31f3bc9b140909b433d657
 			c.JSON(http.StatusOK, gin.H{
 				"isOk": true,
 			})
