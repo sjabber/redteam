@@ -358,8 +358,8 @@
                             '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
                             '                </div></tr></td>');
                     }
-
-                    //paging(rObj.total, page);
+                    
+                    paging(rObj.total, page);
 
                     if (rObj.tags.length > 0) {
                         $('#tag_menage > tbody').empty();
@@ -407,6 +407,7 @@
                 }
             }
         };
+
         r.send();
     }
 
@@ -427,7 +428,6 @@
                 }
             }
         };
-
         console.log(tagNo);
         r.send(JSON.stringify({"tag_no": tagNo}));
     }

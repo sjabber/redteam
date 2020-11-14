@@ -80,30 +80,51 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 }
 
 // todo 보완필요!!! -> 현재 이름, 이메일, 태그 중 하나라도 값이 없으면 리스트목록에 뜨지않는 오류가 존재한다. 태그값이 없어도 표시되도록 해야함.
-func ReadTarget(num int) ([]Target, []Tag, error) {
+func ReadTarget(num int, page int) ([]Target, int, int, error) {
 	db, err := ConnectDB()
 	if err != nil {
-		return nil, nil, fmt.Errorf("DB connection error")
+		return nil, 0, 0, fmt.Errorf("DB connection error")
 	}
 
-	// ROW_NUMBER() over (ORDER BY target_no) RNUM FROM target_info WHERE user_no = $1 ORDER BY target_no asc
+	var pageNum int // 몇번째 페이지부터 가져올지 결정하는 변수
+	var pages int // 총 페이지 수
+	var total int // 총 훈련대상자들의 수를 담을 변수
+
+
+	// ex) 1페이지 -> 1~10, 2페이지 -> 11~20
+	// 페이지번호에 따라 가져올 목록이 달라진다.
+	pageNum = (page - 1) * 10
+
+	// 해당하는 대상목록들을 10개씩만 잘라서 반환한다.
 	query := `
-SELECT target_name,
-    target_email,
-    target_phone,
-    target_organize,
-    target_position,
-    target_tag,
-    modified_time,
-    target_no
-FROM target_info
-WHERE user_no = $1
-ORDER BY target_no ASC
+    SELECT
+       target_name,
+       target_email,
+       target_phone,
+       target_organize,
+       target_position,
+       target_tag,
+       modified_time,
+       target_no
+    FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num,
+             target_no,
+             target_name,
+             target_email,
+             target_phone,
+             target_organize,
+             target_position,
+             target_tag,
+             modified_time
+          FROM target_info
+          WHERE user_no = $1
+         ) AS T
+    WHERE row_num > $2
+    LIMIT 10;
 `
-	rows, err := db.Query(query, num)
+	rows, err := db.Query(query, num, pageNum)
 	if err != nil {
 		fmt.Println(err)
-		return nil, nil, fmt.Errorf("Targets query Error. ")
+		return nil, 0, 0, fmt.Errorf("Targets query Error. ")
 	}
 
 	var targets []Target
@@ -116,31 +137,23 @@ ORDER BY target_no ASC
 			fmt.Printf("Targets scanning Error. : %v", err)
 			continue
 		}
-
+		// 10개로 제한된 대상이 구조체에 담긴다.
 		targets = append(targets, tg)
 	}
 
-	query2 := "SELECT tag_no, tag_name, modified_time FROM tag_info ORDER BY tag_no asc"
-	tags, err2 := db.Query(query2)
-	if err2 != nil {
-		fmt.Println(err2)
-		return nil, nil, fmt.Errorf("Tag query error. ")
-	}
+	// 전체 타겟(훈련대상)의 수를 반환한다.
+	query = `
+    select count(target_no) 
+    from target_info 
+    where user_no = $1`
 
-	var tag []Tag
-	tg2 := Tag{}
-	for tags.Next() {
-		err2 = tags.Scan(&tg2.TagNo, &tg2.TagName, &tg2.TagCreateTime)
+	page_count := db.QueryRow(query, num)
+	page_count.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
-		if err2 != nil {
-			fmt.Printf("Tags scanning Error. : %v", err)
-			continue
-		}
+	total = (pages / 10) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
 
-		tag = append(tag, tg2)
-	}
-
-	return targets, tag, nil
+	// 각각 표시할 대상 10개, 대상의 총 갯수, 총 페이지 수, 에러
+	return targets, pages, total, nil
 }
 
 func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
@@ -301,4 +314,33 @@ func (t *Tag) DeleteTag(conn *sql.DB) error {
 	}
 
 	return nil
+}
+
+func GetTag(num int) []Tag {
+	db, err := ConnectDB()
+	if err != nil {
+		return nil
+	}
+
+	query := "SELECT tag_no, tag_name, modified_time FROM tag_info WHERE user_no = $1 ORDER BY tag_no asc"
+	tags, err := db.Query(query, num)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	var tag []Tag
+	tg := Tag{}
+	for tags.Next() {
+		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
+
+		if err != nil {
+			fmt.Printf("Tags scanning Error. : %v", err)
+			continue
+		}
+
+		tag = append(tag, tg)
+	}
+
+	return tag
 }

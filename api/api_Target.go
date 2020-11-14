@@ -39,14 +39,26 @@ func GetTarget(c *gin.Context) {
 	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
 	num := c.Keys["number"].(int)
 
-	target, tag, err := model.ReadTarget(num) //DB에 저장된 대상들을 읽어오는 메서드
+	// URL 에 포함된 page 수를 page 변수에 int 로 형변환 후 바인딩.
+	pg := c.Query("page")
+	page, _ := strconv.Atoi(pg)
+
+	target, total, pages, err := model.ReadTarget(num, page) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
 		log.Println("GetTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"targets": target, "tags": tag, "registered_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": 1,
+			"status": http.StatusOK,
+			"targets": target,
+			"tags": model.GetTag(num),
+			"total" : total,
+			"pages" : pages,
+			"page" : page,
+		})
 	}
 }
 

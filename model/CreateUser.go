@@ -101,7 +101,7 @@ func (u *User) CreateUsers() (int, error) {
 
 	err = row.Scan(&u.UserNo)
 	_, err = db.Exec(`INSERT INTO smtp_info (user_no, smtp_id, smtp_pw)
-        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.Password)
+        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.PasswordHash)
 	if err != nil {
 		return 500, fmt.Errorf("A database error has occurred. (2)")
 	}
