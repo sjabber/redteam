@@ -17,7 +17,7 @@ func Logout(c *gin.Context) {
 		return
 	} else {
 		//로그아웃에 오류가 발생할경우 500에러를 반환한다.
-		log.Print("Logout error occurred, account : ", Account)
+		log.Println("Logout error occurred, account :", Account)
 		c.AbortWithStatus(http.StatusInternalServerError) //500에러
 		return
 	}

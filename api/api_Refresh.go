@@ -35,15 +35,15 @@ func RefreshToken(c *gin.Context) {
 		// todo 여기에 위의 계정이 맞는지 검사하는 로직도 넣어주자.
 
 		//여기서 토큰을 쿠키에 붙인다.
-		accessToken, err := user.GetAccessToken()
+		accessToken, refreshToken, err := user.GetAccessToken()
 		if err == nil {
-			c.SetCookie("access-token", accessToken, 5, "", "", false, true)
+			c.SetCookie("access-token", accessToken, 1000, "", "", false, true)
+			c.SetCookie("refresh-token", refreshToken, 86400, "", "", false, true)
 			c.JSON(http.StatusOK, gin.H{
 				"isOk": true,
 			})
 			log.Print("token refresh")
 			return
-
 		} else {
 			// access 토큰이 발급되지 않은 경우 500에러를 반환한다.
 			c.JSON(http.StatusInternalServerError, gin.H{

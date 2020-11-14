@@ -39,7 +39,7 @@ func (u *User) GetAuthToken() (string, string, error) {
 	claims["user_email"] = u.Email
 	claims["user_name"] = u.Name
 	claims["user_no"] = u.UserNo
-	claims["exp"] = time.Now().Add(time.Second * 300).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	authToken, err := token.SignedString(tokenSecret)
 
