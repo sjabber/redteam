@@ -10,13 +10,15 @@ import (
 type Template struct {
 	TmpNo int `json:"tmp_no"`
 	//UserNo       int	`json:"user_no"`		   // 사용자(사원) 번호
-	Division     string `json:"division"`      // 구분
-	Kind         string `json:"kind"`          // 훈련유형
-	FileInfo     string `json:"file_info"`     // 첨부파일 정보
-	TmpName      string `json:"tmp_name"`      // 템플릿 이름
-	MailTitle    string `json:"mail_title"`    // 메일 제목
-	SenderName   string `json:"sender_name"`   // 보낸 사람
-	DownloadType string `json:"download_type"` // 다운로드 파일 타입
+	Division       string `json:"division"`      // 구분
+	Kind           string `json:"kind"`          // 훈련유형
+	FileInfo       string `json:"file_info"`     // 첨부파일 정보
+	TmpName        string `json:"tmp_name"`      // 템플릿 이름
+	MailTitle      string `json:"mail_title"`    // 메일 제목
+	SenderName     string `json:"sender_name"`   // 보낸 사람
+	DownloadType   string `json:"download_type"` // 다운로드 파일 타입
+	CreatedTime    string `json:"created_time"`
+	CreateRealTime time.Time
 }
 
 //템플릿 생성 메서드, json 형식으로 데이터를 입력받아서 DB에 저장한다.
@@ -36,7 +38,7 @@ func (t *Template) Create(conn *sql.DB, userID string) error {
 		t.Division, t.Kind, t.FileInfo, t.TmpName,
 		t.MailTitle, userID, t.DownloadType)
 
-	err := row.Scan(&t.TmpNo)//&t.UserNo
+	err := row.Scan(&t.TmpNo) //&t.UserNo
 
 	if err != nil {
 		return fmt.Errorf("An error occurred while creating the template. ")
@@ -60,7 +62,7 @@ func ReadAll() ([]Template, error, int) {
 	//defer db.Close()
 
 	query := "SELECT tmp_no, tmp_division, tmp_kind, file_info, tmp_name," +
-		" mail_title, sender_name, download_type FROM template_info"
+		" mail_title, sender_name, download_type, created_time FROM template_info"
 
 	rows, err := db.Query(query)
 
@@ -75,13 +77,15 @@ func ReadAll() ([]Template, error, int) {
 		tmp := Template{}
 		err = rows.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind,
 			&tmp.FileInfo, &tmp.TmpName, &tmp.MailTitle, &tmp.SenderName,
-			&tmp.DownloadType)
+			&tmp.DownloadType, &tmp.CreateRealTime)
 
 		if err != nil {
 			// 읽어온 정보를 바인딩하는데 오류가 발생.
 			num = 402
 			return nil, fmt.Errorf("Template scanning error : %v ", err), num
 		}
+		tmp.CreatedTime = tmp.CreateRealTime.Format("2006-01-02 15:04")
+
 		templates = append(templates, tmp)
 		// 읽어들인 값들을 전부 template 배열에 넣은 후에 반환하여 보여준다.
 	}
