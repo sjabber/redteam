@@ -246,7 +246,12 @@
                     // paging(rObj.total, page);
 
 
-
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetTemplates();
+                        // console.log("true")
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -254,6 +259,7 @@
         };
         r.send();
     }
+
     GetDashBoard();
     GetTemplates();
 </script>

@@ -400,7 +400,8 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        console.log("true")
+                        GetTarget(page)
+                        // console.log("true")
                     }
                 } else {
                     document.location.href = '/';
@@ -422,6 +423,11 @@
                     document.location.reload();
 
                     $('#tag_' + tagNo).remove();
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        console.log("true")
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -433,7 +439,7 @@
     }
 
     function paging(totalData, currentPage) {
-        const dataPerPage = 10;
+        const dataPerPage = 20;
         const pageCount = 5;
 
         // console.log("currentPage : " + currentPage);
@@ -480,7 +486,6 @@
         }
     }
 
-
     $(function () {
         $('#all_select').click(function () {
             if ($("input:checkbox[id='all_select']").prop("checked")) {
@@ -510,6 +515,11 @@
                             if (r.status === 200) {
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
+                            } else if (r.status === 403) {
+                                const tokenResult = Refresh();
+                                if (tokenResult) {
+                                    console.log("true")
+                                }
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -546,6 +556,12 @@
                             "                        </td>\n" +
                             "                        </tr>");
 
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -594,6 +610,12 @@
                 if (r.readyState === 4) {
                     if (r.status === 200) {
                         document.location.reload();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -626,6 +648,12 @@
                         link.href = window.URL.createObjectURL(blob);
                         link.download = fileName;
                         link.click();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     }
                 }
             };
@@ -655,6 +683,12 @@
                         link.href = window.URL.createObjectURL(blob); //그 안에다 다운로드할 파일의 내용을 집어넣는다.
                         link.download = fileName;
                         link.click();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     }
                 }
             };
