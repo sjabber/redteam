@@ -8,8 +8,8 @@
     <title>REDTEAM | 대상관리</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
-    <link rel="stylesheet" href="../public/css/sport.min.css" type="text/css">
-    <link rel="stylesheet" href="../public/css/choices.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <!--    <script src="/ui/public/js/main.min.js"></script>-->
@@ -19,7 +19,7 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="../public/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -32,10 +32,10 @@
             </a>
                 <ul class="tree">
                     <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
-                    <li class="tree-item"><a href="../dashboard/main.html"><i
+                    <li class="tree-item"><a href="/dashboard/total"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
                     <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
-                    <li class="tree-item"><a href="../dashboard/project-detail.html"><i
+                    <li class="tree-item"><a href="/dashboard/detail"><i
                             class="la la-circle"></i><span
                             style="font-size:0.8em;">프로젝트상세</span></a>
                     </li>
@@ -46,26 +46,26 @@
                 <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
             </a>
                 <ul class="tree">
-                    <li class="tree-item"><a href="../project/project-ing.html"><i
+                    <li class="tree-item"><a href="/project/ing"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
-                    <li class="tree-item"><a href="../project/project-ed.html"><i
+                    <li class="tree-item"><a href="/project/complete"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
-                    <li class="tree-item"><a href="../project/project-booking.html"><i
+                    <li class="tree-item"><a href="/project/book"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
                 </ul>
             </li>
-            <li class="tree-item active"><a href="../target/target.html"><i
+            <li class="tree-item active"><a href="/manager/target"><i
                     class="la la-group"></i><span>대상관리</span>
                 <div class="right-container"></div>
             </a>
 
             </li>
-            <li class="tree-item"><a href="../templates/template.html"><i
+            <li class="tree-item"><a href="/manager/template"><i
                     class="la la-file-text"></i><span>템플릿관리</span>
                 <div class="right-container"></div>
             </a>
             </li>
-            <li class="tree-item"><a href="../project/project-making.html"><i
+            <li class="tree-item"><a href="/project/create"><i
                     class="la la-pencil-square"></i><span>프로젝트 생성</span>
                 <div class="right-container"></div>
             </a>
@@ -75,9 +75,9 @@
                 <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
             </a>
                 <ul class="tree">
-                    <li class="tree-item"><a href="../setting/person-setting.html"><i
+                    <li class="tree-item"><a href="/setting/user"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
-                    <li class="tree-item"><a href="../setting/smtp-setting.html"><i
+                    <li class="tree-item"><a href="/setting/smtp"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
                 </ul>
             </li>
@@ -104,9 +104,9 @@
                         </div>
                     </div>
                     <ul class="dropdown-body">
-                        <li><a href="../setting/person-setting.html" target="_blank"><i
+                        <li><a href="/setting/user" target="_blank"><i
                                 class="la la-user"></i><span>사용자 정보</span></a></li>
-                        <li><a href="../setting/smtp-setting.html"><i class="la la-cogs"></i><span>SMTP 설정</span></a>
+                        <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a>
                         </li>
                         <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
                     </ul>
@@ -209,7 +209,15 @@
                                 <div class="form-group label--floating"><input type="text" id="target_position"><label>직급</label>
                                 </div>
                                 <div class="form-group w-50">
-                                    <label for="tag_selector">태그</label><select id="tag_selector">
+                                    <label for="tag_selector_1">태그</label><select id="tag_selector_1">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_selector_2">태그</label><select id="tag_selector_2">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_selector_3">태그</label><select id="tag_selector_3">
                                 </select>
                                 </div>
                             </div>
@@ -262,7 +270,7 @@
                             </div>
                             <div class="modal__body">
                                 <div class="form-group w-50">
-                                    <label for="tag_selector">태그 선택</label><select id="tag_selector2">
+                                    <label for="tag_selector2">태그 선택</label><select id="tag_selector2">
                                     <option value=0 selected>전체</option>
                                 </select>
                                 </div>
@@ -305,12 +313,12 @@
     </div>
 
 </div>
-<script src="../public/js/main.js"></script>
-<script src="../public/js/script.js"></script>
-<script src="../public/js/demo.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/script.js"></script>
+<script src="/js/demo.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="../public/js/jquery.serialize-object.min.js"></script>
-<script src="../public/js/lib/Sortable.min.js"></script>
+<script src="/js/jquery.serialize-object.min.js"></script>
+<script src="/js/lib/Sortable.min.js"></script>
 <script>
     function GetTarget(page) {
         const r = new XMLHttpRequest();
@@ -324,12 +332,12 @@
                     rObj = JSON.parse(r.responseText);
 
                     console.log(r.responseText);
-                    if(rObj.targets.length > 0) {
+                    if (rObj.targets.length > 0) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj.targets.length; i++) {
                             if (rObj.targets[i].tg_tag.length === 0) {
-                                $('#targets > tbody:last').append('<tr>'+'<td id=' + rObj.targets[i].tg_no +
+                                $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
                                     rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
@@ -368,10 +376,18 @@
                             if (j === 0) {
                                 // const option = ;
                                 console.log(rObj.tags[j].tag_no);
-                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "' selected>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_1').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+                                $('#tag_selector_2').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+                                $('#tag_selector_3').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+
+                                $('#tag_selector_1').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_2').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_3').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
                                 $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
                             } else {
-                                $('#tag_selector').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_1').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_2').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
+                                $('#tag_selector_3').append("<option value='" + rObj.tags[j].tag_no + "' >" + rObj.tags[j].tag_name + "</option>");
                                 $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
                             }
                         }
@@ -383,9 +399,12 @@
 
 
                 } else if (r.status === 403) {
-                    Refresh();
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        console.log("true")
+                    }
                 } else {
-                    document.location.href = "../index.html";
+                    document.location.href = '/';
                 }
             }
         };
@@ -405,7 +424,7 @@
 
                     $('#tag_' + tagNo).remove();
                 } else {
-                    document.location.href = "../index.html";
+                    document.location.href = '/';
                 }
             }
         };
@@ -451,7 +470,7 @@
             if (currentPage === (j)) {
                 pages.append("<li class=\"pagination-item\">" +
                     "<a class='active' onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
-            } else if (j > 0 ) {
+            } else if (j > 0) {
                 pages.append("<li class=\"pagination-item\">" +
                     "<a onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
             }
@@ -531,7 +550,7 @@
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
-                        // document.location.href = "../index.html";
+                        // document.location.href = '/';
                     }
                 }
             };
@@ -543,16 +562,29 @@
             const tg_phone = $('#target_phone').val();
             const tg_organ = $('#target_organ').val();
             const tg_position = $('#target_position').val();
-            const tag_no = $('#tag_selector').val();
+            const tag_no_1 = $('#tag_selector_1').val();
+            const tag_no_2 = $('#tag_selector_2').val();
+            const tag_no_3 = $('#tag_selector_3').val();
+            const tag_array = [];
+
+            if (tag_no_1 !== "") {
+                tag_array.push(tag_no_1)
+            }
+            if (tag_no_2 !== "") {
+                tag_array.push(tag_no_2)
+            }
+            if (tag_no_3 !== "") {
+                tag_array.push(tag_no_3)
+            }
             const formData = {
                 tg_email: tg_email,
                 tg_name: tg_name,
                 tg_phone: tg_phone,
                 tg_organize: tg_organ,
                 tg_position: tg_position,
-                tag_no: tag_no
+                tag_no: tag_array
             };
-            // console.log(formData);
+            console.log(formData);
 
             const r = new XMLHttpRequest();
             r.open('POST', 'http://localhost:5000/api/target/regTarget', true);

@@ -8,7 +8,7 @@ function Logout() {
         if (r.readyState === 4) {
             if (r.status === 200) {
                 alert("로그아웃 되었습니다.");
-                document.location.href = "../index.html";
+                document.location.href = '/';
             } else {
                 console.log("로그아웃 실패");
             }
@@ -32,7 +32,7 @@ function Logout() {
 //                 $('#dropdown_name').text(responseObj.user_info.name);
 //                 document.location.href = "./dashboard/main.html"
 //             } else {
-//                 document.location.href = "../index.html";
+//                 document.location.href = '/';
 //             }
 //         }
 //
@@ -54,7 +54,7 @@ function CheckLoginInLoginPage() {
                 // $('#dropdown_name').text(responseObj.user_info.name);
                 document.location.href = "./dashboard/main.html"
             } else {
-                document.location.href = "../index.html";
+                document.location.href = '/';
             }
         }
 
@@ -71,7 +71,7 @@ function Login() {
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
-                document.location.href = "./dashboard/main.html"
+                document.location.href = './dashboard/total'
             } else if (r.status === 400) {
                 alert("계정 정보를 입력해주세요. ");
             } else if (r.status === 401) {
@@ -103,9 +103,13 @@ function GetDashBoard() {
                 // user_id.text(responseObj.email);
                 // user_name.text(responseObj.name);
             } else if (r.status === 403) {
-                Refresh();
+                const tokenResult = Refresh();
+                if (tokenResult){
+                    console.log("true")
+                }
+
             } else {
-                document.location.href = "../index.html";
+                document.location.href = '/';
             }
         }
     };
@@ -124,7 +128,7 @@ function Register() {
         if (r.readyState === 4) {
             if (r.status === 200) {
                 alert("회원가입이 완료되었습니다.");
-                document.location.href = "index.html"
+                document.location.href = '/'
             } else if (r.status === 400) {
                 alert("정보를 입력해주세요. ");
             } else if (r.status === 401) {
@@ -143,6 +147,12 @@ function Register() {
     r.send(JSON.stringify(formData));
 }
 
+function getRoot() {
+    const r = new XMLHttpRequest();
+    r.open('GET', '/', true);
+    r.send()
+}
+
 function Refresh() {
     const r = new XMLHttpRequest();
     r.open('GET', 'http://localhost:5000/api/RefreshToken', true);
@@ -152,8 +162,9 @@ function Refresh() {
         if (r.readyState === 4) {
             if (r.status === 200) {
                 console.log(r.responseText);
+                return true;
             } else {
-                document.location.href = "../index.html";
+                document.location.href = "/";
             }
         }
     };
