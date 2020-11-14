@@ -359,7 +359,7 @@
                             '                </div></tr></td>');
                     }
 
-                    //paging(rObj.total, page);
+                    paging(rObj.total, page);
 
                     if (rObj.tags.length > 0) {
                         $('#tag_menage > tbody').empty();
@@ -442,13 +442,13 @@
         const dataPerPage = 20;
         const pageCount = 5;
 
-        // console.log("currentPage : " + currentPage);
-        // console.log("totalData : " + totalData);
+        console.log("currentPage : " + currentPage);
+        console.log("totalData : " + totalData);
         const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
 
-        // console.log("pageGroup : " + pageGroup);
-        // console.log("totalPage : " + totalPage);
+        console.log("pageGroup : " + pageGroup);
+        console.log("totalPage : " + totalPage);
 
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
         if (last > totalPage)
@@ -457,10 +457,10 @@
         const next = last + 1;
         const prev = first - 1;
 
-        // console.log("last : " + last);
-        // console.log("first : " + first);
-        // console.log("next : " + next);
-        // console.log("prev : " + prev);
+        console.log("last : " + last);
+        console.log("first : " + first);
+        console.log("next : " + next);
+        console.log("prev : " + prev);
 
         if (totalPage < 1) {
             first = last;
@@ -720,8 +720,12 @@
                         location.reload();
                     },
                     error: function (result) {
-                        console.log("ERROR : ", result.data);
-                        alert('파일을 확인해주세요');
+                        if (result.status === 403) {
+                            Refresh()
+                        } else {
+                            alert('파일을 확인해주세요');
+                        }
+                        console.log("ERROR : ", result.status);
                     }
                 });
             }
