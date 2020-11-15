@@ -358,7 +358,7 @@
                             '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
                             '                </div></tr></td>');
                     }
-                    
+
                     paging(rObj.total, page);
 
                     if (rObj.tags.length > 0) {
@@ -400,14 +400,14 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        console.log("true")
+                        GetTarget(page)
+                        // console.log("true")
                     }
                 } else {
                     document.location.href = '/';
                 }
             }
         };
-
         r.send();
     }
 
@@ -423,26 +423,32 @@
                     document.location.reload();
 
                     $('#tag_' + tagNo).remove();
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        console.log("true")
+                    }
                 } else {
                     document.location.href = '/';
                 }
             }
         };
+
         console.log(tagNo);
         r.send(JSON.stringify({"tag_no": tagNo}));
     }
 
     function paging(totalData, currentPage) {
-        const dataPerPage = 10;
+        const dataPerPage = 20;
         const pageCount = 5;
 
-        // console.log("currentPage : " + currentPage);
-        // console.log("totalData : " + totalData);
+        console.log("currentPage : " + currentPage);
+        console.log("totalData : " + totalData);
         const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
 
-        // console.log("pageGroup : " + pageGroup);
-        // console.log("totalPage : " + totalPage);
+        console.log("pageGroup : " + pageGroup);
+        console.log("totalPage : " + totalPage);
 
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
         if (last > totalPage)
@@ -451,10 +457,10 @@
         const next = last + 1;
         const prev = first - 1;
 
-        // console.log("last : " + last);
-        // console.log("first : " + first);
-        // console.log("next : " + next);
-        // console.log("prev : " + prev);
+        console.log("last : " + last);
+        console.log("first : " + first);
+        console.log("next : " + next);
+        console.log("prev : " + prev);
 
         if (totalPage < 1) {
             first = last;
@@ -479,7 +485,6 @@
                 "<a onclick=\"GetTarget(" + (next) + ");\" style='margin-left: 2px'>next</a></li>");
         }
     }
-
 
     $(function () {
         $('#all_select').click(function () {
@@ -510,6 +515,11 @@
                             if (r.status === 200) {
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
+                            } else if (r.status === 403) {
+                                const tokenResult = Refresh();
+                                if (tokenResult) {
+                                    console.log("true")
+                                }
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -546,6 +556,12 @@
                             "                        </td>\n" +
                             "                        </tr>");
 
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -594,6 +610,12 @@
                 if (r.readyState === 4) {
                     if (r.status === 200) {
                         document.location.reload();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -626,6 +648,12 @@
                         link.href = window.URL.createObjectURL(blob);
                         link.download = fileName;
                         link.click();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     }
                 }
             };
@@ -655,6 +683,12 @@
                         link.href = window.URL.createObjectURL(blob); //그 안에다 다운로드할 파일의 내용을 집어넣는다.
                         link.download = fileName;
                         link.click();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            // GetTarget(page)
+                            console.log("true")
+                        }
                     }
                 }
             };
@@ -686,8 +720,12 @@
                         location.reload();
                     },
                     error: function (result) {
-                        console.log("ERROR : ", result.data);
-                        alert('파일을 확인해주세요');
+                        if (result.status === 403) {
+                            Refresh()
+                        } else {
+                            alert('파일을 확인해주세요');
+                        }
+                        console.log("ERROR : ", result.status);
                     }
                 });
             }
