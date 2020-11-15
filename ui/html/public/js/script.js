@@ -105,6 +105,7 @@ function GetDashBoard() {
             } else if (r.status === 403) {
                 const tokenResult = Refresh();
                 if (tokenResult){
+                    GetDashBoard()
                     console.log("true")
                 }
 
@@ -164,6 +165,7 @@ function Refresh() {
                 console.log(r.responseText);
                 return true;
             } else {
+                alert("인증 토큰 갱신 실패했습니다.")
                 document.location.href = "/";
             }
         }
