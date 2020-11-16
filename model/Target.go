@@ -93,7 +93,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 
 	// ex) 1페이지 -> 1~10, 2페이지 -> 11~20
 	// 페이지번호에 따라 가져올 목록이 달라진다.
-	pageNum = (page - 1) * 10
+	pageNum = (page - 1) * 20
 
 	// 해당하는 대상목록들을 10개씩만 잘라서 반환한다.
 	query := `
@@ -119,7 +119,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
           WHERE user_no = $1
          ) AS T
     WHERE row_num > $2
-    LIMIT 10;
+    LIMIT 20;
 `
 	rows, err := db.Query(query, num, pageNum)
 	if err != nil {
@@ -150,7 +150,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 	page_count := db.QueryRow(query, num)
 	page_count.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
-	total = (pages / 10) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
+	total = (pages / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
 
 	// 각각 표시할 대상 10개, 대상의 총 갯수, 총 페이지 수, 에러
 	return targets, pages, total, nil
