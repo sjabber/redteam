@@ -136,7 +136,15 @@
             </select>
             </div>
             <div class="form-group w-50">
-                <label for="tag">훈련 대상자 선택(태그)</label><select id="tag">
+                <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">
+            </select>
+            </div>
+            <div class="form-group w-50">
+                <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">
+            </select>
+            </div>
+            <div class="form-group w-50">
+                <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">
             </select>
             </div>
 
@@ -210,9 +218,13 @@
                     if (rObj.tags.length > 0) {
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
-                        $('#tag').append("<option value=''>훈련 대상 태그 선택하기</option>");
+                        $('#tag_1').append("<option value=''>훈련 대상 태그 선택하기</option>");
+                        $('#tag_2').append("<option value=''>훈련 대상 태그 선택하기</option>");
+                        $('#tag_3').append("<option value=''>훈련 대상 태그 선택하기</option>");
                         for (let i = 0; i < rObj.tags.length; i++) {
-                            $('#template').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
+                            $('#tag_1').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
+                            $('#tag_2').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
+                            $('#tag_3').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
                         }
                     } else {
                         $('#tag').append("<option value=''>등록된 대상자가 없습니다.</option>");
@@ -255,14 +267,26 @@
         const start_date = $('#start_date').val();
         const end_date = $('#end_date').val();
         const tmp_no = $('#template').val();
-        const tag_no = $('#tag').val();
+        const tag_1 = $('#tag_1').val();
+        const tag_2 = $('#tag_2').val();
+        const tag_3 = $('#tag_3').val();
+        const tag_array = [];
+        if (tag_1 !== "") {
+            tag_array.push(tag_1)
+        }
+        if (tag_2 !== "") {
+            tag_array.push(tag_2)
+        }
+        if (tag_3 !== "") {
+            tag_array.push(tag_3)
+        }
         const formData = {
             p_name: p_name,
             p_description: p_description,
             start_date: start_date,
             end_date: end_date,
             tmp_no: tmp_no,
-            tag_no: tag_no
+            tag_no: tag_array
         };
         console.log(JSON.stringify(formData));
 
