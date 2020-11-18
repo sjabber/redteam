@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:white-space="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -12,22 +12,8 @@
     <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-    <style>
-        #my_modal {
-            display: none;
-            width: 300px;
-            padding: 20px 60px;
-            background-color: #fefefe;
-            border: 1px solid #888;
-            border-radius: 3px;
-        }
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 
-        #my_modal .modal_close_btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-    </style>
 </head>
 
 <body>
@@ -107,6 +93,8 @@
             <p>템플릿관리</p>
             <div class="breadcrumb"><span>템플릿관리</span></div>
         </div>
+
+
         <ul class="right">
             <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
                                                                                                    src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
@@ -127,6 +115,7 @@
                 </div>
             </li>
         </ul>
+
         <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
                 class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
                 class="la la-ellipsis-v"></i></a></div>
@@ -138,65 +127,105 @@
                     <div class="box-header">
                         <h3>템플릿관리</h3>
                     </div>
-
-                    <div class="box-body pt-0 px-0 responsive">
-                        <table id="tmpls">
-                            <thead>
-                            <tr>
-                                <th style="visibility:hidden;position:absolute;"></th>
-                                <th>No</th>
-                                <th><i class="la la-pencil-square"></i></th>
-                                <th>구분</th>
-                                <th>훈련 유형</th>
-                                <th>첨부파일 정보</th>
-                                <th>템플릿명</th>
-                                <th>메일제목</th>
-                                <th>발송자명(이메일)</th>
-                                <th>다운로드 유형</th>
-                                <th>등록일</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <div class="toolbox">
+                        <div class="box-body pt-0 px-0 responsive">
+                            <table id="tmpls">
+                                <thead>
+                                <tr>
+                                    <th style="visibility:hidden;position:absolute;"></th>
+                                    <th>No</th>
+                                    <th><i class="la la-pencil-square"></i></th>
+                                    <th>구분</th>
+                                    <th>훈련 유형</th>
+                                    <th>첨부파일 정보</th>
+                                    <th>템플릿명</th>
+                                    <th>메일제목</th>
+                                    <th>발송자명(이메일)</th>
+                                    <th>다운로드 유형</th>
+                                    <th>등록일</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
+                    <div class="pgn-modal" id="my_modal">
+                        <div class="pgn-modal-wrapper ">
+                            <div class="modal__header">
+                                <h5>템플릿 수정</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
+                                            class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group w-50">
+                                    <!--                                    뭔지 모르면 뺴버리자 ..-->
+                                    <label for="tmp_division">구분</label><select id="tmp_division">
+                                    <option value="1" selected>기본</option>
+                                    <option value="2">사용자</option>
+                                </select>
+                                </div>
+
+                                <div class="form-group w-50">
+                                    <label for="tmp_kind">훈련유형</label><select id="tmp_kind">
+                                    <option value="1" selected>경고 안내</option>
+                                    <option value="2">피싱 유도</option>
+                                    <option value="3">실태 조사</option>
+                                </select>
+                                </div>
+
+                                <div class="form-group w-50">
+                                    <label for="file_info">첨부파일 정보</label><select id="file_info">
+                                    <option selected value="">첨부파일 없음</option>
+                                    <option value="1">EXE</option>
+                                    <option value="2">HTML</option>
+                                    <option value="3">Excel</option>
+                                </select>
+                                </div>
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="sender_name"
+                                                                               maxlength="5"><label>발송자</label></div>
+                                <div class="form-group label--floating"><input type="text"
+                                                                               id="title" maxlength="60"><label>메일 제목(최대
+                                    30자)</label>
+                                </div>
+
+
+                                <textarea name="content" id="content"></textarea>
+                                <script>
+                                    CKEDITOR.replace( 'content' );
+                                </script>
+                                <div class="form-group label--floating">
+                                    <div style="color: red;font-weight: bold; font-size: small">
+                                        {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
+                                        : 직급, {{targer_orgarnize}} : 조직, {{targer_phone}} : 훈련 대상자의 전화번호
+                                    </div>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="download_type">다운로드 타입</label><select id="download_type">
+                                    <option selected value="">첨부파일 없음</option>
+                                    <option value="1">링크 첨부</option>
+                                </select>
+                                </div>
+
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-ghost modal-dismiss" onclick="closeModal()">취소</button>
+                                <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()">수정하기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="pagination-wrapper clearfix">
                         <ul class="pagination float--right" id="pages">
                         </ul>
                     </div>
+
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="pgn-modal" id="my_modal">
-        <div class="pgn-modal-wrapper">
-            <div class="modal__header">
-                <h5>태그 관리</h5>
-                <div class="toolbox">
-                    <button class="btn-modal-close modal-dismiss"><i class="la la-times"></i></button>
-                </div>
-            </div>
-            <div class="modal__body">
-                <div class="form-group label--floating"><input type="text"
-                                                               id="tag_name"><label>태그명</label>
-                </div>
-                <div class="box-body pt-0 px-0 responsive">
-                    <table id="tag_menage">
-                        <thead>
-                        <tr>
-                            <th>태그명</th>
-                            <th>등록날짜</th>
-                            <th>삭제</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal__footer">
-                <button class="btn btn-ghost modal-dismiss">취소</button>
-                <button class="btn btn-primary pull-right" id="tag_reg">등록</button>
             </div>
         </div>
     </div>
@@ -230,12 +259,16 @@
                         for (let i = 0; i < rObj.tmpls.length; i++) {
                             $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].tmp_no + '</td>' +
                                 rObj.tmpls[i].tmp_no + '</td><td>' +
-                                '<button class="btn btn-secondary mr-1" id="tmp_modify"' +
-                                ' onclick="modal(my_modal")"><i class="la la-pencil"></i></button>' +
+                                '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                                ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
                                 '<span></span></div></td><td>' + rObj.tmpls[i].division + '</td><td>' + rObj.tmpls[i].kind + '</td><td>' + rObj.tmpls[i].file_info +
                                 '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].mail_title + '</td><td>' +
                                 rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
                                 '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+
+                            //<button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
+                            //data-modal="#tag_registry">태그 관리
+                            //</button>
                         }
                     } else {
                         $('#tmpls > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
@@ -262,6 +295,99 @@
 
     GetDashBoard();
     GetTemplates();
+
+    function GetTmlDetail(tml_no) {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no='+tml_no, true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText);
+                    // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
+                    // paging(rObj.total, page);
+
+
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetTmlDetail(tml_no);
+                    }
+                } else {
+                    document.location.href = '/';
+                }
+            }
+        };
+        r.send();
+
+    }
+
+    function editTml() {
+        const tmp_division = $('#tmp_division').val();
+        const tmp_kind = $('#tmp_kind').val();
+        const file_info = $('#file_info').val();
+        const sender_name = $('#sender_name').val();
+        const title = $('#title').val();
+        const content = $('#content').val();
+        const download_type = $('#download_type').val();
+
+        const formData = {
+            tmp_division: tmp_division,
+            tmp_kind: tmp_kind,
+            file_info: file_info,
+            sender_name: sender_name,
+            title: title,
+            content: content,
+            download_type: download_type
+        };
+        console.log(JSON.stringify(formData));
+
+        const r = new XMLHttpRequest();
+        r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
+        r.setRequestHeader("Content-Type", "application/json");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    alert("프로젝트 생성이 완료되었습니다.")
+                    location.reload()
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        console.log("true")
+                    }
+                }
+            }
+        };
+        console.log(formData);
+        r.send(JSON.stringify(formData));
+
+    }
+
+    function OpenModal(i) {
+        console.log(i + " 번호")
+        $("#my_modal").show().center();
+
+
+    }
+
+    function closeModal() {
+        $('#my_modal').hide();
+    }
+
+    jQuery.fn.center = function () {
+        this.css("position", "absolute");
+        this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
+            $(window).scrollTop()) + "px");
+        this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
+            $(window).scrollLeft()) + "px");
+        this.css("width", "700px")
+        return this;
+    }
+
 </script>
 
 </body>
