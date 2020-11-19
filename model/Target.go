@@ -95,7 +95,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 	// 페이지번호에 따라 가져올 목록이 달라진다.
 	pageNum = (page - 1) * 20
 
-	// 해당하는 대상목록들을 10개씩만 잘라서 반환한다.
+	// 대상목록들을 20개씩만 잘라서 반하여 페이징처리한다.
 	query := `
     SELECT
        target_name,
@@ -148,11 +148,11 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
     where user_no = $1`
 
 	page_count := db.QueryRow(query, num)
-	page_count.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
+	_ = page_count.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	total = (pages / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
 
-	// 각각 표시할 대상 10개, 대상의 총 갯수, 총 페이지 수, 에러
+	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
 	return targets, pages, total, nil
 }
 
@@ -315,6 +315,10 @@ func (t *Tag) DeleteTag(conn *sql.DB) error {
 
 	return nil
 }
+
+
+// todo 4 : 대상 / 태그 조인 테이블로 부터 태그를 가져오도록 수정한다.
+// 그전에 조인테이블을 만들어야겠지?
 
 func GetTag(num int) []Tag {
 	db, err := ConnectDB()

@@ -53,11 +53,11 @@ func GetTarget(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"isOk": 1,
 			"status": http.StatusOK,
-			"targets": target,
-			"tags": model.GetTag(num),
-			"total" : total,
-			"pages" : pages,
-			"page" : page,
+			"targets": target, // 대상 20개
+			"tags": model.GetTag(num), // todo 4 : 대상 / 태그 조인 테이블로 부터 태그를 가져오도록 수정한다.
+			"total" : total, // 대상의 총 갯수
+			"pages" : pages, // 총 페이지 수
+			"page" : page, // 클릭한 페이지가 몇페이지인지
 		})
 	}
 }
