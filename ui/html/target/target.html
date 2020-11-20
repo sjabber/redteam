@@ -610,6 +610,10 @@
                 if (r.readyState === 4) {
                     if (r.status === 200) {
                         document.location.reload();
+                        console.log(tag_no_1);
+                        console.log(tag_no_2);
+                        console.log(tag_no_3);
+                        console.log(tag_array);
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
@@ -676,7 +680,7 @@
                             let contentDisposition = r.getResponseHeader("content-disposition");
                             fileName = contentDisposition.substring(contentDisposition.indexOf("=") + 1);
                         } else {
-                            fileName = "Target.xlsx";
+                            fileName = "sample.xlsx";
                         }
                         console.log(fileName);
                         const link = document.createElement('a'); // a라는 html 객체를 생성하고
@@ -732,6 +736,8 @@
         });
 
     });
+
+
 
     // CheckLogin();
     GetDashBoard();

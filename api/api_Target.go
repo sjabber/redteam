@@ -122,19 +122,25 @@ func ImportTargets(c *gin.Context) {
 	// num (int) -> str (string) 변환
 	str := strconv.Itoa(num)
 
-	// 파일을 구체적인 장소로 업로드한다. (서버에 파일을 저장할 장소)
+	// 업로드할 파일의 이름이 담기는 변수
 	filename := filepath.Base(file.Filename)
+
+	// 계정별로 업로드할 디렉토리를 다르게하여 동시 업로드시 충돌을 방지한다.
+	if _, err := os.Stat("./Spreadsheet/"+str); os.IsNotExist(err) {
+		os.Mkdir("./Spreadsheet/"+str,777)
+	}
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트로부터 다운로드받을 파일을 하나 만든다.)
 	// 현재는 컴퓨터의 다운로드파일로 업로드 받는다.
-	uploadPath := "./Spreadsheet/" + filename + str
+	// 파일을 구체적인 장소로 업로드한다. (서버에 파일을 저장할 경로, 파일이름)
+	uploadPath := "./Spreadsheet/"+ str + "/" + filename
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
 		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file error: %s", err.Error()))
 		return
 	} else {
-		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename+str))
+		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename))
 	} // 파일 전송이 완료됨.
 
 	/////////////////아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.////////////////////////////
@@ -156,7 +162,7 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("./Spreadsheet/" + filename + str)
+	err2 := os.Remove("./Spreadsheet/"+ str + "/" + filename)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
@@ -171,8 +177,12 @@ func ExportTarget(c *gin.Context) {
 	header["content-type"] = []string{"application/vnd.ms-excel"}
 	header["content-disposition"] = []string{"attachment; filename=" + "Registered_Targets.xlsx"}
 
+	// URL 에 포함된 tag 번호를 tagNumber 변수에 int 로 형변환 후 바인딩.
+	pg := c.Query("tag_no")
+	tagNumber, _ := strconv.Atoi(pg)
+
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
-	err := model.ExportTargets(num) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
+	err := model.ExportTargets(num, tagNumber) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
 		log.Println("ExportTarget error occurred, account : ", c.Keys["email"])
 		log.Print(err.Error())
