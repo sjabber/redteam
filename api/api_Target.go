@@ -26,7 +26,7 @@ func RegTarget(c *gin.Context) {
 
 	err := target.CreateTarget(&conn, num)
 	if err != nil {
-		log.Println("RegTarget error occurred, account : ", c.Keys["email"])
+		log.Println("RegTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -45,7 +45,7 @@ func GetTarget(c *gin.Context) {
 
 	target, total, pages, err := model.ReadTarget(num, page) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
-		log.Println("GetTarget error occurred, account : ", c.Keys["email"])
+		log.Println("GetTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -54,7 +54,7 @@ func GetTarget(c *gin.Context) {
 			"isOk": 1,
 			"status": http.StatusOK,
 			"targets": target, // 대상 20개
-			"tags": model.GetTag(num), // todo 4 : 대상 / 태그 조인 테이블로 부터 태그를 가져오도록 수정한다.
+			"tags": model.GetTag(num), // 태그들
 			"total" : total, // 대상의 총 갯수
 			"pages" : pages, // 총 페이지 수
 			"page" : page, // 클릭한 페이지가 몇페이지인지
@@ -77,7 +77,7 @@ func DeleteTarget(c *gin.Context) {
 
 	err := target.DeleteTarget(&conn, num)
 	if err != nil {
-		log.Println("DeleteTarget error occurred, account : ", c.Keys["email"])
+		log.Println("DeleteTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -97,7 +97,7 @@ func DownloadExcel(c *gin.Context) {
 	destFile := "./Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
-		log.Println("DownloadExcel error occurred, account : ", c.Keys["email"])
+		log.Println("DownloadExcel error occurred, account :", c.Keys["email"])
 		c.String(http.StatusInternalServerError, "%v", err)
 		return
 	}
@@ -111,7 +111,7 @@ func ImportTargets(c *gin.Context) {
 	// 단일 파일 전송
 	file, err := c.FormFile("file")
 	if err != nil {
-		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
+		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
 		c.String(http.StatusInternalServerError, fmt.Sprintf("get form error: %s", err.Error()))
 		return
 	}
@@ -136,7 +136,7 @@ func ImportTargets(c *gin.Context) {
 	uploadPath := "./Spreadsheet/"+ str + "/" + filename
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
-		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
+		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
 		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file error: %s", err.Error()))
 		return
 	} else {
@@ -153,7 +153,7 @@ func ImportTargets(c *gin.Context) {
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
 	err = target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
-		log.Println("ImportTarget error occurred, account : ", c.Keys["email"])
+		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"Batch registration error": err.Error()})
 	} else {
@@ -184,7 +184,7 @@ func ExportTarget(c *gin.Context) {
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
 	err := model.ExportTargets(num, tagNumber) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
-		log.Println("ExportTarget error occurred, account : ", c.Keys["email"])
+		log.Println("ExportTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error ": err.Error()})
 	}
@@ -212,14 +212,17 @@ func ExportTarget(c *gin.Context) {
 }
 
 func RegTag(c *gin.Context) {
+	// num (계정번호) => 해당 계정에 속한 정보들만 추출할 수 있다.
+	num := c.Keys["number"].(int)
+
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
 	tag := model.Tag{}
 	c.ShouldBindJSON(&tag)
-	err := tag.CreateTag(&conn)
+	err := tag.CreateTag(&conn, num)
 	if err != nil {
-		log.Println("RegTag error occurred, account : ", c.Keys["email"])
+		log.Println("RegTag error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {
@@ -229,15 +232,18 @@ func RegTag(c *gin.Context) {
 }
 
 func DeleteTag(c *gin.Context) {
+	// num (계정번호) => 해당 계정에 속한 정보들만 추출할 수 있다.
+	num := c.Keys["number"].(int)
+
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
 	tag := model.Tag{}
 	c.ShouldBindJSON(&tag)
 
-	err := tag.DeleteTag(&conn)
+	err := tag.DeleteTag(&conn, num)
 	if err != nil {
-		log.Println("DeleteTag error occurred, account : ", c.Keys["email"])
+		log.Println("DeleteTag error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"tag_deleting_error": err.Error()})
 	} else {

@@ -17,7 +17,7 @@ type Target struct {
 	TargetOrganize   string    `json:"tg_organize"` //소속
 	TargetPosition   string    `json:"tg_position"` //직급
 	TargetTag        [3]string `json:"tg_tag"`      //태그, 추후에 slice 로 변경한다..
-	TargetCreateTime string    `json:"created_time"`
+	TargetCreateTime string    `json:"created_t"`
 	TagArray         []string  `json:"tag_no"` // 태그 입력받을 때 사용
 }
 
@@ -47,7 +47,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) error {
 	} else if len(t.TargetPhone) < 1 {
 		return fmt.Errorf(" Target's Phone number is empty ")
 	} else if len(t.TargetOrganize) < 1 {
-		return fmt.Errorf(" Target's Organize is empty")
+		return fmt.Errorf(" Target's Organize is empty ")
 	} else if len(t.TargetPosition) < 1 {
 		return fmt.Errorf(" Target's Position is empty ")
 	}
@@ -110,7 +110,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
        target_phone,
        target_organize,
        target_position,
-       modified_time,
+       to_char(modified_time, 'YYYY-MM-YY'),
        target_no
     FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num,
              target_no,
@@ -209,7 +209,14 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 			return fmt.Errorf("Please enter the number of the object to be deleted. ")
 		}
 
-		_, err := conn.Exec("DELETE FROM target_info WHERE user_no = $1 AND target_no = $2", num, number)
+		// 먼저 tag_target_info 테이블의 정보를 삭제해야 한다.
+		_, err := conn.Exec("DELETE FROM tag_target_info WHERE user_no = $1 AND target_no = $2", num, number)
+		if err != nil {
+			return fmt.Errorf("Error deleting target ")
+		}
+
+		// 이후 target_info 테이블에서 대상을 지운다.
+		_, err = conn.Exec("DELETE FROM target_info WHERE user_no = $1 AND target_no = $2", num, number)
 		if err != nil {
 			return fmt.Errorf("Error deleting target ")
 		}
@@ -317,9 +324,11 @@ func ExportTargets(num int, tagNumber int) error {
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
 		query := `
-         SELECT target_no, target_name, target_email, target_phone, target_organize, target_position, modified_time
+         SELECT target_no, target_name, target_email, target_phone, target_organize, target_position, 
+         		to_char(modified_time, 'YYYY-MM-YY HH24:MI')
          from target_info
-         WHERE user_no = $1`
+         WHERE user_no = $1
+         ORDER BY target_no`
 
 		rows, err := db.Query(query, num)
 		if err != nil {
@@ -344,8 +353,36 @@ func ExportTargets(num int, tagNumber int) error {
 			err = rows.Scan(&tg.TargetNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 				&tg.TargetPosition, &tg.TargetCreateTime)
 			if err != nil {
-				fmt.Printf("Target's scanning error : %v", err)
+				fmt.Printf("Target scanning error : %v", err)
 				continue
+			}
+
+			query = `SELECT tag_no FROM tag_target_info WHERE user_no = $1 AND target_no = $2`
+			rows2, err2 := db.Query(query, num, tg.TargetNo)
+			if err != nil {
+				fmt.Println(err)
+				return fmt.Errorf("Database error. ")
+			}
+
+			k := 0 // 태그의 인덱스를 담을 변수
+			//var tagNum string
+
+			for rows2.Next() { // todo 이중 포문
+				err2 = rows2.Scan(&tagNumber) // tagNumber 재탕하기
+				if err2 != nil {
+					fmt.Printf("Tag scanning error : %v", err)
+					continue //태그가 없으면 건너뛴다.
+				}
+
+				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				err = tagName.Scan(&tg.TargetTag[k])
+
+				if err != nil {
+					_ = fmt.Errorf("Target's Tag number query Error. ")
+					continue
+				}
+
+				k++
 			}
 
 			str := strconv.Itoa(i)
@@ -354,14 +391,18 @@ func ExportTargets(num int, tagNumber int) error {
 			f.SetCellValue("Sheet1", "C"+str, tg.TargetPhone)
 			f.SetCellValue("Sheet1", "D"+str, tg.TargetOrganize)
 			f.SetCellValue("Sheet1", "E"+str, tg.TargetPosition)
+			f.SetCellValue("Sheet1", "F"+str, tg.TargetTag[0])
+			f.SetCellValue("Sheet1", "G"+str, tg.TargetTag[1])
+			f.SetCellValue("Sheet1", "H"+str, tg.TargetTag[2])
 			f.SetCellValue("Sheet1", "I"+str, tg.TargetCreateTime)
 
 			i++
-		}
 
-		//f.SetCellValue("Sheet1", "F"+str, tg.TargetTag)
-		//f.SetCellValue("Sheet1", "G"+str, tg.TargetTag)
-		//f.SetCellValue("Sheet1", "H"+str, tg.TargetTag)
+			// 태그의 값을 마지막엔 비워준다.
+			tg.TargetTag[0] = ""
+			tg.TargetTag[1] = ""
+			tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
+		}
 
 		f.SetActiveSheet(index)
 
@@ -377,7 +418,7 @@ func ExportTargets(num int, tagNumber int) error {
 
 		return nil
 
-		// todo 아래부터 특정 태그만 골라서 내보낼 경우에 해당함.
+	// todo -------------------아래부터 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------------------
 	} else {
 		var TargetNumber string
 
@@ -394,7 +435,7 @@ func ExportTargets(num int, tagNumber int) error {
 		// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
-		f, err := excelize.OpenFile("./Spreadsheet/sample2.xlsx")
+		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
 			fmt.Println(err)
 			return fmt.Errorf("Open Spreadsheet Error. ")
@@ -405,7 +446,7 @@ func ExportTargets(num int, tagNumber int) error {
 		for query.Next() {
 			tg := Target{}
 			// 해당 태그에 속하는 대상들을 하나하나 가져온다.
-			err = query.Scan(&TargetNumber)
+			err = query.Scan(&TargetNumber) //TargetNumber 변수에 내보낼 대상의 번호를 바인딩
 			if err != nil {
 				_ = fmt.Errorf("Target number scanning Error. ")
 				continue
@@ -413,7 +454,8 @@ func ExportTargets(num int, tagNumber int) error {
 
 			// user_no는 위에서 검증되었기 때문에 조건절에 user_no는 생략하였음.
 			TargetList := db.QueryRow(
-				`SELECT target_name, target_email, target_phone, target_organize, target_position, modified_time
+				`SELECT target_name, target_email, target_phone, target_organize, target_position,
+ 					   to_char(modified_time, 'YYYY-MM-YY HH24:MI')
 					   from target_info
 					   WHERE user_no = $1 AND target_no = $2`,
 				num, TargetNumber)
@@ -425,13 +467,46 @@ func ExportTargets(num int, tagNumber int) error {
 				continue
 			}
 
+			TagList, err2 := db.Query(
+				`SELECT tag_no
+						FROM tag_target_info
+						WHERE user_no = $1 AND target_no = $2`,
+				num, TargetNumber)
+			if err2 != nil {
+				fmt.Println(err)
+			}
+
+			k := 0 // 태그의 인덱스를 담을 변수
+			//var tagNum string
+
+			for TagList.Next() { //todo 이중 포문
+				err2 = TagList.Scan(&tagNumber) //tagNumber 재탕하기, tag_no를 tagNumber 에 바인딩
+				if err2 != nil {
+					fmt.Printf("Tag scanning error : %v", err)
+					continue //태그가 없으면 건너뛴다.
+				}
+
+				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				err = tagName.Scan(&tg.TargetTag[k])
+
+				if err != nil {
+					_ = fmt.Errorf("Target's Tag number query Error. ")
+					continue
+				}
+
+				k++
+			}
+
 			str := strconv.Itoa(i)
 			f.SetCellValue("Sheet1", "A"+str, tg.TargetName)
 			f.SetCellValue("Sheet1", "B"+str, tg.TargetEmail)
 			f.SetCellValue("Sheet1", "C"+str, tg.TargetPhone)
 			f.SetCellValue("Sheet1", "D"+str, tg.TargetOrganize)
 			f.SetCellValue("Sheet1", "E"+str, tg.TargetPosition)
-			f.SetCellValue("Sheet1", "F"+str, tg.TargetCreateTime)
+			f.SetCellValue("Sheet1", "F"+str, tg.TargetTag[0])
+			f.SetCellValue("Sheet1", "G"+str, tg.TargetTag[1])
+			f.SetCellValue("Sheet1", "H"+str, tg.TargetTag[2])
+			f.SetCellValue("Sheet1", "I"+str, tg.TargetCreateTime)
 
 			i++
 		}
@@ -451,13 +526,13 @@ func ExportTargets(num int, tagNumber int) error {
 	return nil
 }
 
-func (t *Tag) CreateTag(conn *sql.DB) error {
+func (t *Tag) CreateTag(conn *sql.DB, num int) error {
 	t.TagName = strings.Trim(t.TagName, " ")
 	if len(t.TagName) < 1 {
 		return fmt.Errorf(" Tag Name is empty. ")
 	}
 
-	_, err := conn.Exec("INSERT INTO tag_info(tag_name) VALUES ($1)", t.TagName)
+	_, err := conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
 	if err != nil {
 		fmt.Println(err)
 		return fmt.Errorf("Tag create error. ")
@@ -466,7 +541,7 @@ func (t *Tag) CreateTag(conn *sql.DB) error {
 	return nil
 }
 
-func (t *Tag) DeleteTag(conn *sql.DB) error {
+func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 
 	// num (int) -> str (string) 변환
 	str := strconv.Itoa(t.TagNo)
@@ -474,7 +549,7 @@ func (t *Tag) DeleteTag(conn *sql.DB) error {
 		return fmt.Errorf("Please enter the number of the object to be deleted. ")
 	}
 
-	_, err := conn.Exec("DELETE FROM tag_info WHERE tag_no = $1", t.TagNo)
+	_, err := conn.Exec("DELETE FROM tag_info WHERE tag_no = $1 AND user_no = $2", t.TagNo, num)
 	if err != nil {
 		return fmt.Errorf("Error deleting target ")
 	}
@@ -491,7 +566,11 @@ func GetTag(num int) []Tag {
 		return nil
 	}
 
-	query := "SELECT tag_no, tag_name, modified_time FROM tag_info WHERE user_no = $1 ORDER BY tag_no asc"
+	query := `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-YY')
+			  FROM tag_info
+			  WHERE user_no = $1
+			  ORDER BY tag_no asc
+`
 	tags, err := db.Query(query, num)
 	if err != nil {
 		fmt.Println(err)
