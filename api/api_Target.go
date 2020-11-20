@@ -43,7 +43,7 @@ func GetTarget(c *gin.Context) {
 	pg := c.Query("page")
 	page, _ := strconv.Atoi(pg)
 
-	target, total, pages, err := model.ReadTarget(num, page) //DB에 저장된 대상들을 읽어오는 메서드
+	targets, total, pages, err := model.ReadTarget(num, page) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
 		log.Println("GetTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
@@ -53,8 +53,8 @@ func GetTarget(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"isOk": 1,
 			"status": http.StatusOK,
-			"targets": target, // 대상 20개
-			"tags": model.GetTag(num), // 태그들
+			"targets": targets, // 대상 20개
+			"tags": model.GetTag(num, page), // 태그들
 			"total" : total, // 대상의 총 갯수
 			"pages" : pages, // 총 페이지 수
 			"page" : page, // 클릭한 페이지가 몇페이지인지

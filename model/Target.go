@@ -135,6 +135,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 
 	var targets []Target
 	tg := Target{}
+
 	for rows.Next() { // 목록들을 하나하나 읽어들여온다.
 		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 			&tg.TargetPosition, &tg.TargetCreateTime, &tg.TargetNo)
@@ -191,8 +192,8 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
     from target_info 
     where user_no = $1`
 
-	page_count := db.QueryRow(query, num)
-	_ = page_count.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
+	pageCount := db.QueryRow(query, num)
+	_ = pageCount.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	total = (pages / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
 
@@ -417,7 +418,7 @@ func ExportTargets(num int, tagNumber int) error {
 		}
 
 		return nil
-
+		
 	// todo -------------------아래부터 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------------------
 	} else {
 		var TargetNumber string
@@ -560,35 +561,44 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 // todo 4 : 대상 / 태그 조인 테이블로 부터 태그를 가져오도록 수정한다.
 // 그전에 조인테이블을 만들어야겠지?ㅊ
 
-func GetTag(num int) []Tag {
+func GetTag(num int, page int) []Tag {
 	db, err := ConnectDB()
 	if err != nil {
 		return nil
 	}
 
-	query := `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-YY')
+	if page == 1 {
+		query := `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-YY')
 			  FROM tag_info
 			  WHERE user_no = $1
 			  ORDER BY tag_no asc
 `
-	tags, err := db.Query(query, num)
-	if err != nil {
-		fmt.Println(err)
+		tags, err := db.Query(query, num)
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
+
+		var tag []Tag
+		tg := Tag{}
+
+		for tags.Next() {
+			err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
+
+			if err != nil {
+				fmt.Printf("Tags scanning Error. : %v", err)
+				continue
+			}
+
+			tag = append(tag, tg)
+		}
+
+		return tag
+	} else {
 		return nil
 	}
 
-	var tag []Tag
-	tg := Tag{}
-	for tags.Next() {
-		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
 
-		if err != nil {
-			fmt.Printf("Tags scanning Error. : %v", err)
-			continue
-		}
 
-		tag = append(tag, tg)
-	}
 
-	return tag
 }
