@@ -271,8 +271,10 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
                 } else {
-                    responseObj = JSON.parse(r.responseText);
-                    alert("SMTP 정보를 확인해주세요.\n"+responseObj.error.Msg);
+                    responseObj = r.responseText;
+                    alert(responseObj)
+                    // responseObj = JSON.parse(r.responseText);
+                    // alert("SMTP 정보를 확인해주세요.\n"+responseObj.error.Msg);
                 }
             }
         };
