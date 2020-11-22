@@ -15,7 +15,7 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 			return nil, fmt.Errorf("unexpected signing method : %v",
 				token.Header["alg"])
 		}
-		return tokenRefresh, nil
+		return tokenRefresh, nil //Refresh Token 만료
 	})
 
 	if err != nil {
@@ -39,17 +39,26 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 }
 
 // Access 토큰만 반환해 주는 메서드
-func (u *User) GetAccessToken() (string, error) {
+func (u *User) GetAccessToken() (string, string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_email"] = u.Email
 	claims["user_name"] = u.Name
 	claims["user_no"] = u.UserNo
-	claims["exp"] = time.Now().Add(time.Second * 5).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	authToken, err := token.SignedString(tokenSecret)
 
-	return authToken, err
+	rfClaims := jwt.MapClaims{}
+	rfClaims["user_email"] = u.Email
+	rfClaims["user_name"] = u.Name
+	rfClaims["user_no"] = u.UserNo
+	rfClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+	rfToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &rfClaims)
+	refreshToken, err := rfToken.SignedString(tokenRefresh)
+
+
+	return authToken, refreshToken, err
 }
 
 

@@ -51,12 +51,11 @@ func (t *Template) Create(conn *sql.DB, userID string) error {
 // 템플릿 조회 메서드, 템플릿 테이블(template_info)의 모든 템플릿을 조회한다.
 // 여기서 유일하게 솔루션을 사용하는 사용자들이 사용하게 되는 매서드
 // 사용자들을 위해 http status를 정의한다.
-func ReadAll() ([]Template, error, int) {
+func ReadAll() ([]Template, error) {
 
-	num := 200
 	db, err := ConnectDB()
 	if err != nil {
-		return nil, fmt.Errorf("DB connecting error. "), num
+		return nil, fmt.Errorf("DB connecting error. ")
 		// DB를 연결하던 중에 오류가 발생하였습니다.
 	}
 	//defer db.Close()
@@ -68,8 +67,7 @@ func ReadAll() ([]Template, error, int) {
 
 	if err != nil {
 		// 템플릿을 DB 로부터 읽어오는데 오류가 발생.
-		num = 401
-		return nil, fmt.Errorf("There was an error reading the template. "), num
+		return nil, fmt.Errorf("There was an error reading the template. ")
 	}
 
 	var templates []Template
@@ -81,8 +79,7 @@ func ReadAll() ([]Template, error, int) {
 
 		if err != nil {
 			// 읽어온 정보를 바인딩하는데 오류가 발생.
-			num = 402
-			return nil, fmt.Errorf("Template scanning error : %v ", err), num
+			return nil, fmt.Errorf("Template scanning error : %v ", err)
 		}
 		tmp.CreatedTime = tmp.CreateRealTime.Format("2006-01-02 15:04")
 
@@ -90,7 +87,7 @@ func ReadAll() ([]Template, error, int) {
 		// 읽어들인 값들을 전부 template 배열에 넣은 후에 반환하여 보여준다.
 	}
 
-	return templates, nil, num
+	return templates, nil
 }
 
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.

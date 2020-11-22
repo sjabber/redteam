@@ -47,8 +47,8 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		bearer, err := c.Request.Cookie("access-token")
 		if err != nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Not authenticated.",
-				"err": err.Error()})
+			log.Println(err.Error()) // named cookie not present
+			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 			// access-token 을 읽어오는데 오류가 발생할 경우 403에러를 반환한다.
 			c.Abort()
 		}
@@ -56,8 +56,8 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 		isValid, user := model.IsTokenValid(bearer.Value)
 		if isValid == false || bearer == nil {
 			log.Println(err.Error())
-			c.JSON(http.StatusForbidden, gin.H{"error": "Not authenticated."})
-			//access-token 을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
+			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+			// access-token 을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
 			c.Abort()
 		} else {
 			c.Set("number", user.UserNo)

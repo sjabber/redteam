@@ -61,8 +61,6 @@ func RegisterRoute(r *gin.Engine) {
 	target.Use(middleware.TokenAuthMiddleWare())
 	//target.Static("/files", "C:/Users/Taeho/go/src/redteam")
 	{
-		//localhost:5000/api/target/getTarget
-
 		target.GET("/getTarget", api.GetTarget)
 		target.POST("/delTarget", api.DeleteTarget)
 		target.POST("/regTarget", api.RegTarget)

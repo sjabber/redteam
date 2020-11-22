@@ -26,8 +26,9 @@ func (u *User) CreateUsers() (int, error) {
 	defer db.Close()
 
 	// 입력하지 않은 정보가 존재하는지 검사
+	// 400에러 : 필수요청 변수가 없는경우
 	if len(u.Password) < 1 || len(u.PasswordCheck) < 1 || len(u.Email) < 1 || len(u.Name) < 1 {
-		num = 400 // 400에러, 정보를 입력해 주세요.
+		num = 400 // 정보를 입력해 주세요.
 		return num, fmt.Errorf(" Please enter the information. ")
 	}
 
@@ -35,33 +36,34 @@ func (u *User) CreateUsers() (int, error) {
 	var validEmail, _ = regexp.MatchString(
 		"^[_a-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", u.Email)
 
-	// 이메일 형식이 올바르지 않습니다.
+	// 402에러 : 회원가입 계정 이메일이나 비밀번호 형식이 잘못된 경우
 	if validEmail != true {
-		num = 402 // 402에러, 비밀번호나 이메일 형식이 올바르지 않습니다.
+		num = 402 // 비밀번호나 이메일 형식이 올바르지 않습니다.
 		return num, fmt.Errorf("Email format is incorrect. ")
 	}
 
 	// 비밀번호 길이 16자 미만
 	if len(u.Password) > 16 || len(u.PasswordCheck) > 16 {
-		num = 402 // 402에러, 비밀번호나 이메일 형식이 올바르지 않습니다.
+		num = 402 // 비밀번호나 이메일 형식이 올바르지 않습니다.
 		return num, fmt.Errorf("Password must be 16 characters or less. ")
 	}
 
 	// 비밀번호 길이 8자 이상
 	if len(u.Password) < 7 || len(u.PasswordCheck) < 7 {
-		num = 402 // 402에러, 비밀번호나 이메일 형식이 올바르지 않습니다.
+		num = 402 // 비밀번호나 이메일 형식이 올바르지 않습니다.
 		return num, fmt.Errorf("Password must be at least 8 characters long. ")
 	}
 
 	// 비밀번호 형식검사 검증
 	if CheckPassword(u.Password) != nil {
-		num = 402 // 402에러, 비밀번호나 이메일 형식이 올바르지 않습니다.
+		num = 402 // 비밀번호 검증시 상황별로 에러메시지 출력
 		return num, CheckPassword(u.Password)
 	}
 
-	// 비밀번호와 비밀번호 확인이 일치하지 않을경우
+	// 비밀번호와 비밀번호 확인이 일치하지 않는지 검사
+	// 401에러 : 비밀번호와 비밀번호 확인이 일치하지 않을 경우
 	if u.Password != u.PasswordCheck {
-		num = 403 // 403에러, 비밀번호가 일치하지 않습니다.
+		num = 401 // 비밀번호가 일치하지 않습니다.
 		return num, fmt.Errorf("Passwords do not match. ")
 	}
 
@@ -71,10 +73,11 @@ func (u *User) CreateUsers() (int, error) {
 	query := "SELECT user_email FROM user_info WHERE user_email = $1"
 	row := db.QueryRow(query, u.Email)
 
+	// 403에러 : 회원가입시 이미 존재하는 계정이 있는경우
 	userLookup := User{}
 	err = row.Scan(&userLookup)
 	if err != sql.ErrNoRows {
-		num = 401 // 403에러, 이미 존재하는 이메일입니다.
+		num = 403  // 이미 존재하는 이메일입니다.
 		fmt.Println("found user : " + userLookup.Email)
 		return num, fmt.Errorf("This account already exists. ")
 	}
@@ -98,7 +101,7 @@ func (u *User) CreateUsers() (int, error) {
 
 	err = row.Scan(&u.UserNo)
 	_, err = db.Exec(`INSERT INTO smtp_info (user_no, smtp_id, smtp_pw)
-        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.Password)
+        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.PasswordHash)
 	if err != nil {
 		return 500, fmt.Errorf("A database error has occurred. (2)")
 	}

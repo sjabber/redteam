@@ -3,3 +3,5 @@
 vendor
 .idea/workspace.xml
 .훈련대상.xlsx
+node_modules
+package-lock.json
