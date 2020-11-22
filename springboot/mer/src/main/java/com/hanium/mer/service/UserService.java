@@ -4,6 +4,7 @@ import com.hanium.mer.repogitory.UserRepository;
 import com.hanium.mer.vo.NewUserInfo;
 import com.hanium.mer.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,8 +33,8 @@ public class UserService {
         UserVo user =  userRepository.findByUserNo(user_no).get();
         user.setUserId(newUserInfo.getEmail());
         user.setUserName(newUserInfo.getName());
-        user.setUserPw(newUserInfo.getPassword());
         user.setModifyTime(LocalDateTime.now());
+        user.setUserPwHash(BCrypt.hashpw(newUserInfo.getPassword().getBytes(), BCrypt.gensalt()));
         System.out.println(userRepository.save(user));
         //error 는?
     }

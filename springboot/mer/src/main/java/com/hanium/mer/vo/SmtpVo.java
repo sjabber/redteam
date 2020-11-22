@@ -60,7 +60,7 @@ public class SmtpVo {
     @JsonProperty(value = "create_time")
     private LocalDateTime createTime;
 
-    @Column(name = "modify")
+    @Column(name = "modified_time")
     @JsonProperty(value = "modify")
     private LocalDateTime modify;
 

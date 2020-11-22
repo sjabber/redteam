@@ -8,18 +8,13 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
-
-//"		setting.GET(""/smtpSetting"", api.GetSmtpSetting)
-//        setting.POST(""/smtpSetting"", api.SetSmtpSetting)
-//        setting.POST(""/smtpConnectCheck"", api.SmtpConnectionCheck)"
 
 @RestController
 public class ApiSMTPController {
@@ -41,35 +36,87 @@ public class ApiSMTPController {
         return new ResponseEntity<Object>("error", HttpStatus.FORBIDDEN);
     }
 
+    //todo 비밀번호 암호화
     @PostMapping("/setting/smtpSetting")
-    public HttpStatus setSTMPSetting(HttpServletRequest request, @RequestBody SmtpVo newSmtp) throws UnsupportedEncodingException {
+    public ResponseEntity<Object> setSTMPSetting(HttpServletRequest request, @RequestBody SmtpVo newSmtp)
+            throws UnsupportedEncodingException {
+
         Optional<SmtpVo> smtp;
         Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try{
                 smtpService.setSMTP(Long.parseLong(claims.get("user_no").toString()), newSmtp);
                 System.out.println(newSmtp.toString());
-                return HttpStatus.OK;
+                return new ResponseEntity<Object>(newSmtp.toString(), HttpStatus.OK);
             }catch(Exception e){
                 e.printStackTrace();
                 //에러 400-> smtp 정보확인
                 //401 비밀번호확인 제대로 설정하기
-                return HttpStatus.BAD_REQUEST;
+                return new ResponseEntity<Object>("smtp 정보를 확인해주세요.", HttpStatus.BAD_REQUEST);
             }
         }
 
-        return HttpStatus.FORBIDDEN;
+        return new ResponseEntity<Object>("토큰을 확인해주세요", HttpStatus.FORBIDDEN);
     }
 
+    //todo 인증에러는 front 401은 connect에서, connect에서 auth 에러 시 아래 에러 정리하기
     @PostMapping("/setting/smtpConnectCheck")
-    public HttpStatus connectSTMPTest(HttpServletRequest request, @RequestBody SmtpVo smtp) throws UnsupportedEncodingException {
-
+    public ResponseEntity<Object> connectSTMPTest(@RequestBody SmtpVo smtp){
         try {
             smtpService.connectCheck(smtp);
-            return HttpStatus.OK;
-        }catch (Exception e){
+        }catch (IllegalStateException e) {
             e.printStackTrace();
-            return HttpStatus.UNAUTHORIZED;
+            return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
+        } catch(AuthenticationFailedException e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }catch (MessagingException e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<Object>("성공", HttpStatus.OK);
     }
+
+    //project 생성 시
+    @GetMapping("/setting/smtpConnectSimpleCheck")
+    public ResponseEntity<Object> connectionSTMPTest(HttpServletRequest request) throws UnsupportedEncodingException{
+
+        Optional<SmtpVo> smtp = null;
+        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
+        if(claims != null){
+            smtp = smtpService.getSMTP(Long.parseLong(claims.get("user_no").toString()));
+        }else{
+            return new ResponseEntity<Object>("토큰을 확인해주세요", HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            smtpService.connectCheck(smtp.get());
+        }catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
+        } catch(AuthenticationFailedException e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }catch (MessagingException e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<Object>("성공", HttpStatus.OK);
+    }
+
+
+//    @ExceptionHandler(value = { MessagingException.class, NullPointerException.class, AuthenticationFailedException.class, NoSuchMethodError.class})
+//    @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+//    public void nfeHandler(Exception e){
+//        e.printStackTrace();
+//    }
+
 }

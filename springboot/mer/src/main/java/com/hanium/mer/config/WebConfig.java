@@ -25,13 +25,15 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("*") //"GET", "POST","PUT", "DELETE"
                 .allowCredentials(true);
+//                .allowedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Methods","Content-Access-Control-Allow-Headers","Content-Type", "Access-Control-Allow-Credentials")
+//                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Methods","Content-Access-Control-Allow-Headers","Content-Type", "Access-Control-Allow-Credentials");
     }
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(httpHeaderNJWTInterceptor)
-                .addPathPatterns("**");
+                .addPathPatterns("/**");
     }
 
 }
