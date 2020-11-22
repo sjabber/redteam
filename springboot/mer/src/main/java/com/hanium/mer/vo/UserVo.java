@@ -30,10 +30,6 @@ public class UserVo {
     @JsonProperty(value = "name")
     private String userName;
 
-    @Column(name = "user_pw")
-    @JsonProperty(value = "user_pw")
-    private String userPw;
-
     @Column(name = "created_time")
     @JsonProperty(value = "created_time")
     private LocalDateTime createdTime;
@@ -45,4 +41,8 @@ public class UserVo {
     @Column(name = "is_enabled")
     @JsonProperty(value = "is_enabled")
     private int isEnabled;
+
+    @Column(name="user_pw_hash")
+    @JsonProperty(value="user_pw_hash")
+    private String userPwHash;
 }

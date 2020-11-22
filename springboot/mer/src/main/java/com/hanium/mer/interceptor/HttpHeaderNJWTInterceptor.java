@@ -17,41 +17,39 @@ import java.util.Date;
 
 @Component
 public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
-    private static final int SUCCESS = 0;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
-        //최근까지 브라우저에서보면 헤더 붙지도 않음.. cors때문에 붙는거 제외하고는..cors에서 allow나, exponsed headers인가 해야하나..
-        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-        //cors설정에서 자동으로 붙여줌
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-        response.setHeader("Last-Modified", format.format(new Date()));
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Expires", "-1");
+        response = setHeader(response);
 
         Cookie[] cookies = request.getCookies();
         Cookie cookie = null;
+
+        if (request.getMethod().equals("OPTIONS")){
+            response.setStatus(HttpServletResponse.SC_OK);
+            return true;
+        }
+        System.out.println(cookies.length);
         if (cookies != null) {
             for (Cookie c : cookies) {
-                System.out.println("cookie exist");
+
                 try{
                     if (c.getName().equals("access-token")) {
                         TokenUtils.isValidToken(c.getValue());
                         return true;
                     }
                 } catch (ExpiredJwtException e) {
+
                     try {
-                        response.sendError(405, "token expired");
+                        response.sendError(403, "token expired");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
                         return false;
                     }
                 } catch (JwtException e) {
+
                     try {
                         response.sendError(405, "token tempered");
                         return false;
@@ -60,6 +58,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
                         return false;
                     }
                 } catch (NullPointerException e) {
+
                     try {
                         response.sendError(405, "token null");
                         return false;
@@ -68,8 +67,17 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
                         return false;
                     }
                 } catch(UnsupportedEncodingException e){
+
                     try {
                         response.sendError(405, "unsupportedEncoding");
+                        return false;
+                    }catch(IOException ex){
+                        ex.printStackTrace();
+                        return false;
+                    }
+                }catch(NoSuchMethodError e){
+                    try {
+                        response.sendError(403, "토큰을 확인해주세요");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -80,7 +88,9 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
         }
 
         try {
-            response.sendError(444, "null cookies");
+
+            response.sendError(403, "null cookies");
+
             return false;
         }catch(IOException ex){
             ex.printStackTrace();
@@ -91,15 +101,6 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
             throws Exception {
-//        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-//        //cors설정에서 자동으로 붙여줌
-//        response.setHeader("Access-Control-Allow-Credentials", "true");
-//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
-//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
-//        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-//        response.setHeader("Last-Modified", format.format(new Date()));
-//        response.setHeader("Pragma", "no-cache");
-//        response.setHeader("Expires", "-1");
     }
 
     @Override
@@ -111,9 +112,12 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
     public HttpServletResponse setHeader(HttpServletResponse response){
         SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
         //cors설정에서 자동으로 붙여줌
-        //response.setHeader("Access-Control-Allow-Credentials", "true");
-        //response.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
-        //response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
+        //하지만 에러시 controller까지 가지 않으므로 설정을 해줘야한다.
+        //만약 preHandler에서 true라면 붙어서 cors헤더가 붙어서 올것이다.
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
         response.setHeader("Last-Modified", format.format(new Date()));
         response.setHeader("Pragma", "no-cache");
