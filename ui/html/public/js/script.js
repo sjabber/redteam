@@ -131,15 +131,15 @@ function Register() {
                 alert("회원가입이 완료되었습니다.");
                 document.location.href = '/'
             } else if (r.status === 400) {
-                alert("정보를 입력해주세요. ");
+                alert("회원정보를 입력해주세요. ");
             } else if (r.status === 401) {
-                alert("이미 존재하는 이메일 입니다.");
+                alert("비밀번호를 확인해 주세요.");
             } else if (r.status === 402) {
-                alert("비밀번호나 이메일 형식이 올바르지 않습니다. ");
+                alert("이메일, 비밀번호 형식을 확인해 주세요. ");
             } else if (r.status === 403) {
-                alert("비밀번호가 일치하지 않습니다.");
-            } else if (r.status === 405) {
-                alert("계정을 생성하는 도중 오류가 발생하였습니다. ")
+                alert("이미 존재하는 계정입니다. ");
+            } else if (r.status === 500) {
+                alert("서버에러")
             }
 
         }

@@ -597,8 +597,4 @@ func GetTag(num int, page int) []Tag {
 	} else {
 		return nil
 	}
-
-
-
-
 }

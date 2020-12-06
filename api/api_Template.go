@@ -2,10 +2,12 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"redteam/model"
+	"strconv"
 )
 
 // 템플릿 api (Restful)
@@ -15,22 +17,22 @@ import (
 // - todo 클릭하면 편집할 수 있는 팝업이 뜨도록 만든다.
 
 // 템플릿 등록하기
-func PostTemplateList(c *gin.Context) {
-	userID := c.GetString("email") // httpheader.go 의 AuthMiddleware 에 셋팅되어있음
-	db, _ := c.Get("db")           // httpheader.go 의 DBMiddleware에 셋팅되어있음.
-	conn := db.(sql.DB)
-
-	tmp := model.Template{}
-	c.ShouldBindJSON(&tmp)
-	err := tmp.Create(&conn, userID)
-	if err != nil {
-		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, tmp)
-}
+//func PostTemplateList(c *gin.Context) {
+//	userID := c.GetString("email") // httpheader.go 의 AuthMiddleware 에 셋팅되어있음
+//	db, _ := c.Get("db")           // httpheader.go 의 DBMiddleware에 셋팅되어있음.
+//	conn := db.(sql.DB)
+//
+//	tmp := model.Template{}
+//	c.ShouldBindJSON(&tmp)
+//	err := tmp.Create(&conn, userID)
+//	if err != nil {
+//		log.Print(err.Error())
+//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	c.JSON(http.StatusOK, tmp)
+//}
 
 // 템플릿 목록 가져오기
 func GetTemplateList(c *gin.Context) {
@@ -44,14 +46,37 @@ func GetTemplateList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
 }
 
+func TemplateDetail(c *gin.Context) {
+	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
+	//num := c.Keys["number"].(int)
+
+	tn := c.Query("template_no")
+	tmp_no, _ := strconv.Atoi(tn)
+	fmt.Print(tmp_no)
+
+	//tmp_no := 1
+
+	tmp, err := model.Detail(tmp_no)
+	if err != nil {
+		log.Println("Error fetching template details :", c.Keys["email"])
+		log.Print(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"tmpls": tmp})
+	}
+
+}
+
 // 템플릿 수정하기
-func PutTemplateList(c *gin.Context) {
+func EditTemplate(c *gin.Context) {
+	num := c.Keys["email"].(string)
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
-	err := tmp.Update(&conn)
+	err := tmp.Update(&conn, num)
 	if err != nil {
 		log.Print(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -34,15 +34,16 @@ func RegisterRoute(r *gin.Engine) {
 	setting := r.Group("/setting")
 	setting.Use(middleware.TokenAuthMiddleWare()) //로그인 이후에 사용할 api 들은 토큰검증이 필요
 	{
-		setting.POST("/setTemplates", api.PostTemplateList)
+		//setting.POST("/setTemplates", api.PostTemplateList) - 사용안함
 		setting.GET("/getTemplates", api.GetTemplateList)
-		setting.POST("/putTemplates", api.PutTemplateList)
+		setting.POST("/EditTemplate", api.EditTemplate)
 		setting.POST("/deleteTemplates", api.DeleteTemplateList)
-		//setting.GET("/userSetting", api.GetUserSetting)
-		//setting.POST("/userSetting", api.SetUserSetting)
-		//setting.GET("/smtpSetting", api.GetSmtpSetting)
-		//setting.POST("/smtpSetting", api.SetSmtpSetting)
-		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck)
+		setting.GET("/TemplateDetail", api.TemplateDetail)
+		//setting.GET("/userSetting", api.GetUserSetting) - spring boot
+		//setting.POST("/userSetting", api.SetUserSetting) - spring boot
+		//setting.GET("/smtpSetting", api.GetSmtpSetting) - spring boot
+		//setting.POST("/smtpSetting", api.SetSmtpSetting) - spring boot
+		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck) - spring boot
 	}
 
 	// 대시보드

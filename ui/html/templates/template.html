@@ -187,7 +187,7 @@
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                id="sender_name"
-                                                                               maxlength="5"><label>발송자</label></div>
+                                                                               maxlength="30"><label>발송자</label></div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                id="title" maxlength="60"><label>메일 제목(최대
                                     30자)</label>
@@ -261,8 +261,8 @@
                                 rObj.tmpls[i].tmp_no + '</td><td>' +
                                 '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
                                 ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
-                                '<span></span></div></td><td>' + rObj.tmpls[i].division + '</td><td>' + rObj.tmpls[i].kind + '</td><td>' + rObj.tmpls[i].file_info +
-                                '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].mail_title + '</td><td>' +
+                                '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
                                 rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
                                 '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
 
@@ -277,7 +277,6 @@
                     }
 
                     // paging(rObj.total, page);
-
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
@@ -297,19 +296,28 @@
     GetTemplates();
 
     function GetTmlDetail(tml_no) {
+
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no='+tml_no, true);
+        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             let rObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    rObj = JSON.parse(r.responseText);
                     console.log(r.responseText);
+                    rObj = JSON.parse(r.responseText);
                     // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
-                    // paging(rObj.total, page);
+                    // todo 김태호 멘티 자체적으로 포멧 추가..
 
+                    $('#tmp_division').val(rObj.tmpls.tmp_division);
+                    $('#tmp_kind').val(rObj.tmpls.tmp_kind);
+                    $('#file_info').val(rObj.tmpls.file_info);
+                    $('#sender_name').val(rObj.tmpls.sender_name);
+                    $('#title').val(rObj.tmpls.title);
+                    CKEDITOR.instances.content.setData(rObj.tmpls.content);
+                    // $('#content').val(rObj.tmpls.content);
+                    $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
@@ -322,7 +330,6 @@
             }
         };
         r.send();
-
     }
 
     function editTml() {
@@ -347,7 +354,7 @@
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
-        r.setRequestHeader("Content-Type", "application/json");
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
@@ -368,10 +375,11 @@
     }
 
     function OpenModal(i) {
-        console.log(i + " 번호")
+        console.log(i + "번호")
+
+        GetTmlDetail(i); //todo 김태호 멘티 test 용 추가함.
+
         $("#my_modal").show().center();
-
-
     }
 
     function closeModal() {
