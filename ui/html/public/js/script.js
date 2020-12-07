@@ -75,9 +75,13 @@ function Login() {
             } else if (r.status === 400) {
                 alert("계정 정보를 입력해주세요. ");
             } else if (r.status === 401) {
-                alert("해당 계정이 존재하지 않습니다. ");
+                alert("계정 정보를 확인해주세요. ");
             } else if (r.status === 402) {
-                alert("패스워드가 일치하지 않습니다. ")
+                alert("이메일, 비밀번호 형식이 잘못됐습니다. ");
+            } else if (r.status === 403) {
+                alert("존재하지 않는 계정입니다. ");
+            } else if (r.status === 500) {
+                alert("서버에러");
             }
         }
     };

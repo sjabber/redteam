@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                id="target_name"><label>이름</label></div>
-                                <div class="form-group label--floating"><input type="text"
+                                <div class="form-group label--floating"><input type="text" onkeyup="inputPhoneNumber(this);" maxlength="13"
                                                                                id="target_phone"><label>전화번호</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
@@ -395,8 +395,6 @@
                             '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
                             '                </div></tr></td>');
                     }
-
-
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
@@ -610,12 +608,18 @@
                 if (r.readyState === 4) {
                     if (r.status === 200) {
                         document.location.reload();
+                    } else if (r.status === 400) {
+                        alert("등록정보를 입력해주세요. ");
+                    } else if (r.status === 402) {
+                        alert("이름이나 이메일, 전화번호 입력 형식이 잘못됐습니다. ");
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
                             // GetTarget(page)
                             console.log("true")
                         }
+                    } else if (r.status === 500) {
+                        alert("서버에러");
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -720,7 +724,9 @@
                         location.reload();
                     },
                     error: function (result) {
-                        if (result.status === 403) {
+                        if (result.status === 500) {
+                            alert('서버에러');
+                        } else if (result.status === 403) {
                             Refresh()
                         } else {
                             alert('파일을 확인해주세요');
@@ -732,6 +738,33 @@
         });
 
     });
+
+    function inputPhoneNumber(obj) {
+
+        var number = obj.value.replace(/[^0-9]/g, "");
+        var phone = "";
+
+        if(number.length < 4) {
+            return number;
+        } else if(number.length < 7) {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3);
+        } else if(number.length < 11) {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3, 3);
+            phone += "-";
+            phone += number.substr(6);
+        } else {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3, 4);
+            phone += "-";
+            phone += number.substr(7);
+        }
+        obj.value = phone;
+    }
 
     // CheckLogin();
     GetDashBoard();

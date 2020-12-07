@@ -8,7 +8,8 @@ import (
 )
 
 type Template struct {
-	TmpNo 			  int `json:"tmp_no"`
+	FakeNo			int `json:"fake_no"`
+	TmpNo 			int `json:"tmp_no"`
 	//UserNo       int	`json:"user_no"`		  // 사용자(사원) 번호
 	Division       string `json:"tmp_division"`  // 구분
 	Kind           string `json:"tmp_kind"`     // 훈련유형
@@ -52,7 +53,7 @@ type Template struct {
 // 템플릿 조회 메서드, 템플릿 테이블(template_info)의 모든 템플릿을 조회한다.
 // 여기서 유일하게 솔루션을 사용하는 사용자들이 사용하게 되는 매서드
 // 사용자들을 위해 http status를 정의한다.
-func ReadAll() ([]Template, error) {
+func ReadAll(num int) ([]Template, error) {
 
 	db, err := ConnectDB()
 	if err != nil {
@@ -61,10 +62,33 @@ func ReadAll() ([]Template, error) {
 	}
 	//defer db.Close()
 
-	query := "SELECT tmp_no, tmp_division, tmp_kind, file_info, tmp_name," +
-		" mail_title, sender_name, download_type, created_time FROM template_info ORDER BY tmp_no"
+	query := `SELECT 
+	   row_num,
+	   tmp_no,
+       tmp_division,
+       tmp_kind,
+       file_info,
+       tmp_name,
+       mail_title,
+       sender_name,
+       download_type,
+       created_time
+FROM (SELECT ROW_NUMBER() over (ORDER BY tmp_no) AS row_num,
+			 tmp_no,
+             tmp_division,
+             tmp_kind,
+             file_info,
+             tmp_name,
+             mail_title,
+             sender_name,
+             download_type,
+             created_time
+      FROM template_info
+      WHERE user_no = 0 OR user_no = $1
+     ) AS T
+ORDER BY row_num;`
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, num)
 
 	if err != nil {
 		// 템플릿을 DB 로부터 읽어오는데 오류가 발생.
@@ -74,7 +98,7 @@ func ReadAll() ([]Template, error) {
 	var templates []Template
 	for rows.Next() {
 		tmp := Template{}
-		err = rows.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind,
+		err = rows.Scan(&tmp.FakeNo, &tmp.TmpNo, &tmp.Division, &tmp.Kind,
 			&tmp.FileInfo, &tmp.TmpName, &tmp.MailTitle, &tmp.SenderName,
 			&tmp.DownloadType, &tmp.CreateRealTime)
 
@@ -82,7 +106,7 @@ func ReadAll() ([]Template, error) {
 			// 읽어온 정보를 바인딩하는데 오류가 발생.
 			return nil, fmt.Errorf("Template scanning error : %v ", err)
 		}
-		tmp.CreatedTime = tmp.CreateRealTime.Format("2020-12-05")
+		tmp.CreatedTime = tmp.CreateRealTime.Format("2006-01-02 15:04")
 
 		switch tmp.Division {
 		case "1":
@@ -124,47 +148,45 @@ func ReadAll() ([]Template, error) {
 }
 
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
-func (t *Template) Update(conn *sql.DB, num string) error {
+func (t *Template) Update(conn *sql.DB, num int) error {
 
-	switch t.Division {
-	case "1":
-		t.Division = "기본"
-	case "2":
-		t.Division = "사용자"
-	}
-
-	switch t.Kind {
-	case "1":
-		t.Kind = "경고 안내"
-	case "2":
-		t.Kind = "피싱 유도"
-	case "3":
-		t.Kind = "실태조사"
-	}
-
-	switch t.FileInfo {
-	case "1":
-		t.FileInfo = "EXE"
-	case "2":
-		t.FileInfo = "HTML"
-	case "3":
-		t.FileInfo = "Excel"
-	}
-
-	if t.DownloadType == "1" {
-		t.DownloadType = "링크 첨부"
-	} else if t.DownloadType == "" {
-		t.DownloadType = "파일 첨부"
-	} else {
-		t.DownloadType = ""
-	}
+	//switch t.Division {
+	//case "기본":
+	//	t.Division = "1"
+	//case "사용자":
+	//	t.Division = "2"
+	//}
+	//
+	//switch t.Kind {
+	//case "경고 안내":
+	//	t.Kind = "1"
+	//case "피싱 유도":
+	//	t.Kind = "2"
+	//case "실태조사":
+	//	t.Kind = "3"
+	//}
+	//
+	//switch t.FileInfo {
+	//case "EXE":
+	//	t.FileInfo = "1"
+	//case "HTML":
+	//	t.FileInfo = "2"
+	//case "Excel":
+	//	t.FileInfo = "3"
+	//}
+	//
+	//if t.DownloadType == "링크 첨부" {
+	//	t.DownloadType = "1"
+	//} else if t.DownloadType == "파일 첨부" {
+	//	t.DownloadType = "2"
+	//}
 
 	query := `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
- 	mail_title, mail_content, sender_name, download_type)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+ 	mail_title, mail_content, sender_name, download_type, user_no)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
 	_, err := conn.Exec(query, t.Division, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
-			t.Content, t.SenderName, t.DownloadType)
+			t.Content, t.SenderName, t.DownloadType, num)
 
 	if err != nil {
 		log.Panic(err)

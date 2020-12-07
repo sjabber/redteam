@@ -24,14 +24,15 @@ func RegTarget(c *gin.Context) {
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
-	err := target.CreateTarget(&conn, num)
+	errcode, err := target.CreateTarget(&conn, num)
 	if err != nil {
 		log.Println("RegTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(errcode, gin.H{"error": err.Error()})
 		return
 	} else {
-		c.Status(http.StatusOK)
+		//errcode == status.Ok (200)
+		c.Status(errcode)
 	}
 }
 

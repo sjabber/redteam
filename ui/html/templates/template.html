@@ -187,11 +187,12 @@
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                id="sender_name"
-                                                                               maxlength="30"><label>발송자</label></div>
+                                                                               maxlength="30"></div>
+                                    <!-- <label>발송자</label> -->
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="title" maxlength="60"><label>메일 제목(최대
-                                    30자)</label>
-                                </div>
+                                                                               id="title" maxlength="60"></div>
+                                    <!-- <label>메일 제목(최대 30자)</label> -->
+
 
 
                                 <textarea name="content" id="content"></textarea>
@@ -205,7 +206,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group w-50">
-                                    <label for="download_type">다운로드 타입</label><select id="download_type">
+                                    <label for="download_type">다운로드 방식</label><select id="download_type">
                                     <option selected value="">첨부파일 없음</option>
                                     <option value="1">링크 첨부</option>
                                 </select>
@@ -257,8 +258,8 @@
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
                         for (let i = 0; i < rObj.tmpls.length; i++) {
-                            $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].tmp_no + '</td>' +
-                                rObj.tmpls[i].tmp_no + '</td><td>' +
+                            $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                                rObj.tmpls[i].fake_no + '</td><td>' +
                                 '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
                                 ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
                                 '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
@@ -338,7 +339,7 @@
         const file_info = $('#file_info').val();
         const sender_name = $('#sender_name').val();
         const title = $('#title').val();
-        const content = $('#content').val();
+        const content = CKEDITOR.instances.content.getData();
         const download_type = $('#download_type').val();
 
         const formData = {

@@ -34,7 +34,7 @@ func (u *User) CreateUsers() (int, error) {
 
 	// 이메일 형식을 검사하는 정규식
 	var validEmail, _ = regexp.MatchString(
-		"^[_a-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", u.Email)
+		"^[_A-Za-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", u.Email)
 
 	// 402에러 : 회원가입 계정 이메일이나 비밀번호 형식이 잘못된 경우
 	if validEmail != true {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 	"time"
 )
 
@@ -58,6 +59,8 @@ func (u *User) GetAuthToken() (string, string, error) {
 // 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
 func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 	num := 200 // 기본적으로 200 (StatusOk의 값을 넣어놓는다.)
+
+	u.Email = strings.ToLower(u.Email)
 
 	if u.Email == "" || u.Password == "" {
 		num = 400 // 아이디나 패스워드를 입력하지 않은경우.
