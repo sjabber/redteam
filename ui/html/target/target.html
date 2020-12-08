@@ -570,9 +570,22 @@
             r.send(JSON.stringify({"tag_name": $('#tag_name').val()}));
         });
         $('#target_reg').click(function () {
+
+            var phone = "";
+
+            if ($('#target_phone').val().length == 12) {
+                phone += $('#target_phone').val().substr(0,3);
+                phone += $('#target_phone').val().substr(4,3);
+                phone += $('#target_phone').val().substr(8,4);
+            } else if($('#target_phone').val().length == 13) {
+                phone += $('#target_phone').val().substr(0,3);
+                phone += $('#target_phone').val().substr(4,4);
+                phone += $('#target_phone').val().substr(9,4);
+            }
+
             const tg_email = $('#target_email').val();
             const tg_name = $('#target_name').val();
-            const tg_phone = $('#target_phone').val();
+            const tg_phone = phone;
             const tg_organ = $('#target_organ').val();
             const tg_position = $('#target_position').val();
             const tag_no_1 = $('#tag_selector_1').val();

@@ -87,7 +87,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
 	// 핸드폰 형식검사
 	var phoneNumber, _ = regexp.MatchString(
-		"^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$", t.TargetPhone)
+		"^[0-9]{10,11}$", t.TargetPhone)
 
 	if phoneNumber != true {
 		errcode = 402
@@ -184,7 +184,23 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 			continue
 		}
 
-		// 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
+		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
+		var sub [3]string
+		phone := []rune(tg.TargetPhone)
+
+		if len(tg.TargetPhone) == 10 {
+			sub[0] = string(phone[0:3])
+			sub[1] = string(phone[3:6])
+			sub[2] = string(phone[6:10])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if len(tg.TargetPhone) == 11 {
+			sub[0] = string(phone[0:3])
+			sub[1] = string(phone[3:7])
+			sub[2] = string(phone[7:11])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		}
+
+		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
 		// 태그 번호를 담을 변수 (tag_target_info 테이블로부터 조회한 결과를 담는다.)
 		var tagNumber string
 
@@ -306,27 +322,12 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 		var validPhone, _ = regexp.MatchString(
 			"^[0-9]{10,11}$", t.TargetPhone)
 
-		var sub [3]string
-
-		// 핸드폰 번호 형식이 잘못됐으면 그냥 공백처리한다.
+		// 핸드폰 번호 형식이 올바르지 않을 경우에는 공백처리한다.
 		if validPhone != true {
 			t.TargetPhone = ""
-		} else {
-			//하이픈 추가절차
-			phone := []rune(t.TargetPhone)
-
-			if len(t.TargetPhone) == 10 {
-				sub[0] = string(phone[0:3])
-				sub[1] = string(phone[3:6])
-				sub[2] = string(phone[6:10])
-			} else if len(t.TargetPhone) == 11 {
-				sub[0] = string(phone[0:3])
-				sub[1] = string(phone[3:7])
-				sub[2] = string(phone[7:11])
-			}
-
-			t.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
 		}
+
+		var sub [3]string
 
 		// 여기부터는 선택정보.
 		t.TargetOrganize = f.GetCellValue("Sheet1", "D"+str)
@@ -498,8 +499,8 @@ func ExportTargets(num int, tagNumber int) error {
 		}
 
 		return nil
-		
-	// todo -------------------아래부터 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------------------
+
+		// todo -------------------아래부터 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------------------
 	} else {
 		var TargetNumber string
 
