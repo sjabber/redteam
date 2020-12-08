@@ -39,11 +39,13 @@ func RegisterRoute(r *gin.Engine) {
 		setting.POST("/EditTemplate", api.EditTemplate)
 		setting.POST("/deleteTemplates", api.DeleteTemplateList)
 		setting.GET("/TemplateDetail", api.TemplateDetail)
-		//setting.GET("/userSetting", api.GetUserSetting) - spring boot
-		//setting.POST("/userSetting", api.SetUserSetting) - spring boot
-		//setting.GET("/smtpSetting", api.GetSmtpSetting) - spring boot
-		//setting.POST("/smtpSetting", api.SetSmtpSetting) - spring boot
-		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck) - spring boot
+		setting.GET("/getTag", api.GetTag)
+
+		//setting.GET("/userSetting", api.GetUserSetting) //Note - spring boot
+		//setting.POST("/userSetting", api.SetUserSetting) //Note - spring boot
+		//setting.GET("/smtpSetting", api.GetSmtpSetting) //Note - spring boot
+		//setting.POST("/smtpSetting", api.SetSmtpSetting) //Note - spring boot
+		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck) //Note - spring boot
 	}
 
 	// 대시보드

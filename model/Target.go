@@ -87,7 +87,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
 	// 핸드폰 형식검사
 	var phoneNumber, _ = regexp.MatchString(
-		"^[0-9]{10,11}$", t.TargetPhone)
+		"^[0-9]{9,11}$", t.TargetPhone)
 
 	if phoneNumber != true {
 		errcode = 402
@@ -306,7 +306,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 			"^[_A-Za-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", t.TargetEmail)
 
 		// 이름 형식검사 (한글, 영어 이름만 허용)
-		var validName, _ = regexp.MatchString("^[가-힣A-Za-z\\s]{1,30}$", t.TargetName)
+		var validName, _ = regexp.MatchString("^[가-힣A-Za-z\\s]{2,30}$", t.TargetName)
 
 		// 필수적인 정보가 누락됐거나 형식이 잘못된 경우 그 즉시 입력을 중단한다.
 		if validName != true || t.TargetName == "" {
@@ -637,41 +637,74 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 	return nil
 }
 
-// todo 4 : tag_target_info 테이블로부터 태그번호 조회 ->번호로 tag_info 에서 정보를 가져온다.
-func GetTag(num int, page int) []Tag {
+// todo 4 : tag_info 에서 사용자 번호로 태그정보를 가져온다.
+func GetTag(num int) []Tag {
 	db, err := ConnectDB()
 	if err != nil {
 		return nil
 	}
+	var query string
 
-	if page == 1 {
-		query := `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-YY')
+	query = `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-YY')
 			  FROM tag_info
 			  WHERE user_no = $1
 			  ORDER BY tag_no asc
 `
-		tags, err := db.Query(query, num)
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
-
-		var tag []Tag
-		tg := Tag{}
-
-		for tags.Next() {
-			err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
-
-			if err != nil {
-				fmt.Printf("Tags scanning Error. : %v", err)
-				continue
-			}
-
-			tag = append(tag, tg)
-		}
-
-		return tag
-	} else {
+	tags, err := db.Query(query, num)
+	if err != nil {
+		fmt.Println(err)
 		return nil
 	}
+
+	var tag []Tag
+	tg := Tag{}
+
+	for tags.Next() {
+		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
+
+		if err != nil {
+			fmt.Printf("Tags scanning Error. : %v", err)
+			continue
+		}
+
+		tag = append(tag, tg)
+	}
+
+	return tag
+}
+
+// CreateProject 에서 사용할 메서드.
+func GetTag2(num int) []Tag {
+	db, err := ConnectDB()
+	if err != nil {
+		return nil
+	}
+	var query string
+
+	query = `SELECT tag_no, tag_name
+			  FROM tag_info
+			  WHERE user_no = $1
+			  ORDER BY tag_no asc
+`
+	tags, err := db.Query(query, num)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	var tag []Tag
+	tg := Tag{}
+
+	for tags.Next() {
+		err = tags.Scan(&tg.TagNo, &tg.TagName)
+
+		if err != nil {
+			fmt.Printf("Tags scanning Error. : %v", err)
+			continue
+		}
+
+		tag = append(tag, tg)
+	}
+
+	return tag
 }

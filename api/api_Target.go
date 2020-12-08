@@ -55,7 +55,7 @@ func GetTarget(c *gin.Context) {
 			"isOk": 1,
 			"status": http.StatusOK,
 			"targets": targets, // 대상 20개
-			"tags": model.GetTag(num, page), // 태그들
+			"tags": model.GetTag(num), // 태그들
 			"total" : total, // 대상의 총 갯수
 			"pages" : pages, // 총 페이지 수
 			"page" : page, // 클릭한 페이지가 몇페이지인지
