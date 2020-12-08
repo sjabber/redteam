@@ -188,7 +188,17 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 		var sub [3]string
 		phone := []rune(tg.TargetPhone)
 
-		if len(tg.TargetPhone) == 10 {
+		if len(tg.TargetPhone) < 10 {
+			sub[0] = string(phone[0:2])
+			sub[1] = string(phone[2:5])
+			sub[2] = string(phone[5:9])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
+			sub[0] = string(phone[0:2])
+			sub[1] = string(phone[2:6])
+			sub[2] = string(phone[6:10])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if len(tg.TargetPhone) == 10 {
 			sub[0] = string(phone[0:3])
 			sub[1] = string(phone[3:6])
 			sub[2] = string(phone[6:10])
@@ -320,7 +330,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 		// 전화번호 형식을 검사한 뒤 하이픈(-)을 추가한다.
 		// 핸드폰 형식검사
 		var validPhone, _ = regexp.MatchString(
-			"^[0-9]{10,11}$", t.TargetPhone)
+			"^[0-9]{9,11}$", t.TargetPhone)
 
 		// 핸드폰 번호 형식이 올바르지 않을 경우에는 공백처리한다.
 		if validPhone != true {

@@ -573,15 +573,27 @@
 
             var phone = "";
 
-            if ($('#target_phone').val().length == 12) {
+            if ($('#target_phone').val().length < 12) {
+                //case : 02-xxx-xxxx
+                phone += $('#target_phone').val().substr(0, 2);
+                phone += $('#target_phone').val().substr(3, 3);
+                phone += $('#target_phone').val().substr(7, 4);
+            } else if ($('#target_phone').val().substr(1, 1) === "2" && $('#target_phone').val().length === 12) {
+                //case : 02-xxxx-xxxx
+                phone += $('#target_phone').val().substr(0, 2);
+                phone += $('#target_phone').val().substr(3, 4);
+                phone += $('#target_phone').val().substr(8, 4);
+            } else if ($('#target_phone').val().length === 12) {
                 phone += $('#target_phone').val().substr(0,3);
                 phone += $('#target_phone').val().substr(4,3);
                 phone += $('#target_phone').val().substr(8,4);
-            } else if($('#target_phone').val().length == 13) {
+            } else if($('#target_phone').val().length === 13) {
                 phone += $('#target_phone').val().substr(0,3);
                 phone += $('#target_phone').val().substr(4,4);
                 phone += $('#target_phone').val().substr(9,4);
             }
+
+            console.log(phone);
 
             const tg_email = $('#target_email').val();
             const tg_name = $('#target_name').val();
@@ -754,8 +766,8 @@
 
     function inputPhoneNumber(obj) {
 
-        var number = obj.value.replace(/[^0-9]/g, "");
-        var phone = "";
+        let number = obj.value.replace(/[^0-9]/g, "");
+        let phone = "";
 
         if(number.length < 4) {
             return number;
@@ -763,13 +775,27 @@
             phone += number.substr(0, 3);
             phone += "-";
             phone += number.substr(3);
+        } else if (number.substr(1, 1) === "2" && number.length < 10) {
+            //case 02-xxx-xxxx
+            phone += number.substr(0, 2);
+            phone += "-";
+            phone += number.substr(2, 3);
+            phone += "-";
+            phone += number.substr(5, 4);
+        } else if (number.substr(1, 1) === "2" && number.length < 11) {
+            phone += number.substr(0, 2);
+            phone += "-";
+            phone += number.substr(2, 4);
+            phone += "-";
+            phone += number.substr(6, 4);
         } else if(number.length < 11) {
+            //case 010-xxx-xxxx, 031-xxx-xxxx
             phone += number.substr(0, 3);
             phone += "-";
             phone += number.substr(3, 3);
             phone += "-";
             phone += number.substr(6);
-        } else {
+        } else { //010-xxxx-xxxx, 031-xxxx-xxxx
             phone += number.substr(0, 3);
             phone += "-";
             phone += number.substr(3, 4);
