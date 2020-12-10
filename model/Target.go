@@ -33,6 +33,7 @@ type Tag struct {
 	TagCreateTime string `json:"created_t"`
 }
 
+
 func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
 	// status 200 설정. 에러발생시 변경됨.
@@ -259,12 +260,12 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
     where user_no = $1`
 
 	pageCount := db.QueryRow(query, num)
-	_ = pageCount.Scan(&pages) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
+	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
-	total = (pages / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
+	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
 
 	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
-	return targets, pages, total, nil
+	return targets, total, pages, nil
 }
 
 func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
@@ -717,4 +718,141 @@ func GetTag2(num int) []Tag {
 	}
 
 	return tag
+}
+
+func SearchTarget(num int, page int, searchDivision string, searchText string) ([]Target, int, int, error) {
+	db, err := ConnectDB()
+	if err != nil {
+		return nil, 0, 0, fmt.Errorf("DB connection error")
+	}
+
+	var pageNum int // 몇번째 페이지부터 가져올지 결정하는 변수
+	var pages int   // 총 페이지 수
+	var total int   // 총 훈련대상자들의 수를 담을 변수
+
+	// ex) 1페이지 -> 1~10, 2페이지 -> 11~20
+	// 페이지번호에 따라 가져올 목록이 달라진다.
+	pageNum = (page - 1) * 20
+
+	// 대상목록들을 20개씩만 잘라서 반하여 페이징처리한다.
+	query := "SELECT target_name, " +
+		"target_email, " +
+		"target_phone, " +
+		"target_organize, " +
+		"target_position, " +
+		"to_char(modified_time, 'YYYY-MM-DD')," +
+		"target_no " +
+		"FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num," +
+		"target_no, " +
+		"target_name, " +
+		"target_email, " +
+		"target_phone, " +
+		"target_organize, " +
+		"target_position, " +
+		"modified_time " +
+		"FROM target_info " +
+		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2" +
+		") AS T " +
+		"WHERE row_num > $3 " +
+		"ORDER BY target_no asc " +
+		"LIMIT 20;"
+
+	searchText = "%"+searchText+"%"
+	rows, err := db.Query(query, num, searchText, pageNum)
+	if err != nil {
+		fmt.Println(err)
+		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
+	}
+
+	var targets []Target
+	tg := Target{}
+
+	for rows.Next() { // 목록들을 하나하나 읽어들여온다.
+		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
+			&tg.TargetPosition, &tg.TargetCreateTime, &tg.TargetNo)
+		if err != nil {
+			fmt.Printf("Targets scanning Error. : %v", err)
+			continue
+		}
+
+		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
+		var sub [3]string
+		phone := []rune(tg.TargetPhone)
+
+		if len(tg.TargetPhone) < 10 {
+			sub[0] = string(phone[0:2])
+			sub[1] = string(phone[2:5])
+			sub[2] = string(phone[5:9])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
+			sub[0] = string(phone[0:2])
+			sub[1] = string(phone[2:6])
+			sub[2] = string(phone[6:10])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if len(tg.TargetPhone) == 10 {
+			sub[0] = string(phone[0:3])
+			sub[1] = string(phone[3:6])
+			sub[2] = string(phone[6:10])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		} else if len(tg.TargetPhone) == 11 {
+			sub[0] = string(phone[0:3])
+			sub[1] = string(phone[3:7])
+			sub[2] = string(phone[7:11])
+			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		}
+
+		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
+		// 태그 번호를 담을 변수 (tag_target_info 테이블로부터 조회한 결과를 담는다.)
+		var tagNumber string
+
+		k := 0 // 태그의 인덱스를 담을 변수
+		tagNum, err := db.Query(`SELECT tag_no
+									   FROM tag_target_info
+									   WHERE user_no = $1
+  									   AND target_no = $2`,
+			num, tg.TargetNo)
+		for tagNum.Next() { //todo 이중 for문... 성능을 어떻게 개선할지는 고민이 더 필요하다.
+			if tagNum == nil {
+				break //태그값이 없으면 안읽어온다.
+			} else {
+
+				err = tagNum.Scan(&tagNumber)
+				//해당 대상자가 가진 태그의 번호값을 하나하나 가져온다. (태그가 3개면 이를 세번 반복)
+				if err != nil {
+					_ = fmt.Errorf("Target's Tag number query Error. ")
+					continue
+				}
+
+				// user_no는 위에서 검증되었기 때문에 조건절에 user_no는 생략하였음.
+				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				err = tagName.Scan(&tg.TargetTag[k])
+
+				if err != nil {
+					_ = fmt.Errorf("Target's Tag number query Error. ")
+					continue
+				}
+
+				k++
+			}
+		}
+		// 최대 20개로 제한된 대상이 구조체에 담길때 까지 넣는다.
+		targets = append(targets, tg)
+
+		tg.TargetTag[0] = ""
+		tg.TargetTag[1] = ""
+		tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
+	}
+
+	// 전체 타겟(훈련대상)의 수를 반환한다.
+	query = "SELECT count(target_no) " +
+		"FROM target_info " +
+		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2"
+
+	pageCount := db.QueryRow(query, num, searchText)
+	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
+
+	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
+
+	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
+	return targets, total, pages, nil
 }

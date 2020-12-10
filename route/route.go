@@ -73,6 +73,8 @@ func RegisterRoute(r *gin.Engine) {
 
 		target.GET("/downloadExcel", api.DownloadExcel)
 		target.POST("/importTargets", api.ImportTargets)
+
+		target.GET("/search", api.Search)
 	}
 
 	r.Run(":5000")

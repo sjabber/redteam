@@ -123,7 +123,7 @@
                 <div class="box">
                     <div class="box-header">
                         <h3>모든 대상자</h3>
-                        <div class="toolbox">
+                        <div class="toolbox" style="justify-content: center;">
                             <div class="row p-3">
                                 <button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
                                         data-modal="#tag_registry">태그 관리
@@ -141,7 +141,26 @@
                                     <button class="btn btn-primary" id="export_targets" data-modal="#exported_targets">
                                         <span>대상자 내보내기</span></button>
                                 </div>
-                                <form class="searchbox" style="margin-left: 20px;"><input type="text" name=""></form>
+                                <form action id="search_box" style="margin-left: 10px">
+                                    <div class ="search_box" style="margin-left: 10px">
+                                        <select id="search_division" style="height: 30px; font-size: 16px;
+                                            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                                            display: inline-block; padding: 0 17px 0 5px;
+                                            border: 1px solid #d5d5d5; background: transparent; color: #959595;
+                                            line-height: 24px; vertical-align: top; width: 100px;">
+                                            <option value="target_name">이름</option>
+                                            <option value="target_email">이메일</option>
+                                            <option value="target_phone">연락처</option>
+                                            <option value="target_organize">소속</option>
+                                            <option value="target_position">직급</option>
+                                        </select>
+                                        <input style="font-size: 14px; margin-right: 1px; width: 200px; height: 30px;
+                                           padding-left: 10px" type="text" id="search_text"
+                                               placeholder="검색어를 입력하세요.">
+                                        <button id="search_button" style="margin-right: 10px">검색</button>
+                                    </div>
+
+                                </form>
                                 <!--                                <a><i class="la la-plus"></i></a>-->
                                 <a class="trigger-dropdown"><i
                                             class="la la-ellipsis-h"></i></a>
@@ -351,7 +370,6 @@
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td><label class="badge badge-green">' + rObj.targets[i].tg_tag + '</label></td></tr>');
                             }
-
                         }
                     } else {
                         $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
@@ -359,6 +377,7 @@
                             '                </div></tr></td>');
                     }
 
+                    console.log(rObj.total);
                     paging(rObj.total, page);
 
                     if (rObj.tags.length > 0) {
@@ -761,17 +780,198 @@
                 });
             }
         });
-
     });
+    function Search(search_division, search_text, page) {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/target/search?search_division=' + search_division +
+            '&search_text=' + search_text + '&page=' + page, true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj2;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj2 = JSON.parse(r.responseText);
+
+                    if (rObj2.targets.length > 0) {
+                        // table 비워주기
+                        $('#targets > tbody').empty();
+                        for (let i = 0; i < rObj2.targets.length; i++) {
+                            if (rObj2.targets[i].tg_tag.length === 0) {
+                                $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj2.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj2.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj2.targets[i].tg_name + "(" +
+                                    rObj2.targets[i].tg_email + ")" + '</td><td>' + rObj2.targets[i].tg_phone + '</td><td>' + rObj2.targets[i].tg_organize +
+                                    '</td><td>' + rObj2.targets[i].tg_position + '</td><td>' + rObj2.targets[i].created_t + '</td>' +
+                                    '<td></td></tr>');
+                            } else {
+                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj2.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj2.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj2.targets[i].tg_name + "(" +
+                                    rObj2.targets[i].tg_email + ")" + '</td><td>' + rObj2.targets[i].tg_phone + '</td><td>' + rObj2.targets[i].tg_organize +
+                                    '</td><td>' + rObj2.targets[i].tg_position + '</td><td>' + rObj2.targets[i].created_t + '</td>' +
+                                    '<td><label class="badge badge-green">' + rObj2.targets[i].tg_tag + '</label></td></tr>');
+                            }
+
+                        }
+                    } else {
+                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
+
+                    search_paging(rObj2.total, page);
+
+                    if (rObj2.tags.length > 0) {
+                        $('#tag_menage > tbody').empty();
+                        $('#tag_select').empty();
+                        for (let j = 0; j < rObj2.tags.length; j++) {
+                            $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
+                                "                        <td>" + rObj2.tags[j].tag_name + "</td>\n" +
+                                "                        <td>" + rObj2.tags[j].created_t + "</td>\n" +
+                                "                        <td>\n" +
+                                "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj2.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
+                                "                        </td>\n" +
+                                "                        </tr>");
+                            if (j === 0) {
+                                // const option = ;
+                                console.log(rObj2.tags[j].tag_no);
+                                $('#tag_selector_1').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+                                $('#tag_selector_2').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+                                $('#tag_selector_3').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
+
+                                $('#tag_selector_1').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector_2').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector_3').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj2.tags[j].tag_no + "'>" + rObj2.tags[j].tag_name + "</option>");
+                            } else {
+                                $('#tag_selector_1').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector_2').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector_3').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
+                                $('#tag_selector2').append("<option value='" + rObj2.tags[j].tag_no + "'>" + rObj2.tags[j].tag_name + "</option>");
+                            }
+                        }
+                    } else {
+                        $('#tag_menage > tbody:last').append('<tr><td colspan="3"><div class="alert alert">\n' +
+                            '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
+                            '                </div></tr></td>');
+                    }
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        Search(search_division, search_text, page);
+                        // console.log("true")
+                    }
+                } else {
+                    document.location.href = '/';
+                }
+            }
+        };
+        r.send();
+    }
+
+    function search_paging(totalData, currentPage) {
+        const dataPerPage = 20;
+        const pageCount = 5;
+
+        console.log("currentPage : " + currentPage);
+        console.log("totalData : " + totalData);
+        const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
+        const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
+
+        console.log("pageGroup : " + pageGroup);
+        console.log("totalPage : " + totalPage);
+
+        let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
+
+        if (last > totalPage)
+            last = totalPage;
+        let first = last - (pageCount - 1);    // 화면에 보여질 첫번째 페이지 번호
+        const next = last + 1;
+        const prev = first - 1;
+
+        console.log("last : " + last);
+        console.log("first : " + first);
+        console.log("next : " + next);
+        console.log("prev : " + prev);
+
+        const division = $('#search_division').val();
+        const text = $('#search_text').val();
+
+        console.log(text);
+
+        if (totalPage < 1) {
+            first = last;
+        }
+
+        //Search(division, text, 1);
+
+        const pages = $("#pages");
+        pages.empty();
+        if (first > 5) {
+
+            var li = document.createElement('li');
+            li.className = 'pagination-item';
+
+            var element = document.createElement('a');
+            element.className = 'active';
+            element.addEventListener('click', function () { Search(division, text, prev); }, false);
+            element.style.marginLeft = 2 + "px";
+            element.innerHTML = prev;
+
+            li.appendChild(element);
+            pages.append(li);
+        }
+        for (let j = first; j <= last; j++) {
+            if (currentPage === (j)) {
+                var li = document.createElement('li');
+                li.className = 'pagination-item';
+
+                var element = document.createElement('a');
+                element.className = 'active';
+                element.addEventListener('click', function () { Search(division, text, j); }, false);
+                element.style.marginLeft = 2 + "px";
+                element.innerHTML = j;
+
+                li.appendChild(element);
+                pages.append(li);
+            } else if (j > 0) {
+                var li = document.createElement('li');
+                li.className = 'pagination-item';
+
+                var element = document.createElement('a');
+                element.addEventListener('click', function () { Search(division, text, j); }, false);
+                element.style.marginLeft = 2 + "px";
+                element.innerHTML = j;
+
+                li.appendChild(element);
+                pages.append(li);
+            }
+        }
+        if (next > 5 && next < totalPage) {
+            var li = document.createElement('li');
+            li.className = 'pagination-item';
+
+            var element = document.createElement('a');
+            element.className = 'active';
+            element.addEventListener('click', function () { Search(division, text, next); }, false);
+            element.style.marginLeft = 2 + "px";
+            element.innerHTML = next;
+
+            li.appendChild(element);
+            pages.append(li);
+        }
+    }
+
 
     function inputPhoneNumber(obj) {
 
         let number = obj.value.replace(/[^0-9]/g, "");
         let phone = "";
 
-        if(number.length < 4) {
+        if (number.length < 4) {
             return number;
-        } else if(number.length < 7) {
+        } else if (number.length < 7) {
             phone += number.substr(0, 3);
             phone += "-";
             phone += number.substr(3);
@@ -788,7 +988,7 @@
             phone += number.substr(2, 4);
             phone += "-";
             phone += number.substr(6, 4);
-        } else if(number.length < 11) {
+        } else if (number.length < 11) {
             //case 010-xxx-xxxx, 031-xxx-xxxx
             phone += number.substr(0, 3);
             phone += "-";
@@ -808,6 +1008,43 @@
     // CheckLogin();
     GetDashBoard();
     GetTarget(1);
+
+    $("#search_text").keypress(function (e) {
+        if (e.keyCode === 13) {
+            const division = $('#search_division').val();
+            const text = $('#search_text').val();
+            if(!text) {
+                $('#search_text').focus();
+                alert("검색어를 입력하세요.");
+                return false;
+            } else {
+                // $('#targets').empty();
+                // $('#tag_menage').empty();
+                $('#targets > tbody ').empty();
+                $('#tag_menage > tbody').empty();
+                Search(division, text, 1);
+                return false;
+            }
+        }
+    });
+
+    $("#search_button").click(function search_click() {
+        const division = $('#search_division').val();
+        const text = $('#search_text').val();
+        if(!text) {
+            $('#search_text').focus();
+            alert("검색어를 입력하세요.");
+            return false;
+        } else {
+            // $('#targets').empty();
+            // $('#tag_menage').empty();
+            $('#targets > tbody ').empty();
+            $('#tag_menage > tbody').empty();
+            Search(division, text, 1);
+            return false;
+        }
+    });
+
 </script>
 </body>
 
