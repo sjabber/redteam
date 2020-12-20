@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Properties;
@@ -59,22 +62,22 @@ public class SMTPService {
 
         mailSender.testConnection();
 
-        /*
+
         //메세지 보내기: html 형태(검색시 금방 나옴), 파일도 보낼 수 있다.
         //여러 사람에게 보내기 List InternetAddress 형태? 검색필요
         //InternetAddress를 배열로 받아서 후에 프로젝트에서 target의 메일들을 받아보내면 됨
         MimeMessage message = mailSender.createMimeMessage();
         message.setFrom(new InternetAddress(smtp_info.getSmtpId()));
         //수신자
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress("kimkc5215@naver.com"));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress("sjabber@naver.com"));
 
         // 메일 제목
-        message.setSubject("SMTP TEST1111");
+        message.setSubject("SMTP 연결 test입니다.");
 
         // 메일 내용
         message.setText("Success!!");
         mailSender.send(message);
-        */
+
 
     }
 

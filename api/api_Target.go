@@ -24,14 +24,15 @@ func RegTarget(c *gin.Context) {
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
-	err := target.CreateTarget(&conn, num)
+	errcode, err := target.CreateTarget(&conn, num)
 	if err != nil {
 		log.Println("RegTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(errcode, gin.H{"error": err.Error()})
 		return
 	} else {
-		c.Status(http.StatusOK)
+		//errcode == status.Ok (200)
+		c.Status(errcode)
 	}
 }
 
@@ -54,7 +55,7 @@ func GetTarget(c *gin.Context) {
 			"isOk": 1,
 			"status": http.StatusOK,
 			"targets": targets, // 대상 20개
-			"tags": model.GetTag(num, page), // 태그들
+			"tags": model.GetTag(num), // 태그들
 			"total" : total, // 대상의 총 갯수
 			"pages" : pages, // 총 페이지 수
 			"page" : page, // 클릭한 페이지가 몇페이지인지
@@ -248,5 +249,34 @@ func DeleteTag(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"tag_deleting_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
+	}
+}
+
+func Search(c *gin.Context) {
+	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
+	num := c.Keys["number"].(int)
+
+	// URL 에 포함된 page 수를 page 변수에 int 로 형변환 후 바인딩.
+	pg := c.Query("page")
+	searchDivision := c.Query("search_division")
+	searchText := c.Query("search_text")
+	page, _ := strconv.Atoi(pg)
+
+	targets, total, pages, err := model.SearchTarget(num, page, searchDivision, searchText) //DB에 저장된 대상들을 읽어오는 메서드
+	if err != nil {
+		log.Println("GetTarget error occurred, account :", c.Keys["email"])
+		log.Print(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": 1,
+			"status": http.StatusOK,
+			"targets": targets, // 대상 20개
+			"tags": model.GetTag(num), // 태그들
+			"total" : total, // 대상의 총 갯수
+			"pages" : pages, // 총 페이지 수
+			"page" : page, // 클릭한 페이지가 몇페이지인지
+		})
 	}
 }

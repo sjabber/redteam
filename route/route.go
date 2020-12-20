@@ -34,15 +34,18 @@ func RegisterRoute(r *gin.Engine) {
 	setting := r.Group("/setting")
 	setting.Use(middleware.TokenAuthMiddleWare()) //로그인 이후에 사용할 api 들은 토큰검증이 필요
 	{
-		setting.POST("/setTemplates", api.PostTemplateList)
+		//setting.POST("/setTemplates", api.PostTemplateList) - 사용안함
 		setting.GET("/getTemplates", api.GetTemplateList)
-		setting.POST("/putTemplates", api.PutTemplateList)
+		setting.POST("/EditTemplate", api.EditTemplate)
 		setting.POST("/deleteTemplates", api.DeleteTemplateList)
-		//setting.GET("/userSetting", api.GetUserSetting)
-		//setting.POST("/userSetting", api.SetUserSetting)
-		//setting.GET("/smtpSetting", api.GetSmtpSetting)
-		//setting.POST("/smtpSetting", api.SetSmtpSetting)
-		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck)
+		setting.GET("/TemplateDetail", api.TemplateDetail)
+		setting.GET("/getTag", api.GetTag)
+
+		//setting.GET("/userSetting", api.GetUserSetting) //Note - spring boot
+		//setting.POST("/userSetting", api.SetUserSetting) //Note - spring boot
+		//setting.GET("/smtpSetting", api.GetSmtpSetting) //Note - spring boot
+		//setting.POST("/smtpSetting", api.SetSmtpSetting) //Note - spring boot
+		//setting.POST("/smtpConnectCheck", api.SmtpConnectionCheck) //Note - spring boot
 	}
 
 	// 대시보드
@@ -70,6 +73,8 @@ func RegisterRoute(r *gin.Engine) {
 
 		target.GET("/downloadExcel", api.DownloadExcel)
 		target.POST("/importTargets", api.ImportTargets)
+
+		target.GET("/search", api.Search)
 	}
 
 	r.Run(":5000")
