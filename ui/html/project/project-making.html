@@ -25,7 +25,7 @@
     <div class="sidebar-wrapper">
         <ul class="list-menu">
             <li class="header">Total Info</li>
-            <li class="has-children"><a href="javascript:;"><i
+            <li class="has-children"><a href="javascript:"><i
                     class="la la-dashboard"></i><span>대시보드</span>
                 <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
             </a>
@@ -41,7 +41,7 @@
                 </ul>
             </li>
             <li class="header">Project Info</li>
-            <li class="has-children"><a href="javascript:;"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
+            <li class="has-children"><a href="javascript:"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
                 <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
             </a>
                 <ul class="tree">
@@ -53,7 +53,8 @@
                             class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
                 </ul>
             </li>
-            <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
+            <li class="tree-item"><a href="/manager/target"><i
+                    class="la la-group"></i><span>대상관리</span>
                 <div class="right-container"></div>
             </a>
 
@@ -69,7 +70,7 @@
             </a>
             </li>
             <li class="header">Setting</li>
-            <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
+            <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
                 <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
             </a>
                 <ul class="tree">
@@ -117,10 +118,10 @@
     <div class="content-wrapper">
         <div class="col-md-5">
             <h5>프로젝트 정보 입력</h5>
-            <div class="form-group label--floating"><input type="email"
+            <div class="form-group"><input type="email"
                                                            id="p_name"><label>프로젝트 이름</label>
             </div>
-            <div class="form-group label--floating"><textarea type="text"
+            <div class="form-group"><textarea type="text"
                                                               id="p_description" placeholder="프로젝트 설명"
                                                               cols="50"></textarea></div>
             <div class="form-group label">
@@ -158,20 +159,16 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"
-                                                                  target="_blank">Al Jazari Studio</a></span></div>
-</div>
-</div>
-<script src="/js/main.js"></script>
+
 <script src="/js/script.js"></script>
 <script src="/js/demo.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
+<script src="/js/main.js"></script>
 <script>
-    // GetDashBoard();
-    // $('#tag_selector2').append("<option value='" + rObj.tags[j].tag_no + "'>" + rObj.tags[j].tag_name + "</option>");
     function GetTmplProjectCreate() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
@@ -242,8 +239,6 @@
         r.send();
     }
 
-    GetTmplProjectCreate()
-    GetTag()
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
@@ -311,7 +306,12 @@
         console.log(formData);
         r.send(JSON.stringify(formData));
     }
+
+    GetTmplProjectCreate()
+    GetTag()
+
 </script>
+
 </body>
 
 </html>

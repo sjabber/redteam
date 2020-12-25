@@ -12,73 +12,72 @@
     <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-    <!--    <script src="/ui/public/js/main.min.js"></script>-->
 </head>
 
 <body>
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-            <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
-        </a>
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+    </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
     <div class="sidebar-wrapper">
         <ul class="list-menu">
             <li class="header">Total Info</li>
-            <li class="has-children"><a href="javascript:;"><i
-                            class="la la-dashboard"></i><span>대시보드</span>
-                    <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
-                </a>
+            <li class="has-children"><a href="javascript:"><i
+                    class="la la-dashboard"></i><span>대시보드</span>
+                <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
+            </a>
                 <ul class="tree">
                     <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
                     <li class="tree-item"><a href="/dashboard/total"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
                     <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
                     <li class="tree-item"><a href="/dashboard/detail"><i
-                                    class="la la-circle"></i><span
-                                    style="font-size:0.8em;">프로젝트상세</span></a>
+                            class="la la-circle"></i><span
+                            style="font-size:0.8em;">프로젝트상세</span></a>
                     </li>
                 </ul>
             </li>
             <li class="header">Project Info</li>
-            <li class="has-children"><a href="javascript:;"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
-                    <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
-                </a>
+            <li class="has-children"><a href="javascript:"><i class="la la-laptop"></i><span>프로젝트 진행현황</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
                 <ul class="tree">
                     <li class="tree-item"><a href="/project/ing"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">진행 프로젝트</span></a></li>
                     <li class="tree-item"><a href="/project/complete"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">완료 프로젝트</span></a></li>
                     <li class="tree-item"><a href="/project/book"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">예약 프로젝트</span></a></li>
                 </ul>
             </li>
             <li class="tree-item active"><a href="/manager/target"><i
-                            class="la la-group"></i><span>대상관리</span>
-                    <div class="right-container"></div>
-                </a>
+                    class="la la-group"></i><span>대상관리</span>
+                <div class="right-container"></div>
+            </a>
 
             </li>
             <li class="tree-item"><a href="/manager/template"><i
-                            class="la la-file-text"></i><span>템플릿관리</span>
-                    <div class="right-container"></div>
-                </a>
+                    class="la la-file-text"></i><span>템플릿관리</span>
+                <div class="right-container"></div>
+            </a>
             </li>
             <li class="tree-item"><a href="/project/create"><i
-                            class="la la-pencil-square"></i><span>프로젝트 생성</span>
-                    <div class="right-container"></div>
-                </a>
+                    class="la la-pencil-square"></i><span>프로젝트 생성</span>
+                <div class="right-container"></div>
+            </a>
             </li>
             <li class="header">Setting</li>
-            <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
-                    <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
-                </a>
+            <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
                 <ul class="tree">
                     <li class="tree-item"><a href="/setting/user"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
                     <li class="tree-item"><a href="/setting/smtp"><i
-                                    class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
                 </ul>
             </li>
         </ul>
@@ -93,6 +92,8 @@
             <p>대상관리</p>
             <div class="breadcrumb"><span>대상관리</span></div>
         </div>
+
+
         <ul class="right">
             <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
                                                                                                    src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
@@ -105,7 +106,7 @@
                     </div>
                     <ul class="dropdown-body">
                         <li><a href="/setting/user" target="_blank"><i
-                                        class="la la-user"></i><span>사용자 정보</span></a></li>
+                                class="la la-user"></i><span>사용자 정보</span></a></li>
                         <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a>
                         </li>
                         <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
@@ -113,9 +114,10 @@
                 </div>
             </li>
         </ul>
+
         <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
-                    class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
-                        class="la la-ellipsis-v"></i></a></div>
+                class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
+                class="la la-ellipsis-v"></i></a></div>
     </div>
     <div class="content-wrapper">
         <div class="row">
@@ -142,7 +144,7 @@
                                         <span>대상자 내보내기</span></button>
                                 </div>
                                 <form action id="search_box" style="margin-left: 10px">
-                                    <div class ="search_box" style="margin-left: 10px">
+                                    <div class="search_box" style="margin-left: 10px">
                                         <select id="search_division" style="height: 30px; font-size: 16px;
                                             overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
                                             display: inline-block; padding: 0 17px 0 5px;
@@ -163,7 +165,7 @@
                                 </form>
                                 <!--                                <a><i class="la la-plus"></i></a>-->
                                 <a class="trigger-dropdown"><i
-                                            class="la la-ellipsis-h"></i></a>
+                                        class="la la-ellipsis-h"></i></a>
                                 <ul class="dropdown-box">
                                     <li><a><i class="la la-sort-alpha-asc"></i><span>a to z</span></a></li>
                                     <li><a><i class="la la-sort-alpha-desc"></i><span>z to a</span></a></li>
@@ -220,7 +222,9 @@
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                id="target_name"><label>이름</label></div>
-                                <div class="form-group label--floating"><input type="text" onkeyup="inputPhoneNumber(this);" maxlength="13"
+                                <div class="form-group label--floating"><input type="text"
+                                                                               onkeyup="inputPhoneNumber(this);"
+                                                                               maxlength="13"
                                                                                id="target_phone"><label>전화번호</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
@@ -229,15 +233,15 @@
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_1">태그</label><select id="tag_selector_1">
-                                    </select>
+                                </select>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_2">태그</label><select id="tag_selector_2">
-                                    </select>
+                                </select>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_3">태그</label><select id="tag_selector_3">
-                                    </select>
+                                </select>
                                 </div>
                             </div>
                             <div class="modal__footer">
@@ -290,8 +294,8 @@
                             <div class="modal__body">
                                 <div class="form-group w-50">
                                     <label for="tag_selector2">태그 선택</label><select id="tag_selector2">
-                                        <option value=0 selected>전체</option>
-                                    </select>
+                                    <option value=0 selected>전체</option>
+                                </select>
                                 </div>
                             </div>
                             <div class="modal__footer">
@@ -330,7 +334,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <script src="/js/main.js"></script>
 <script src="/js/script.js"></script>
@@ -603,13 +606,13 @@
                 phone += $('#target_phone').val().substr(3, 4);
                 phone += $('#target_phone').val().substr(8, 4);
             } else if ($('#target_phone').val().length === 12) {
-                phone += $('#target_phone').val().substr(0,3);
-                phone += $('#target_phone').val().substr(4,3);
-                phone += $('#target_phone').val().substr(8,4);
-            } else if($('#target_phone').val().length === 13) {
-                phone += $('#target_phone').val().substr(0,3);
-                phone += $('#target_phone').val().substr(4,4);
-                phone += $('#target_phone').val().substr(9,4);
+                phone += $('#target_phone').val().substr(0, 3);
+                phone += $('#target_phone').val().substr(4, 3);
+                phone += $('#target_phone').val().substr(8, 4);
+            } else if ($('#target_phone').val().length === 13) {
+                phone += $('#target_phone').val().substr(0, 3);
+                phone += $('#target_phone').val().substr(4, 4);
+                phone += $('#target_phone').val().substr(9, 4);
             }
 
             console.log(phone);
@@ -781,6 +784,7 @@
             }
         });
     });
+
     function Search(search_division, search_text, page) {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/target/search?search_division=' + search_division +
@@ -915,7 +919,9 @@
 
             var element = document.createElement('a');
             element.className = 'active';
-            element.addEventListener('click', function () { Search(division, text, prev); }, false);
+            element.addEventListener('click', function () {
+                Search(division, text, prev);
+            }, false);
             element.style.marginLeft = 2 + "px";
             element.innerHTML = prev;
 
@@ -929,7 +935,9 @@
 
                 var element = document.createElement('a');
                 element.className = 'active';
-                element.addEventListener('click', function () { Search(division, text, j); }, false);
+                element.addEventListener('click', function () {
+                    Search(division, text, j);
+                }, false);
                 element.style.marginLeft = 2 + "px";
                 element.innerHTML = j;
 
@@ -940,7 +948,9 @@
                 li.className = 'pagination-item';
 
                 var element = document.createElement('a');
-                element.addEventListener('click', function () { Search(division, text, j); }, false);
+                element.addEventListener('click', function () {
+                    Search(division, text, j);
+                }, false);
                 element.style.marginLeft = 2 + "px";
                 element.innerHTML = j;
 
@@ -954,7 +964,9 @@
 
             var element = document.createElement('a');
             element.className = 'active';
-            element.addEventListener('click', function () { Search(division, text, next); }, false);
+            element.addEventListener('click', function () {
+                Search(division, text, next);
+            }, false);
             element.style.marginLeft = 2 + "px";
             element.innerHTML = next;
 
@@ -1013,7 +1025,7 @@
         if (e.keyCode === 13) {
             const division = $('#search_division').val();
             const text = $('#search_text').val();
-            if(!text) {
+            if (!text) {
                 $('#search_text').focus();
                 alert("검색어를 입력하세요.");
                 return false;
@@ -1031,7 +1043,7 @@
     $("#search_button").click(function search_click() {
         const division = $('#search_division').val();
         const text = $('#search_text').val();
-        if(!text) {
+        if (!text) {
             $('#search_text').focus();
             alert("검색어를 입력하세요.");
             return false;
