@@ -8,16 +8,16 @@ import (
 )
 
 type Template struct {
-	FakeNo			int `json:"fake_no"`
-	TmpNo 			int `json:"tmp_no"`
+	FakeNo int `json:"fake_no"`
+	TmpNo  int `json:"tmp_no"`
 	//UserNo       int	`json:"user_no"`		  // 사용자(사원) 번호
 	Division       string `json:"tmp_division"`  // 구분
-	Kind           string `json:"tmp_kind"`     // 훈련유형
-	FileInfo       string `json:"file_info"`   // 첨부파일 정보
-	TmpName        string `json:"tmp_name"`   // 템플릿 이름
-	MailTitle      string `json:"title"`     // 메일 제목
-	SenderName     string `json:"sender_name"` // 보낸 사람
-	Content		   string `json:"content"`  // 메일내용
+	Kind           string `json:"tmp_kind"`      // 훈련유형
+	FileInfo       string `json:"file_info"`     // 첨부파일 정보
+	TmpName        string `json:"tmp_name"`      // 템플릿 이름
+	MailTitle      string `json:"title"`         // 메일 제목
+	SenderName     string `json:"sender_name"`   // 보낸 사람
+	Content        string `json:"content"`       // 메일내용
 	DownloadType   string `json:"download_type"` // 다운로드 파일 타입
 	CreatedTime    string `json:"created_time"`  // 생성시간
 	CreateRealTime time.Time
@@ -186,7 +186,7 @@ func (t *Template) Update(conn *sql.DB, num int) error {
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
 	_, err := conn.Exec(query, t.Division, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
-			t.Content, t.SenderName, t.DownloadType, num)
+		t.Content, t.SenderName, t.DownloadType, num)
 
 	if err != nil {
 		log.Panic(err)
@@ -197,22 +197,22 @@ func (t *Template) Update(conn *sql.DB, num int) error {
 	return nil
 }
 
-func Detail(tmp_no int) (Template, error) {
+func Detail(tmpNo int, userNo int) (Template, error) {
 	db, err := ConnectDB()
 	if err != nil {
 		return Template{}, fmt.Errorf("DB connecting error. ")
 		// DB를 연결하던 중에 오류가 발생하였습니다.
 	}
 
-	query := `SELECT tmp_division, tmp_kind, file_info, sender_name, mail_title, mail_content, download_type
+	query := `SELECT tmp_no, tmp_division, tmp_kind, tmp_name, file_info, sender_name, mail_title, mail_content, download_type
 	FROM template_info
-	WHERE tmp_no = $1`
+	WHERE tmp_no = $1 and user_no = $2`
 
 	//var Detail []Template
 	tmp := Template{}
 
-	tmpDetail := db.QueryRow(query, tmp_no)
-	err = tmpDetail.Scan(&tmp.Division, &tmp.Kind, &tmp.FileInfo, &tmp.SenderName,
+	tmpDetail := db.QueryRow(query, tmpNo, userNo)
+	err = tmpDetail.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind, &tmp.TmpName, &tmp.FileInfo, &tmp.SenderName,
 		&tmp.MailTitle, &tmp.Content, &tmp.DownloadType)
 
 	if err != nil {

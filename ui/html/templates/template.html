@@ -138,7 +138,6 @@
                             </div>
                             <div class="modal__body">
                                 <div class="form-group w-50">
-                                    <!--                                    뭔지 모르면 뺴버리자 ..-->
                                     <label for="tmp_division">구분</label><select id="tmp_division">
                                     <option value="1" selected>기본</option>
                                     <option value="2">사용자</option>
@@ -161,12 +160,27 @@
                                     <option value="3">Excel</option>
                                 </select>
                                 </div>
-                                <div class="form-group"><input type="text"
-                                                                               id="sender_name"
-                                                                               maxlength="30"></div>
+
+                                <div class="form-group">
+                                    <label for="tmp_name">템플릿명</label>
+                                    <input type="text"
+                                           id="tmp_name"
+                                           maxlength="30">
+                                    <input type="hidden" id="tmp_no">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sender_name">발송자명</label>
+                                    <input type="text"
+                                           id="sender_name"
+                                           maxlength="30">
+                                </div>
                                 <!-- <label>발송자</label> -->
-                                <div class="form-group"><input type="text"
-                                                                               id="title" maxlength="60"></div>
+
+                                <div class="form-group">
+                                    <label for="title">메일 제목</label>
+                                    <input type="text"
+                                           id="title" maxlength="60"></div>
                                 <!-- <label>메일 제목(최대 30자)</label> -->
 
 
@@ -190,6 +204,7 @@
                             </div>
                             <div class="modal__footer">
                                 <button class="btn btn-ghost modal-dismiss" onclick="closeModal()">취소</button>
+                                <button class="btn btn-primary modal-dismiss" onclick="delTml()">삭제</button>
                                 <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()">수정하기
                                 </button>
                             </div>
@@ -310,6 +325,8 @@
 
                     $('#tmp_division').val(rObj.tmpls.tmp_division);
                     $('#tmp_kind').val(rObj.tmpls.tmp_kind);
+                    $('#tmp_no').val(rObj.tmpls.tmp_no);
+                    $('#tmp_name').val(rObj.tmpls.tmp_name);
                     $('#file_info').val(rObj.tmpls.file_info);
                     $('#sender_name').val(rObj.tmpls.sender_name);
                     $('#title').val(rObj.tmpls.title);
@@ -333,6 +350,7 @@
     function editTml() {
         const tmp_division = $('#tmp_division').val();
         const tmp_kind = $('#tmp_kind').val();
+        const tmp_name = $('#tmp_name').val();
         const file_info = $('#file_info').val();
         const sender_name = $('#sender_name').val();
         const title = $('#title').val();
@@ -342,6 +360,7 @@
         const formData = {
             tmp_division: tmp_division,
             tmp_kind: tmp_kind,
+            tmp_name : tmp_name,
             file_info: file_info,
             sender_name: sender_name,
             title: title,
@@ -370,6 +389,12 @@
         };
         console.log(formData);
         r.send(JSON.stringify(formData));
+
+    }
+
+    function delTml() {
+        const tmp_no = $('#tmp_no').val();
+        console.log(tmp_no)
 
     }
 

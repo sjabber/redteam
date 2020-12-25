@@ -42,8 +42,8 @@ func GetTemplateList(c *gin.Context) {
 	tmp, err := model.ReadAll(num)
 	if err != nil {
 		// 템플릿을 읽어오는데 오류가 발생한 경우 500에러를 반환한다.
-		log.Print("GetTemplate error occurred, account : ",  c.Keys["email"])
-		c.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
+		log.Print("GetTemplate error occurred, account : ", c.Keys["email"])
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
@@ -51,7 +51,7 @@ func GetTemplateList(c *gin.Context) {
 
 func TemplateDetail(c *gin.Context) {
 	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
-	//num := c.Keys["number"].(int)
+	num := c.Keys["number"].(int)
 
 	tn := c.Query("template_no")
 	tmp_no, _ := strconv.Atoi(tn)
@@ -59,7 +59,7 @@ func TemplateDetail(c *gin.Context) {
 
 	//tmp_no := 1
 
-	tmp, err := model.Detail(tmp_no)
+	tmp, err := model.Detail(tmp_no, num)
 	if err != nil {
 		log.Println("Error fetching template details :", c.Keys["email"])
 		log.Print(err.Error())
