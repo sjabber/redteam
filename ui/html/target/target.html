@@ -355,11 +355,27 @@
                     rObj = JSON.parse(r.responseText);
 
                     console.log(r.responseText);
+
                     if (rObj.targets.length > 0) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj.targets.length; i++) {
-                            if (rObj.targets[i].tg_tag.length === 0) {
+                            // 태그 분리해주는 작업 ..
+                            let full_tag = ''
+                            for (let j = 0; j < rObj.targets[i].tg_tag.length; j++) {
+                                // console.log(rObj.targets[i].tg_tag[j])
+                                if (rObj.targets[i].tg_tag[j] !== "") {
+                                    if (j === 0) {
+                                        full_tag += '<label class="badge badge-green">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (j === 1) {
+                                        full_tag += '<label class="badge badge-red">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (j === 2) {
+                                        full_tag += '<label class="badge badge-blue">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    }
+                                }
+                            }
+
+                            if (full_tag === '') {
                                 $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
@@ -372,7 +388,7 @@
                                     '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
                                     rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
-                                    '<td><label class="badge badge-green">' + rObj.targets[i].tg_tag + '</label></td></tr>');
+                                    '<td>' + full_tag + '</td></tr>');
                             }
                         }
                     } else {
@@ -399,6 +415,7 @@
         };
         r.send();
     }
+
     function getTagForTargetInfo() {
         console.log('getTagForTargetInfo')
         const r = new XMLHttpRequest();
