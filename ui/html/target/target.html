@@ -343,6 +343,7 @@
 <script src="/js/lib/Sortable.min.js"></script>
 <script>
     function GetTarget(page) {
+        console.log('GetTarget')
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -380,9 +381,35 @@
                             '                </div></tr></td>');
                     }
 
-                    console.log(rObj.total);
+                    // console.log(rObj.total);
                     paging(rObj.total, page);
 
+                    getTagForTargetInfo();
+
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetTarget(page)
+                        // console.log("true")
+                    }
+                } else {
+                    document.location.href = '/';
+                }
+            }
+        };
+        r.send();
+    }
+    function getTagForTargetInfo() {
+        console.log('getTagForTargetInfo')
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/setting/getTag', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
                     if (rObj.tags.length > 0) {
                         $('#tag_menage > tbody').empty();
                         $('#tag_select').empty();
@@ -420,8 +447,7 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        GetTarget(page)
-                        // console.log("true")
+                        console.log("true")
                     }
                 } else {
                     document.location.href = '/';
