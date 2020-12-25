@@ -7,7 +7,6 @@ import (
 	"redteam/model"
 )
 
-
 func RegisterRoute(r *gin.Engine) {
 
 	conn, err := model.ConnectDB()
@@ -39,6 +38,7 @@ func RegisterRoute(r *gin.Engine) {
 		setting.POST("/EditTemplate", api.EditTemplate)
 		setting.POST("/deleteTemplates", api.DeleteTemplateList)
 		setting.GET("/TemplateDetail", api.TemplateDetail)
+		setting.POST("/delTmp", api.DelTml)
 		setting.GET("/getTag", api.GetTag)
 
 		//setting.GET("/userSetting", api.GetUserSetting) //Note - spring boot

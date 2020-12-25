@@ -33,7 +33,6 @@ type Tag struct {
 	TagCreateTime string `json:"created_t"`
 }
 
-
 func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
 	// status 200 설정. 에러발생시 변경됨.
@@ -757,7 +756,7 @@ func SearchTarget(num int, page int, searchDivision string, searchText string) (
 		"ORDER BY target_no asc " +
 		"LIMIT 20;"
 
-	searchText = "%"+searchText+"%"
+	searchText = "%" + searchText + "%"
 	rows, err := db.Query(query, num, searchText, pageNum)
 	if err != nil {
 		fmt.Println(err)

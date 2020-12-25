@@ -150,37 +150,6 @@ ORDER BY row_num;`
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
 func (t *Template) Update(conn *sql.DB, num int) error {
 
-	//switch t.Division {
-	//case "기본":
-	//	t.Division = "1"
-	//case "사용자":
-	//	t.Division = "2"
-	//}
-	//
-	//switch t.Kind {
-	//case "경고 안내":
-	//	t.Kind = "1"
-	//case "피싱 유도":
-	//	t.Kind = "2"
-	//case "실태조사":
-	//	t.Kind = "3"
-	//}
-	//
-	//switch t.FileInfo {
-	//case "EXE":
-	//	t.FileInfo = "1"
-	//case "HTML":
-	//	t.FileInfo = "2"
-	//case "Excel":
-	//	t.FileInfo = "3"
-	//}
-	//
-	//if t.DownloadType == "링크 첨부" {
-	//	t.DownloadType = "1"
-	//} else if t.DownloadType == "파일 첨부" {
-	//	t.DownloadType = "2"
-	//}
-
 	query := `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
  	mail_title, mail_content, sender_name, download_type, user_no)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
@@ -226,13 +195,13 @@ func Detail(tmpNo int, userNo int) (Template, error) {
 }
 
 // 템플릿 삭제 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 삭제한다.
-func (t *Template) Delete(conn *sql.DB) error {
+func (t *Template) Delete(conn *sql.DB, userNo int) error {
 	str := string(t.TmpNo) // int -> string 형변환
 	if str == "" {
 		return fmt.Errorf("Please enter the template number to be deleted. ")
 		// 삭제할 템플릿 번호를 입력해주세요.
 	}
-	_, err := conn.Exec("DELETE ROWS FROM template_info WHERE tmp_no = $1", t.TmpNo)
+	_, err := conn.Exec("DELETE FROM template_info WHERE tmp_no = $1 and user_no = $2", t.TmpNo, userNo)
 	if err != nil {
 		fmt.Printf("Error updating template: (%v)", err)
 		return fmt.Errorf("Error deleting template ")
