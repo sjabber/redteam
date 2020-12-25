@@ -52,13 +52,13 @@ func GetTarget(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"isOk": 1,
-			"status": http.StatusOK,
+			"isOk":    1,
+			"status":  http.StatusOK,
 			"targets": targets, // 대상 20개
-			"tags": model.GetTag(num), // 태그들
-			"total" : total, // 대상의 총 갯수
-			"pages" : pages, // 총 페이지 수
-			"page" : page, // 클릭한 페이지가 몇페이지인지
+			//"tags": model.GetTag(num), // 태그들
+			"total": total, // 대상의 총 갯수
+			"pages": pages, // 총 페이지 수
+			"page":  page,  // 클릭한 페이지가 몇페이지인지
 		})
 	}
 }
@@ -127,14 +127,14 @@ func ImportTargets(c *gin.Context) {
 	filename := filepath.Base(file.Filename)
 
 	// 계정별로 업로드할 디렉토리를 다르게하여 동시 업로드시 충돌을 방지한다.
-	if _, err := os.Stat("./Spreadsheet/"+str); os.IsNotExist(err) {
-		os.Mkdir("./Spreadsheet/"+str,777)
+	if _, err := os.Stat("./Spreadsheet/" + str); os.IsNotExist(err) {
+		os.Mkdir("./Spreadsheet/"+str, 777)
 	}
 
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트로부터 다운로드받을 파일을 하나 만든다.)
 	// 현재는 컴퓨터의 다운로드파일로 업로드 받는다.
 	// 파일을 구체적인 장소로 업로드한다. (서버에 파일을 저장할 경로, 파일이름)
-	uploadPath := "./Spreadsheet/"+ str + "/" + filename
+	uploadPath := "./Spreadsheet/" + str + "/" + filename
 	log.Println(filename)
 	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
 		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
@@ -163,7 +163,7 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("./Spreadsheet/"+ str + "/" + filename)
+	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
@@ -270,13 +270,13 @@ func Search(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"isOk": 1,
-			"status": http.StatusOK,
-			"targets": targets, // 대상 20개
-			"tags": model.GetTag(num), // 태그들
-			"total" : total, // 대상의 총 갯수
-			"pages" : pages, // 총 페이지 수
-			"page" : page, // 클릭한 페이지가 몇페이지인지
+			"isOk":    1,
+			"status":  http.StatusOK,
+			"targets": targets,           // 대상 20개
+			"tags":    model.GetTag(num), // 태그들
+			"total":   total,             // 대상의 총 갯수
+			"pages":   pages,             // 총 페이지 수
+			"page":    page,              // 클릭한 페이지가 몇페이지인지
 		})
 	}
 }
