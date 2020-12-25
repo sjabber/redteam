@@ -40,7 +40,7 @@
 - 홍대화 수석님
 
 #### 프론트엔드 담당 && 프로젝트 리더
-- 김민석 (node.js - javascript, PL)
+- 김민석 (node.js - javascript)
 
 #### 백엔드 담당 && 멘티
 - 김태호 (gin framework - Go)
