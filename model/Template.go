@@ -53,14 +53,7 @@ type Template struct {
 // 템플릿 조회 메서드, 템플릿 테이블(template_info)의 모든 템플릿을 조회한다.
 // 여기서 유일하게 솔루션을 사용하는 사용자들이 사용하게 되는 매서드
 // 사용자들을 위해 http status를 정의한다.
-func ReadAll(num int) ([]Template, error) {
-
-	db, err := ConnectDB()
-	if err != nil {
-		return nil, fmt.Errorf("DB connecting error. ")
-		// DB를 연결하던 중에 오류가 발생하였습니다.
-	}
-	//defer db.Close()
+func ReadAll(conn *sql.DB, num int) ([]Template, error) {
 
 	query := `SELECT 
 	   row_num,
@@ -88,7 +81,7 @@ FROM (SELECT ROW_NUMBER() over (ORDER BY tmp_no) AS row_num,
      ) AS T
 ORDER BY row_num;`
 
-	rows, err := db.Query(query, num)
+	rows, err := conn.Query(query, num)
 
 	if err != nil {
 		// 템플릿을 DB 로부터 읽어오는데 오류가 발생.
@@ -150,38 +143,61 @@ ORDER BY row_num;`
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
 func (t *Template) Update(conn *sql.DB, num int) error {
 
-	query := `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
+	// t.TmpNo가 3이하면 템플릿이 생성되도록 코드를 짜고
+	// 4이상이면 수정이 되도록 코드를 수정한다.
+	var query string
+
+	if t.TmpNo <= 3 {
+		//Note 템플릿 생성
+		query = `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
  	mail_title, mail_content, sender_name, download_type, user_no)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
-	_, err := conn.Exec(query, t.Division, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
-		t.Content, t.SenderName, t.DownloadType, num)
+		_, err := conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
+			t.Content, t.SenderName, t.DownloadType, num)
 
-	if err != nil {
-		log.Panic(err)
-		return fmt.Errorf("Error updating template ")
-		// 템플릿 업데이트 오류
+		if err != nil {
+			log.Panic(err)
+			return fmt.Errorf("Error create template. ")
+			// 템플릿 업데이트 오류
+		}
+		return nil
+
+	} else if t.TmpNo >= 4 {
+		//Note 템플릿 수정
+		query = `UPDATE template_info SET tmp_division = $1, tmp_kind = $2, file_info = $3, tmp_name = $4,
+                        sender_name = $5, mail_title = $6, mail_content = $7, 
+                         download_type = $8 WHERE user_no = $9 AND tmp_no = $10;`
+
+		_, err := conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.SenderName, t.MailTitle, t.Content,
+			t.DownloadType, num, t.TmpNo)
+
+		if err != nil {
+			log.Panic(err)
+			return fmt.Errorf("Error updating template. ")
+			// 템플릿 업데이트 오류
+		}
+		return nil
 	}
 
 	return nil
 }
 
-func Detail(tmpNo int, userNo int) (Template, error) {
-	db, err := ConnectDB()
-	if err != nil {
-		return Template{}, fmt.Errorf("DB connecting error. ")
-		// DB를 연결하던 중에 오류가 발생하였습니다.
-	}
-
-	query := `SELECT tmp_no, tmp_division, tmp_kind, tmp_name, file_info, sender_name, mail_title, mail_content, download_type
+func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {
+	var query = `SELECT tmp_no, tmp_division, tmp_kind, tmp_name, file_info, sender_name, mail_title,
+ 	mail_content, download_type
 	FROM template_info
 	WHERE tmp_no = $1 and user_no = $2`
+
+	if tmpNo <= 3 && tmpNo >= 0 {
+		userNo = 0
+	}
 
 	//var Detail []Template
 	tmp := Template{}
 
-	tmpDetail := db.QueryRow(query, tmpNo, userNo)
-	err = tmpDetail.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind, &tmp.TmpName, &tmp.FileInfo, &tmp.SenderName,
+	tmpDetail := conn.QueryRow(query, tmpNo, userNo)
+	err := tmpDetail.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind, &tmp.TmpName, &tmp.FileInfo, &tmp.SenderName,
 		&tmp.MailTitle, &tmp.Content, &tmp.DownloadType)
 
 	if err != nil {
@@ -201,9 +217,10 @@ func (t *Template) Delete(conn *sql.DB, userNo int) error {
 		return fmt.Errorf("Please enter the template number to be deleted. ")
 		// 삭제할 템플릿 번호를 입력해주세요.
 	}
+	//Note 사용자번호(user_no)에 막혀서 기본 템플릿은 삭제가 되지 않는다. // 기본템플릿은 user_no가 0이기 때문.
 	_, err := conn.Exec("DELETE FROM template_info WHERE tmp_no = $1 and user_no = $2", t.TmpNo, userNo)
 	if err != nil {
-		fmt.Printf("Error updating template: (%v)", err)
+		fmt.Printf("Error deleting template: (%v)", err)
 		return fmt.Errorf("Error deleting template ")
 	}
 

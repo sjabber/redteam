@@ -36,7 +36,7 @@ func RegisterRoute(r *gin.Engine) {
 		//setting.POST("/setTemplates", api.PostTemplateList) - 사용안함
 		setting.GET("/getTemplates", api.GetTemplateList)
 		setting.POST("/EditTemplate", api.EditTemplate)
-		setting.POST("/deleteTemplates", api.DeleteTemplateList)
+		//setting.POST("/deleteTemplates", api.DeleteTemplateList)
 		setting.GET("/TemplateDetail", api.TemplateDetail)
 		setting.POST("/delTmp", api.DelTml)
 		setting.GET("/getTag", api.GetTag)
