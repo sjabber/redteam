@@ -22,6 +22,7 @@ public class SMTPService {
     public Optional<SmtpVo> getSMTP(Long user_no){
         Optional<SmtpVo> smtp =  smtpRepository.findByUserNo(user_no);
         try {
+            //TODO LOG로 변경
             System.out.println(aesService.decAES(smtp.get().getSmtpPw()));//log
         }catch(Exception e){
             e.printStackTrace();
@@ -44,13 +45,13 @@ public class SMTPService {
     }
 
     public void connectCheck(SmtpVo smtp_info) throws Exception {
-        //todo id(email 아이디) 유효성 검사하기
+        //TODO id(email 아이디) 유효성 검사하기
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(smtp_info.getSmtpHost());
         mailSender.setPort(Integer.parseInt(smtp_info.getSmtpPort()));
 
         mailSender.setUsername(smtp_info.getSmtpId());
-        mailSender.setPassword(smtp_info.getSmtpPw());
+        mailSender.setPassword(aesService.decAES(smtp_info.getSmtpPw()));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.startttls.enable", smtp_info.getSmtpTls().equals("1")?"true":"false");//smtp_info.getSmtpTls().equals("1")?"true":"false"
