@@ -311,7 +311,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 			"^[_A-Za-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", t.TargetEmail)
 
 		// 이름 형식검사 (한글, 영어 이름만 허용)
-		var validName, _ = regexp.MatchString("^[가-힣A-Za-z\\s]{2,30}$", t.TargetName)
+		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{2,30}$", t.TargetName)
 
 		// 필수적인 정보가 누락됐거나 형식이 잘못된 경우 그 즉시 입력을 중단한다.
 		if validName != true || t.TargetName == "" {
