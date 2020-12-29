@@ -128,12 +128,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 }
 
 // todo 보완필요!!! -> 현재 이름, 이메일, 태그 중 하나라도 값이 없으면 리스트목록에 뜨지않는 오류가 존재한다. 태그값이 없어도 표시되도록 해야함.
-func ReadTarget(num int, page int) ([]Target, int, int, error) {
-	db, err := ConnectDB()
-	if err != nil {
-		return nil, 0, 0, fmt.Errorf("DB connection error")
-	}
-
+func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	var pageNum int // 몇번째 페이지부터 가져올지 결정하는 변수
 	var pages int   // 총 페이지 수
 	var total int   // 총 훈련대상자들의 수를 담을 변수
@@ -167,7 +162,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
     ORDER BY target_no asc
     LIMIT 20;
 `
-	rows, err := db.Query(query, num, pageNum)
+	rows, err := conn.Query(query, num, pageNum)
 	if err != nil {
 		fmt.Println(err)
 		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
@@ -215,7 +210,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 		var tagNumber string
 
 		k := 0 // 태그의 인덱스를 담을 변수
-		tagNum, err := db.Query(`SELECT tag_no
+		tagNum, err := conn.Query(`SELECT tag_no
 									   FROM tag_target_info
 									   WHERE user_no = $1
   									   AND target_no = $2`,
@@ -233,7 +228,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
 				}
 
 				// user_no는 위에서 검증되었기 때문에 조건절에 user_no는 생략하였음.
-				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
 				err = tagName.Scan(&tg.TargetTag[k])
 
 				if err != nil {
@@ -258,7 +253,7 @@ func ReadTarget(num int, page int) ([]Target, int, int, error) {
     from target_info 
     where user_no = $1`
 
-	pageCount := db.QueryRow(query, num)
+	pageCount := conn.QueryRow(query, num)
 	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
@@ -316,7 +311,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 			"^[_A-Za-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", t.TargetEmail)
 
 		// 이름 형식검사 (한글, 영어 이름만 허용)
-		var validName, _ = regexp.MatchString("^[가-힣A-Za-z\\s]{2,30}$", t.TargetName)
+		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{2,30}$", t.TargetName)
 
 		// 필수적인 정보가 누락됐거나 형식이 잘못된 경우 그 즉시 입력을 중단한다.
 		if validName != true || t.TargetName == "" {
@@ -406,13 +401,7 @@ func (t *Target) ImportTargets(conn *sql.DB, str string, num int) error {
 }
 
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
-func ExportTargets(num int, tagNumber int) error {
-	db, err := ConnectDB()
-	if err != nil {
-		fmt.Println(err)
-		return fmt.Errorf("Database error. ")
-	}
-
+func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
 		query := `
@@ -422,7 +411,7 @@ func ExportTargets(num int, tagNumber int) error {
          WHERE user_no = $1
          ORDER BY target_no`
 
-		rows, err := db.Query(query, num)
+		rows, err := conn.Query(query, num)
 		if err != nil {
 			fmt.Println(err)
 			return fmt.Errorf("Database error. ")
@@ -450,7 +439,7 @@ func ExportTargets(num int, tagNumber int) error {
 			}
 
 			query = `SELECT tag_no FROM tag_target_info WHERE user_no = $1 AND target_no = $2`
-			rows2, err2 := db.Query(query, num, tg.TargetNo)
+			rows2, err2 := conn.Query(query, num, tg.TargetNo)
 			if err != nil {
 				fmt.Println(err)
 				return fmt.Errorf("Database error. ")
@@ -466,7 +455,7 @@ func ExportTargets(num int, tagNumber int) error {
 					continue //태그가 없으면 건너뛴다.
 				}
 
-				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
 				err = tagName.Scan(&tg.TargetTag[k])
 
 				if err != nil {
@@ -514,7 +503,7 @@ func ExportTargets(num int, tagNumber int) error {
 	} else {
 		var TargetNumber string
 
-		query, err := db.Query(`SELECT Target_no
+		query, err := conn.Query(`SELECT Target_no
 									  FROM tag_target_info
 									  WHERE tag_no = $1
   									  AND user_no = $2`,
@@ -545,7 +534,7 @@ func ExportTargets(num int, tagNumber int) error {
 			}
 
 			// user_no는 위에서 검증되었기 때문에 조건절에 user_no는 생략하였음.
-			TargetList := db.QueryRow(
+			TargetList := conn.QueryRow(
 				`SELECT target_name, target_email, target_phone, target_organize, target_position,
  					   to_char(modified_time, 'YYYY-MM-YY HH24:MI')
 					   from target_info
@@ -559,7 +548,7 @@ func ExportTargets(num int, tagNumber int) error {
 				continue
 			}
 
-			TagList, err2 := db.Query(
+			TagList, err2 := conn.Query(
 				`SELECT tag_no
 						FROM tag_target_info
 						WHERE user_no = $1 AND target_no = $2`,
@@ -578,7 +567,7 @@ func ExportTargets(num int, tagNumber int) error {
 					continue //태그가 없으면 건너뛴다.
 				}
 
-				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
 				err = tagName.Scan(&tg.TargetTag[k])
 
 				if err != nil {
@@ -683,48 +672,43 @@ func GetTag(num int) []Tag {
 	return tag
 }
 
-// CreateProject 에서 사용할 메서드.
-func GetTag2(num int) []Tag {
-	db, err := ConnectDB()
-	if err != nil {
-		return nil
-	}
-	var query string
+//// CreateProject 에서 사용할 메서드.
+//func GetTag2(num int) []Tag {
+//	db, err := ConnectDB()
+//	if err != nil {
+//		return nil
+//	}
+//	var query string
+//
+//	query = `SELECT tag_no, tag_name
+//			  FROM tag_info
+//			  WHERE user_no = $1
+//			  ORDER BY tag_no asc
+//`
+//	tags, err := db.Query(query, num)
+//	if err != nil {
+//		fmt.Println(err)
+//		return nil
+//	}
+//
+//	var tag []Tag
+//	tg := Tag{}
+//
+//	for tags.Next() {
+//		err = tags.Scan(&tg.TagNo, &tg.TagName)
+//
+//		if err != nil {
+//			fmt.Printf("Tags scanning Error. : %v", err)
+//			continue
+//		}
+//
+//		tag = append(tag, tg)
+//	}
+//
+//	return tag
+//}
 
-	query = `SELECT tag_no, tag_name
-			  FROM tag_info
-			  WHERE user_no = $1
-			  ORDER BY tag_no asc
-`
-	tags, err := db.Query(query, num)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	var tag []Tag
-	tg := Tag{}
-
-	for tags.Next() {
-		err = tags.Scan(&tg.TagNo, &tg.TagName)
-
-		if err != nil {
-			fmt.Printf("Tags scanning Error. : %v", err)
-			continue
-		}
-
-		tag = append(tag, tg)
-	}
-
-	return tag
-}
-
-func SearchTarget(num int, page int, searchDivision string, searchText string) ([]Target, int, int, error) {
-	db, err := ConnectDB()
-	if err != nil {
-		return nil, 0, 0, fmt.Errorf("DB connection error")
-	}
-
+func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, searchText string) ([]Target, int, int, error) {
 	var pageNum int // 몇번째 페이지부터 가져올지 결정하는 변수
 	var pages int   // 총 페이지 수
 	var total int   // 총 훈련대상자들의 수를 담을 변수
@@ -757,7 +741,7 @@ func SearchTarget(num int, page int, searchDivision string, searchText string) (
 		"LIMIT 20;"
 
 	searchText = "%" + searchText + "%"
-	rows, err := db.Query(query, num, searchText, pageNum)
+	rows, err := conn.Query(query, num, searchText, pageNum)
 	if err != nil {
 		fmt.Println(err)
 		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
@@ -805,7 +789,7 @@ func SearchTarget(num int, page int, searchDivision string, searchText string) (
 		var tagNumber string
 
 		k := 0 // 태그의 인덱스를 담을 변수
-		tagNum, err := db.Query(`SELECT tag_no
+		tagNum, err := conn.Query(`SELECT tag_no
 									   FROM tag_target_info
 									   WHERE user_no = $1
   									   AND target_no = $2`,
@@ -823,7 +807,7 @@ func SearchTarget(num int, page int, searchDivision string, searchText string) (
 				}
 
 				// user_no는 위에서 검증되었기 때문에 조건절에 user_no는 생략하였음.
-				tagName := db.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
+				tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
 				err = tagName.Scan(&tg.TargetTag[k])
 
 				if err != nil {
@@ -847,7 +831,7 @@ func SearchTarget(num int, page int, searchDivision string, searchText string) (
 		"FROM target_info " +
 		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2"
 
-	pageCount := db.QueryRow(query, num, searchText)
+	pageCount := conn.QueryRow(query, num, searchText)
 	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.

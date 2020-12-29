@@ -309,7 +309,6 @@
     }
 
     function GetTmlDetail(tml_no) {
-
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -359,7 +358,7 @@
         const download_type = $('#download_type').val();
 
         const formData = {
-            tmp_no: tmp_no,
+            tmp_no: parseInt(tmp_no),
             tmp_division: tmp_division,
             tmp_kind: tmp_kind,
             tmp_name: tmp_name,

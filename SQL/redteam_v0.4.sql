@@ -51,13 +51,13 @@ create table template_info
     tmp_no        serial not null
         constraint template_info_pk
             primary key,
-    tmp_division  text,
-    tmp_kind      text,
-    file_info     text,
+    tmp_division  smallint,
+    tmp_kind      smallint,
+    file_info     smallint,
     tmp_name      text,
     mail_title    text,
     sender_name   text,
-    download_type text,
+    download_type smallint,
     created_time  timestamp default now(),
     modified_time timestamp default now(),
     mail_content  text,
