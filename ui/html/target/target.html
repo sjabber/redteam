@@ -342,6 +342,8 @@
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
 <script>
+    getTagForTargetInfo();
+
     function GetTarget(page) {
         console.log('GetTarget')
         const r = new XMLHttpRequest();
@@ -399,8 +401,6 @@
 
                     // console.log(rObj.total);
                     paging(rObj.total, page);
-
-                    getTagForTargetInfo();
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
