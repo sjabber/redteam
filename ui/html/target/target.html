@@ -592,7 +592,7 @@
                     console.log(tdArr[0])
                     r.send(JSON.stringify({target_list: tdArr}))
                 } else {
-                    alert("삭제할 대상을 선택해주세요.")
+                    alert("삭제할 대상을 선택해주세요.");
                 }
 
             }
@@ -619,6 +619,8 @@
                             "                        </td>\n" +
                             "                        </tr>");
 
+                    }else if(r.status === 400) {
+                        alert('태그명을 입력해 주세요.');
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
