@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"io"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -33,6 +31,20 @@ type Tag struct {
 	TagNo         int    `json:"tag_no"`
 	TagName       string `json:"tag_name"`
 	TagCreateTime string `json:"created_t"`
+}
+
+// 대상관리 페이지 맨 처음 GetTag가 실행되기 때문에
+// 태그들을 전역변수인 해시맵에 담아서 트랜잭션 횟수를 줄인다.
+var Hashmap = make(map[int]string) // 태그값들을 담아놓을 변수.
+
+//
+func isValueIn(value string, list []string) bool {
+	for _, v := range list {
+		if v == value {
+			return true
+		}
+	}
+	return false
 }
 
 func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
@@ -171,7 +183,8 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	var targets []Target
 	tg := Target{}
 
-	var tags [3]string
+	//태그의 번호가 담길 변수
+	var tags [3]int
 
 	// 목록들을 하나하나 읽어들여온다.
 	for rows.Next() {
@@ -209,21 +222,24 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 		}
 
 		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
+		// 데이터베이스에서 일일히 조회할 필요없이 GetTag()를 통해 가져오고 저장한 값과 비교해 조회속도를 높인다.
+	Loop1:
 		for i := 0; i < len(tags); i++ {
-			if tags[i] == "" { // tags[i]가 null 값 이면 태그는 더 이상 없음.
+			if tags[i] == 0 {
 				tg.TargetTag[i] = ""
-				continue
+				continue Loop1
 			}
 
-			tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tags[i])
-			err = tagName.Scan(&tg.TargetTag[i])
-
-			if err != nil {
-				_ = fmt.Errorf("Target's Tag number query Error. ")
-				continue
+			for key, val := range Hashmap {
+				if key == tags[i] {
+					tg.TargetTag[i] = val
+					break
+				} else {
+					tg.TargetTag[i] = ""
+				}
 			}
 		}
-		// 최대 20개로 제한된 대상이 구조체에 담길때 까지 넣는다.
+
 		targets = append(targets, tg)
 
 		tg.TargetTag[0] = ""
@@ -255,13 +271,7 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 			return fmt.Errorf("Please enter the number of the object to be deleted. ")
 		}
 
-		//// 먼저 tag_target_info 테이블의 정보를 삭제해야 한다.
-		//_, err := conn.Exec("DELETE FROM tag_target_info WHERE user_no = $1 AND target_no = $2", num, number)
-		//if err != nil {
-		//	return fmt.Errorf("Error deleting target ")
-		//}
-
-		// 이후 target_info 테이블에서 대상을 지운다.
+		// target_info 테이블에서 대상을 지운다.
 		_, err := conn.Exec("DELETE FROM target_info WHERE user_no = $1 AND target_no = $2", num, number)
 		if err != nil {
 			return fmt.Errorf("Error deleting target ")
@@ -284,7 +294,17 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 	user1 := strconv.Itoa(num) //int -> string
 
+	// Bulk insert 하기 위해 값들을 쌓아놓을 변수
 	var BigString string
+
+	// 태그 값을 db 조회없이 비교, 대조하여 삽입하여 성능을 높이기 위한 변수
+	var list []string
+	pt := 0
+	for _,  value := range Hashmap {
+		list = append(list, value)
+		pt++
+	}
+
 
 	i := 2 // 2행부터 값을 읽어온다.
 	for i <= 501 {
@@ -328,82 +348,51 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 		sub[1] = f.GetCellValue("sheet1", "G"+str)
 		sub[2] = f.GetCellValue("sheet1", "H"+str)
 
-		if sub[0] != "" {
-			t.TagArray = append(t.TagArray, sub[0])
-		}
-		if sub[1] != "" {
-			t.TagArray = append(t.TagArray, sub[1])
-		}
-		if sub[2] != "" {
-			t.TagArray = append(t.TagArray, sub[2])
-		}
-
-		if len(t.TagArray) > 0 { // todo 추후 t.TargetTag 를 동적배열(slice)로 변경해야 하므로 이대로 사용한다.
-			for k := 0; k < len(t.TagArray); k++ {
-				row2 := conn.QueryRow(`SELECT tag_no
-											 FROM tag_info
-											 WHERE user_no = $1
-  											 AND tag_name = $2`,
-					num, t.TagArray[k])
-
-				// tag_no 값으로 변경하는 지점.
-				err := row2.Scan(&sub[k])
-				if err != nil {
-					fmt.Println(err)
-					break
+	Loop1:
+		for i := 0; i < len(sub); i++ {
+			if isValueIn(sub[i], list) {
+			Loop2:
+				for key, val := range Hashmap {
+					if val == sub[i] {
+						sub[i] = strconv.Itoa(key)
+						break Loop2
+					}
 				}
-			}
-
-			t.TagArray = nil
-		}
-
-		for i := 0; i < 3; i++ {
-			if sub[i] == ""  {
+			} else {
 				sub[i] = "0"
+				continue Loop1
 			}
 		}
 
 		//Bulk insert로 삽입할 내용들을 텍스트로 만든다.
 		//Note xlsx 파일은 psql 에서 인코딩문제로 bulk insert 불가, csv, txt 등은 가능함.
-		BigString += t.TargetName + "," + t.TargetEmail + "," +
-			t.TargetPhone + "," + t.TargetOrganize + "," + t.TargetPosition + "," +
-			user1 + "," + sub[0] + "," + sub[1] + "," + sub[2] + "\n"
+		BigString += "('" + t.TargetName + "', '" + t.TargetEmail + "', '" +
+			t.TargetPhone + "', '" + t.TargetOrganize + "', '" + t.TargetPosition + "', " +
+			user1 + "," + sub[0] + "," + sub[1] + "," + sub[2] + ")," + "\n"
 
 		i++
 	}
 
-	path, _ := os.Getwd()
-	path += `\Spreadsheet\`+ user1 +`\bulk.txt`
+	BigString = BigString[:len(BigString)-2]
 
-	bulkFile, err := os.Create(path)
-	checkError(err)
-	_, err = io.WriteString(bulkFile, BigString)
-	checkError(err)
-
-	//bulk insert 후에 txt 파일 지운다.
-	query := "COPY target_info (target_name, target_email, target_phone, target_organize, " +
-		"target_position, user_no, tag1, tag2, tag3)" +
-		"FROM  '" + path + "' " +
-		"WITH DELIMITER ',' " +
-		"CSV HEADER " +
-		"FORCE NOT NULL " +
-		"target_phone, target_organize, target_position"
+	query := "INSERT INTO target_info (target_name, target_email, target_phone," +
+		"target_organize, target_position, user_no, tag1, tag2, tag3) VALUES" +
+		BigString
 
 	_, err = conn.Exec(query)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	bulkFile.Close()
+	//bulkFile.Close()
 
 	return nil
 }
 
-
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
 func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
-	var tags [3]string
+	var tags [3]int
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
 		query := `
@@ -450,19 +439,36 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			//k := 0 // 태그의 인덱스를 담을 변수
 			//var tagNum string
 
-			for k := 0; k < len(tags); k++ { // Note 이중 포문으로 태그의 이름을 조회한다.
-				if tags[k] == "0" {
-					tg.TargetTag[k] = ""
-					continue
+		Loop1:
+			for i := 0; i < len(tags); i++ {
+				if tags[i] == 0 {
+					tg.TargetTag[i] = ""
+					continue Loop1
 				}
 
-				tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tags[k])
-				err = tagName.Scan(&tg.TargetTag[k])
-				if err != nil {
-					_ = fmt.Errorf("Target's Tag number query Error. ")
-					continue
+				for key, val := range Hashmap {
+					if key == tags[i] {
+						tg.TargetTag[i] = val
+						break
+					} else {
+						tg.TargetTag[i] = ""
+					}
 				}
 			}
+
+			//for k := 0; k < len(tags); k++ { // Note 이중 포문으로 태그의 이름을 조회한다.
+			//	if tags[k] == "0" {
+			//		tg.TargetTag[k] = ""
+			//		continue
+			//	}
+			//
+			//	tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tags[k])
+			//	err = tagName.Scan(&tg.TargetTag[k])
+			//	if err != nil {
+			//		_ = fmt.Errorf("Target's Tag number query Error. ")
+			//		continue
+			//	}
+			//}
 
 			str := strconv.Itoa(i)
 			f.SetCellValue("Sheet1", "A"+str, tg.TargetName)
@@ -547,58 +553,22 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 				continue
 			}
 
-			for k := 0; k < len(tags); k++ {
-				if tags[k] == "0" {
-					tg.TargetTag[k] = ""
-					continue
+		Loop2:
+			for i := 0; i < len(tags); i++ {
+				if tags[i] == 0 {
+					tg.TargetTag[i] = ""
+					continue Loop2
 				}
 
-				TagName, err := conn.Query(
-					`SELECT tag_name
- 						   FROM tag_info
-  						   WHERE user_no = $1
-   						   AND tag_no = $2`, num, tags[k])
-				if err != nil {
-					fmt.Printf("Tag scanning error : %v", err)
-				}
-
-				TagName.Next()
-				err = TagName.Scan(&tg.TargetTag[k])
-				if err != nil {
-					fmt.Println(err)
+				for key, val := range Hashmap {
+					if key == tags[i] {
+						tg.TargetTag[i] = val
+						break
+					} else {
+						tg.TargetTag[i] = ""
+					}
 				}
 			}
-
-			//
-			//TagList, err2 := conn.Query(
-			//	`SELECT tag_no
-			//			FROM tag_target_info
-			//			WHERE user_no = $1 AND target_no = $2`,
-			//	num, TargetNumber)
-			//if err2 != nil {
-			//	fmt.Println(err)
-			//}
-			//
-			//k := 0 // 태그의 인덱스를 담을 변수
-			////var tagNum string
-			//
-			//for TagList.Next() { //todo 이중 포문
-			//	err2 = TagList.Scan(&tagNumber) //tagNumber 재탕하기, tag_no를 tagNumber 에 바인딩
-			//	if err2 != nil {
-			//		fmt.Printf("Tag scanning error : %v", err)
-			//		continue //태그가 없으면 건너뛴다.
-			//	}
-			//
-			//	tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tagNumber)
-			//	err = tagName.Scan(&tg.TargetTag[k])
-			//
-			//	if err != nil {
-			//		_ = fmt.Errorf("Target's Tag number query Error. ")
-			//		continue
-			//	}
-			//
-			//	k++
-			//}
 
 			str := strconv.Itoa(i)
 			f.SetCellValue("Sheet1", "A"+str, tg.TargetName)
@@ -659,6 +629,7 @@ func GetTag(num int) []Tag {
 	if err != nil {
 		return nil
 	}
+
 	var query string
 
 	query = `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-DD')
@@ -675,8 +646,10 @@ func GetTag(num int) []Tag {
 	var tag []Tag
 	tg := Tag{}
 
+	i := 0
 	for tags.Next() {
 		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
+		Hashmap[tg.TagNo] = tg.TagName
 
 		if err != nil {
 			fmt.Printf("Tags scanning Error. : %v", err)
@@ -684,7 +657,12 @@ func GetTag(num int) []Tag {
 		}
 
 		tag = append(tag, tg)
+		i++
 	}
+
+	//for key, val := range Hashmap {
+	//	fmt.Println(key, val)
+	//}
 
 	return tag
 }
@@ -774,18 +752,24 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 		}
 
 		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
+		// 데이터베이스에서 일일히 조회할 필요없이 GetTag()를 통해 가져오고 저장한 값과 비교해 조회속도를 높인다.
+	Loop1:
 		for i := 0; i < len(tags); i++ {
-			if tags[i] == 0 { // tags[i]가 0이면 태그는 더 이상 없음.
-				break
+			if tags[i] == 0 {
+				tg.TargetTag[i] = ""
+				continue Loop1
 			}
-			tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tags[i])
-			err = tagName.Scan(&tg.TargetTag[i])
-			if err != nil {
-				_ = fmt.Errorf("Target's Tag number query Error. ")
-				continue
+
+			for key, val := range Hashmap {
+				if key == tags[i] {
+					tg.TargetTag[i] = val
+					break
+				} else {
+					tg.TargetTag[i] = ""
+				}
 			}
 		}
-		// 최대 20개로 제한된 대상이 구조체에 담길때 까지 넣는다.
+
 		targets = append(targets, tg)
 
 		tg.TargetTag[0] = ""
@@ -805,11 +789,4 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 
 	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
 	return targets, total, pages, nil
-}
-
-func checkError(err error) {
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 }

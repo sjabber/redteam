@@ -166,13 +166,13 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("./Spreadsheet/" + str + "/bulk.txt")
-	if err2 != nil {
-		fmt.Println(err2)
-		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
-	}
+	//err2 := os.Remove("./Spreadsheet/" + str + "/bulk.txt")
+	//if err2 != nil {
+	//	fmt.Println(err2)
+	//	panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
+	//}
 
-	err2 = os.Remove("./Spreadsheet/" + str + "/" + filename)
+	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
