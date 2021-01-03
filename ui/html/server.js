@@ -33,11 +33,11 @@ app.get('/project/progress', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
     fs.createReadStream("./project/project.html").pipe(res);
 })
-//
-// app.get('/project/complete', function (req, res) {
-//     res.writeHead(200, {"Content-Type": "text/html"});
-//     fs.createReadStream("./project/project-ed.html").pipe(res);
-// })
+
+app.get('/project/example', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./project/example.html").pipe(res);
+})
 // app.get('/project/ing', function (req, res) {
 //     res.writeHead(200, {"Content-Type": "text/html"});
 //     fs.createReadStream("./project/project-ing.html").pipe(res);
@@ -83,6 +83,6 @@ app.use(function (req, res, next) {
 });
 
 
-server.listen(8080, function () {
+server.listen(8888, function () {
     console.log('Express server listening on port ' + server.address().port);
 })
