@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Properties;
@@ -19,12 +16,21 @@ public class SMTPService {
     @Autowired
     SMTPRepository smtpRepository;
 
+    @Autowired
+    AESService aesService;
+
     public Optional<SmtpVo> getSMTP(Long user_no){
         Optional<SmtpVo> smtp =  smtpRepository.findByUserNo(user_no);
+        try {
+            //TODO LOG로 변경
+            System.out.println(aesService.decAES(smtp.get().getSmtpPw()));//log
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return smtp;
     }
 
-    public void setSMTP(Long user_no, SmtpVo newSmtp){
+    public void setSMTP(Long user_no, SmtpVo newSmtp) throws Exception{
         SmtpVo smtp =  smtpRepository.findByUserNo(user_no).get();
         smtp.setSmtpHost(newSmtp.getSmtpHost());
         smtp.setSmtpPort(newSmtp.getSmtpPort());
@@ -32,19 +38,20 @@ public class SMTPService {
         smtp.setSmtpTls(newSmtp.getSmtpTls());
         smtp.setSmtpTimeOut(newSmtp.getSmtpTimeOut());
         smtp.setSmtpId(newSmtp.getSmtpId());
-        smtp.setSmtpPw(newSmtp.getSmtpPw());
+        smtp.setSmtpPw(aesService.encAES(newSmtp.getSmtpPw()));//
+        System.out.println(smtp.getSmtpPw());//
         smtp.setModify(LocalDateTime.now());
         System.out.println(smtpRepository.save(smtp));
     }
 
     public void connectCheck(SmtpVo smtp_info) throws Exception {
-        //todo id(email 아이디) 유효성 검사하기
+        //TODO id(email 아이디) 유효성 검사하기
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(smtp_info.getSmtpHost());
         mailSender.setPort(Integer.parseInt(smtp_info.getSmtpPort()));
 
         mailSender.setUsername(smtp_info.getSmtpId());
-        mailSender.setPassword(smtp_info.getSmtpPw());
+        mailSender.setPassword(aesService.decAES(smtp_info.getSmtpPw()));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.startttls.enable", smtp_info.getSmtpTls().equals("1")?"true":"false");//smtp_info.getSmtpTls().equals("1")?"true":"false"
@@ -62,22 +69,22 @@ public class SMTPService {
 
         mailSender.testConnection();
 
-
+        /*
         //메세지 보내기: html 형태(검색시 금방 나옴), 파일도 보낼 수 있다.
         //여러 사람에게 보내기 List InternetAddress 형태? 검색필요
         //InternetAddress를 배열로 받아서 후에 프로젝트에서 target의 메일들을 받아보내면 됨
         MimeMessage message = mailSender.createMimeMessage();
         message.setFrom(new InternetAddress(smtp_info.getSmtpId()));
         //수신자
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress("sjabber@naver.com"));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress("kimkc5215@naver.com"));
 
         // 메일 제목
-        message.setSubject("SMTP 연결 test입니다.");
+        message.setSubject("SMTP TEST1111");
 
         // 메일 내용
         message.setText("Success!!");
         mailSender.send(message);
-
+        */
 
     }
 

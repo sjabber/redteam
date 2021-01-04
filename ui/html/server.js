@@ -29,19 +29,19 @@ app.get('/dashboard/detail', function (req, res) {
     fs.createReadStream("./dashboard/project-detail.html").pipe(res);
 })
 
-app.get('/project/book', function (req, res) {
+app.get('/project/progress', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
-    fs.createReadStream("./project/project-booking.html").pipe(res);
+    fs.createReadStream("./project/project.html").pipe(res);
 })
 
-app.get('/project/complete', function (req, res) {
+app.get('/project/example', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
-    fs.createReadStream("./project/project-ed.html").pipe(res);
+    fs.createReadStream("./project/example.html").pipe(res);
 })
-app.get('/project/ing', function (req, res) {
-    res.writeHead(200, {"Content-Type": "text/html"});
-    fs.createReadStream("./project/project-ing.html").pipe(res);
-})
+// app.get('/project/ing', function (req, res) {
+//     res.writeHead(200, {"Content-Type": "text/html"});
+//     fs.createReadStream("./project/project-ing.html").pipe(res);
+// })
 
 app.get('/project/create', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
@@ -83,6 +83,6 @@ app.use(function (req, res, next) {
 });
 
 
-server.listen(8080, function () {
+server.listen(8888, function () {
     console.log('Express server listening on port ' + server.address().port);
 })
