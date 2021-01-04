@@ -117,7 +117,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
 	// 엑셀파일의 중간에 값이 없는 경우, 잘못된 형식이 들어가 있을경우 이를 검사할 필요가 있음.
 
-	query1 := "INSERT INTO target_info (target_name, target_email, target_phone, target_organize, target_position," +
+	query1 := "INSERT INTO target_info2 (target_name, target_email, target_phone, target_organize, target_position," +
 		"tag1, tag2, tag3, user_no) " +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
@@ -166,7 +166,7 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
              tag2,
              tag3,
              modified_time
-          FROM target_info
+          FROM target_info2
           WHERE user_no = $1
          ) AS T
     WHERE row_num > $2
@@ -250,7 +250,7 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	// 전체 타겟(훈련대상)의 수를 반환한다.
 	query = `
     select count(target_no) 
-    from target_info 
+    from target_info2 
     where user_no = $1`
 
 	pageCount := conn.QueryRow(query, num)
@@ -272,7 +272,7 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 		}
 
 		// target_info 테이블에서 대상을 지운다.
-		_, err := conn.Exec("DELETE FROM target_info WHERE user_no = $1 AND target_no = $2", num, number)
+		_, err := conn.Exec("DELETE FROM target_info2 WHERE user_no = $1 AND target_no = $2", num, number)
 		if err != nil {
 			return fmt.Errorf("Error deleting target ")
 		}
@@ -375,7 +375,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 	BigString = BigString[:len(BigString)-2]
 
-	query := "INSERT INTO target_info (target_name, target_email, target_phone," +
+	query := "INSERT INTO target_info2 (target_name, target_email, target_phone," +
 		"target_organize, target_position, user_no, tag1, tag2, tag3) VALUES" +
 		BigString
 
@@ -398,7 +398,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		query := `
          SELECT target_no, target_name, target_email, target_phone, target_organize, target_position, 
          		to_char(modified_time, 'YYYY-MM-YY HH24:MI'), tag1, tag2, tag3
-         from target_info
+         from target_info2
          WHERE user_no = $1
          ORDER BY target_no`
 
@@ -518,7 +518,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
              				 tag1,
              				 tag2,
              				 tag3
-      			FROM target_info
+      			FROM target_info2
       			WHERE user_no = $1) as T
 				WHERE tag1 = $2
    				OR tag2 = $2
@@ -698,7 +698,7 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 		"tag2, " +
 		"tag3, " +
 		"modified_time " +
-		"FROM target_info " +
+		"FROM target_info2 " +
 		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2" +
 		") AS T " +
 		"WHERE row_num > $3 " +
@@ -779,7 +779,7 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 
 	// 전체 타겟(훈련대상)의 수를 반환한다.
 	query = "SELECT count(target_no) " +
-		"FROM target_info " +
+		"FROM target_info2 " +
 		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2"
 
 	pageCount := conn.QueryRow(query, num, searchText)
