@@ -6,6 +6,11 @@ import (
 	"redteam/model"
 )
 
+func CreateProject(c *gin.Context) {
+
+}
+
+
 func GetTag(c *gin.Context) {
 	num := c.Keys["number"].(int)
 
