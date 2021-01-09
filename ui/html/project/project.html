@@ -108,65 +108,65 @@
 <!--            템플릿 뷰어     -->
             <div class="pgn-modal" id="my_modal">
               <div class="pgn-modal-wrapper ">
-                <div class="modal__header">
-                  <h5>템플릿 수정</h5>
-                  <div class="toolbox">
-                    <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
-                            class="la la-times"></i></button>
-                  </div>
-                </div>
-                <div class="modal__body">
-                  <div class="form-group w-50">
-                    <label for="tmp_division">구분</label><select id="tmp_division">
-                    <option value="1" selected>기본</option>
-                    <option value="2">사용자</option>
-                  </select>
-                  </div>
+                <!--   <div class="modal__header">
+                      <h5>템플릿 수정</h5>
+                      <div class="toolbox">
+                        <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
+                                class="la la-times"></i></button>
+                      </div>
+                    </div>
+                    <div class="modal__body">
+                      <div class="form-group w-50">
+                        <label for="tmp_division">구분</label><select id="tmp_division">
+                        <option value="1" selected>기본</option>
+                        <option value="2">사용자</option>
+                      </select>
+                      </div>
 
-                  <div class="form-group w-50">
-                    <label for="tmp_kind">훈련유형</label><select id="tmp_kind">
-                    <option value="1" selected>경고 안내</option>
-                    <option value="2">피싱 유도</option>
-                    <option value="3">실태 조사</option>
-                  </select>
-                  </div>
+                      <div class="form-group w-50">
+                        <label for="tmp_kind">훈련유형</label><select id="tmp_kind">
+                        <option value="1" selected>경고 안내</option>
+                        <option value="2">피싱 유도</option>
+                        <option value="3">실태 조사</option>
+                      </select>
+                      </div>
 
-                  <div class="form-group w-50">
-                    <label for="file_info">첨부파일 정보</label><select id="file_info">
-                    <option selected value="">첨부파일 없음</option>
-                    <option value="1">EXE</option>
-                    <option value="2">HTML</option>
-                    <option value="3">Excel</option>
-                  </select>
-                  </div>
+                      <div class="form-group w-50">
+                        <label for="file_info">첨부파일 정보</label><select id="file_info">
+                        <option selected value="">첨부파일 없음</option>
+                        <option value="1">EXE</option>
+                        <option value="2">HTML</option>
+                        <option value="3">Excel</option>
+                      </select>
+                      </div>
 
-                  <div class="form-group">
-                    <label for="tmp_name">템플릿명</label>
-                    <input type="text"
-                           id="tmp_name"
-                           maxlength="30">
-                    <input type="hidden" id="tmp_no">
-                  </div>
+                      <div class="form-group">
+                        <label for="tmp_name">템플릿명</label>
+                        <input type="text"
+                               id="tmp_name"
+                               maxlength="30">
+                        <input type="hidden" id="tmp_no">
+                      </div>
 
-                  <div class="form-group">
-                    <label for="sender_name">발송자명</label>
-                    <input type="text"
-                           id="sender_name"
-                           maxlength="30">
-                  </div>
-                  <!-- <label>발송자</label> -->
+                      <div class="form-group">
+                        <label for="sender_name">발송자명</label>
+                        <input type="text"
+                               id="sender_name"
+                               maxlength="30">
+                      </div>
+                      <label>발송자</label>
 
                   <div class="form-group">
                     <label for="title">메일 제목</label>
                     <input type="text"
                            id="title" maxlength="60"></div>
-                  <!-- <label>메일 제목(최대 30자)</label> -->
+                   <label>메일 제목(최대 30자)</label>
 
 
                   <textarea name="content" id="content"></textarea>
-                  <script>
+                 <script>
                     CKEDITOR.replace('content');
-                  </script>
+                  </script> -->
                   <div class="form-group">
                     <div style="color: red;font-weight: bold; font-size: small">
                       {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
@@ -177,7 +177,7 @@
                     <label for="download_type">다운로드 방식</label><select id="download_type">
                     <option selected value="">첨부파일 없음</option>
                     <option value="1">링크 첨부</option>
-                  </select>
+                  </select> -->
                   </div>
 
                 </div>
@@ -209,88 +209,12 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td></td>
-                    <td>1</td>
-                    <td>첫번째테스트</td>
-                    <td>
-                      <label class="badge badge-green">삼성전자</label>
-                      <label class="badge badge-red">엘지전자</label>
-                      <label class="badge badge-blue">레드팀</label>
-                    </td>
-                    <td>
-                      <button class="btn btn-secondary">
-                        시작
-                      </button>
-                      <button class="btn btn-blue">
-                        종료
-                      </button>
-                      <button class="btn btn-c-info">
-                        진행
-                      </button>
-                    </td>
-                    <td>
-                      훈련템플릿1
-                    </td>
-                    <td>
-                      151 명
-                    </td>
-                    <td>
-                      <progress class="valign-middle" value="45" max="151"></progress>29%(45명)
-                    </td>
-                    <td>
-                      <button class="btn btn-c-success">
-                        프로젝트 종료하기
-                      </button>
-                    </td>
-                    <td>
-                      2020-01-01 09:30
-                    </td>
-                    <td>
-                      2020-02-01 10:30
-                    </td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>2</td>
-                    <td>두번째테스트</td>
-                    <td>
-                      <label class="badge badge-green">삼성전자</label>
-                      <label class="badge badge-red">엘지전자</label>
-                    </td>
-                    <td>
-                      <label class="badge badge-secondary">
-                        종료
-                      </label>
-                    </td>
-                    <td>
-                      훈련템플릿2
-                    </td>
-                    <td>
-                      121 명
-                    </td>
-                    <td>
-                      <progress class="valign-middle" value="100" max="121"></progress>82%(100명)
-                    </td>
-                    <td>
-                      <button class="btn btn-disabled">
-                        프로젝트 종료하기
-                      </button>
-                    </td>
-                    <td>
-                      2020-02-01 09:30
-                    </td>
-                    <td>
-                      2020-03-01 10:30
-                    </td>
-                  </tr>
-                  </tbody>
                 </table>
               </div>
             </div>
 
 
-            <div class="pagination-wrapper clearfix">
+            <div class="pagination-wrapper clearfix" id="under">
               <ul class="pagination float--right" id="pages">
               </ul>
             </div>
@@ -300,14 +224,222 @@
       </div>
     </div>
   </div>
+<script src="/js/lib/Sortable.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="/js/jquery.serialize-object.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/demo.js"></script>
+<script src="/js/script.js"></script>
+<script>
+  function getTag() {
+    console.log('getTagForTargetInfo')
+    const r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:5000/setting/getTag', true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    r.withCredentials = true;
+    r.onreadystatechange = function () {
+      //let rObj;
+      if (r.readyState === 4) {
+        if (r.status === 200) {
+          rObj = JSON.parse(r.responseText);
+          if (rObj.tags.length > 0) {
+            $('#tag_menage > tbody').empty();
+            for (let j = 0; j < rObj.tags.length; j++) {
+              $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
+                      "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
+                      "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
+                      "                        </tr>");
+            }
+          }
+        } else if (r.status === 403) {
+          const tokenResult = Refresh()
+          if (tokenResult) {
+            getTag();
+            console.log("true")
+          }
+        } else {
+          document.location.href = '/';
+        }
+      }
+    };
+    r.send();
+  }
+
+  function GetProject() {
+    const r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:5000/api/getProject', true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    r.withCredentials = true;
+    r.onreadystatechange = function () {
+      let rObj;
+      if (r.readyState === 4) {
+        if (r.status === 200) {
+          rObj = JSON.parse(r.responseText);
+          //console.log(r.responseText);
+
+          if (rObj.project_list != null) {
+            // table 비워주기
+            $('#project_list > tbody').empty();
+            // No, 프로젝트명, 대상 태그, 진행상태, 템플릿명, 대상자 수, 감염 현황(%), 프로젝트 종료, 시작일, 종료일
+            // No, p_name, tag_name, p_status, p_name, targets, infection, end_date, start_date
+            for (let i = 0; i < rObj.project_list.length; i++) {
+              // 태그 분리작업
+              let full_tag = ''
+              let status = ''
+              let end = ''
+              let infection_percentage
+                for (let j = 0; j < rObj.project_list[i].tag_no.length; j++) {
+                  // console.log(rObj.project_list
+                  if (rObj.project_list[i].tag_no[j] !== "") {
+                    if (j === 0) {
+                      full_tag += '<label class="badge badge-green">' + rObj.project_list[i].tag_no[j] + '</label>'
+                    } else if (j === 1) {
+                      full_tag += '<label class="badge badge-red">' + rObj.project_list[i].tag_no[j] + '</label>'
+                    } else if (j === 2) {
+                      full_tag += '<label class="badge badge-blue">' + rObj.project_list[i].tag_no[j] + '</label>'
+                    }
+                  }
+                }
+                // 프로젝트 진행 상황에 따라 버튼들의 색들을 다 다르게한다.
+                if (rObj.project_list[i].p_status === "0") {
+                  rObj.project_list[i].p_status = "예약";
+                  let test11 = "해당 프로젝트를 실행하시겠습니까?";
+                  status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
+                          ' border: 2px solid transparent; border-radius: 3px;" ' +
+                          'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
+                          + rObj.project_list[i].p_status + '</button>'
+                  end += '<button class="btn btn-c-success" id="project_end" ' +
+                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                } else if (rObj.project_list[i].p_status == "1") {
+                  rObj.project_list[i].p_status = "진행";
+                  status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
+                          ' border: 2px solid transparent; border-radius: 3px;">'
+                          + rObj.project_list[i].p_status + '</button>'
+                  end += '<button class="btn btn-c-success" id="project_end" ' +
+                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                } else if (rObj.project_list[i].p_status == "2") {
+                  rObj.project_list[i].p_status = "종료";
+                  status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
+                  end += '<button class="btn btn-disabled" id="project_end" disabled="disabled" ' +
+                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                }
+
+                infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
+
+                if (full_tag === '') {
+                  $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                          + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
+                          + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
+                          + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
+                          + '<td><progress class="valign-middle" value=' + 'rObj.project_list[i].infection max='
+                          + 'rObj.project_list[i].targets></progress>' + infection_percentage
+                          + "%(" + rObj.project_list[i].infection +"명)"
+                          + '</td><td>' + end + '</td>'
+                          + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
+                          + '</td></tr>');
+                } else {
+                $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                        + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
+                        + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
+                        + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
+                        + '<td><progress class="valign-middle" value=' + 'rObj.project_list[i].infection max='
+                        + 'rObj.project_list[i].targets></progress>' + infection_percentage
+                        + "%(" + rObj.project_list[i].infection +"명)"
+                        + '</td><td>' + end + '</td>'
+                        + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
+                        + '</td></tr>');
+
+              }
+            }
+          } else if (rObj.project_list === null) {
+            document.getElementById('under').style.background="#f2eff1";
+            $('#project_list').append('<tr style="background-color:white"><td colspan="11" align="center">' +
+                    '<div class="alert alert" style="background-color:white">' +
+                    '<p align="center"><span style="border: 1px; font-size:15px;' +
+                    'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
+                    '</div></td></tr>');
+          }
+        } else if (r.status === 403) {
+          const tokenResult = Refresh();
+          if (tokenResult) {
+            GetProject();
+          } else {
+            document.location.href = '/';
+          }
+        }
+      }
+    };
+    r.send();
+  }
+
+  //종료하기 버튼 누른경우 작동하는 기능
+  function ProjectEnd(p_no) {
+    const r = new XMLHttpRequest();
+    const verify = confirm("해당 프로젝트를 종료하시겠습니까?");
+    if (verify === true) {
+      r.open('POST', 'http://localhost:5000/api/endProjectList', true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            alert('해당 프로젝트가 종료되었습니다.');
+            document.location.reload();
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              ProjectEnd(p_no);
+            }
+          } else {
+            document.location.href = '/';
+          }
+        }
+      };
+    }
+    else {
+      alert("취소되었습니다.");
+    }
+
+    console.log(p_no);
+    r.send(JSON.stringify({"p_no": p_no}));
+  }
+
+  function ProjectStart(p_no) {
+    const r = new XMLHttpRequest();
+    const verify = confirm("해당 프로젝트를 실행하시겠습니까?");
+    if (verify === true) {
+      r.open('POST', 'http://localhost:5000/api/startProjectList', true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            alert('프로젝트가 시작되었습니다.');
+            document.location.reload();
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              ProjectStart(p_no);
+            }
+          } else {
+            document.location.href = '/';
+          }
+        }
+      };
+    }
+    else {
+      alert("취소되었습니다.");
+    }
+
+    console.log(p_no);
+    r.send(JSON.stringify({"p_no": p_no}));
+  }
 
 
-  <script src="/js/lib/Sortable.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="/js/jquery.serialize-object.min.js"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/demo.js"></script>
-  <script src="/js/script.js"></script>
+
+  getTag();
+  GetProject();
+  </script>
 </body>
 
 </html>

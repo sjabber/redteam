@@ -233,7 +233,6 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
-
 <script>
     function GetTemplates() {
         const r = new XMLHttpRequest();
@@ -389,7 +388,7 @@
                 if (r.status === 200) {
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
-                } else if (r.status === 403) {
+                } else if (r.status === 403 || r.status === 500) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
                         delTml();

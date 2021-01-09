@@ -10,15 +10,15 @@ import (
 )
 
 type Smtpinfo struct {
-	SmtpNo       int    `json:"smtp_no"`
-	SmtpHost     string `json:"smtp_host"`
-	SmtpPort     string `json:"smtp_port"`
-	SmtpProtocol string `json:"smtp_protocol"`
-	SmtpTls      string `json:"smtp_tls"`
-	SmtpTimeout  string `json:"smtp_timeout"`
-	SmtpId       string `json:"smtp_id"`
-	SmtpPw       string `json:"smtp_pw"`
-	SmtpIdentity string `json:"smtp_identity"`
+	SmtpNo          int    `json:"smtp_no"`
+	SmtpHost        string `json:"smtp_host"`
+	SmtpPort        string `json:"smtp_port"`
+	SmtpProtocol    string `json:"smtp_protocol"`
+	SmtpTls         string `json:"smtp_tls"`
+	SmtpTimeout     string `json:"smtp_timeout"`
+	SmtpId          string `json:"smtp_id"`
+	SmtpPw          string `json:"smtp_pw"`
+	SmtpPwHashCheck string `json:"smtp_identity"` // smtp 비밀번호 해시값 체크
 }
 
 func (sm *Smtpinfo) IdPwCheck(conn *sql.DB) error {
@@ -29,12 +29,12 @@ func (sm *Smtpinfo) IdPwCheck(conn *sql.DB) error {
 	}
 
 	row := conn.QueryRow(`SELECT smtp_pw FROM smtp_info WHERE smtp_id = $1`, sm.SmtpId)
-	err := row.Scan(&sm.SmtpIdentity)
+	err := row.Scan(&sm.SmtpPwHashCheck)
 	if err != nil {
 		return fmt.Errorf("this account does not exist. ")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(sm.SmtpIdentity), []byte(sm.SmtpPw))
+	err = bcrypt.CompareHashAndPassword([]byte(sm.SmtpPwHashCheck), []byte(sm.SmtpPw))
 	if err != nil {
 		return fmt.Errorf("This Password is incorrect. ")
 	}
@@ -43,15 +43,30 @@ func (sm *Smtpinfo) IdPwCheck(conn *sql.DB) error {
 }
 
 
-func (sm *Smtpinfo) SmtpConnectionCheck(num int) error {
+func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
+
+	row := conn.QueryRow(`SELECT smtp_host, smtp_port, smtp_id, smtp_pw
+ 								FROM smtp_info
+ 								WHERE user_no = $1`, num)
+	err := row.Scan(&sm.SmtpHost, &sm.SmtpPort, &sm.SmtpId, &sm.SmtpPw)
+	if err != nil {
+		return fmt.Errorf("this account does not exist. ")
+	}
+
+	// 비밀번호 일치여부 검사
+	//err = bcrypt.CompareHashAndPassword([]byte(sm.SmtpPwHashCheck), []byte(sm.SmtpPw))
+	//if err != nil {
+	//	return fmt.Errorf("This Password is incorrect. ")
+	//}
+
+	// string -> int, smtp 연결을 테스트한다.
 	port, _ := strconv.Atoi(sm.SmtpPort)
 	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
-
-	_, err := d.Dial()
-
+	_, err = d.Dial()
 	if err != nil {
-		return err
+		return fmt.Errorf("Smtp connecting failed. : %v ", err)
 	}
+	sm.SendMail2()
 	return nil
 }
 
@@ -73,6 +88,34 @@ func (sm *Smtpinfo) SendMail() error {
 	m.SetAddressHeader("To", "받는계정주소", "이름")
 	m.SetHeader("Subject", "메일제목")
 	m.SetBody("text/html", fmt.Sprintf("Hello %s!", "이름"))
+
+	if err := gomail.Send(s, m); err != nil {
+		return fmt.Errorf(
+			"Could not send email to %q: %v ", "보내는 계정주소", err)
+	}
+	m.Reset()
+	// }
+	return nil
+}
+
+func (sm *Smtpinfo) SendMail2() error {
+
+	port, _ := strconv.Atoi(sm.SmtpPort) //string -> int
+
+	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
+
+	s, err := d.Dial()
+
+	if err != nil {
+		return err
+	}
+
+	m := gomail.NewMessage()
+	// for _, r := range list {
+	m.SetHeader("From", sm.SmtpId) //보내는 사람
+	m.SetAddressHeader("To", sm.SmtpId, "김태호") //받는사람
+	m.SetHeader("Subject", "smtp test") //메일 제목
+	m.SetBody("text/html", fmt.Sprintf("Hello %s!", "이름 김태호")) //내용
 
 	if err := gomail.Send(s, m); err != nil {
 		return fmt.Errorf(

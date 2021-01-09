@@ -16,9 +16,9 @@ func SmtpConnectionCheck(c *gin.Context)  {
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
-	err := c.BindJSON(&sm)
-	err = sm.IdPwCheck(&conn)
-	err = sm.SmtpConnectionCheck(num)
+	//err := c.BindJSON(&sm)
+	//err = sm.IdPwCheck(&conn)
+	err := sm.SmtpConnectionCheck(&conn, num)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
