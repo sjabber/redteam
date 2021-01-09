@@ -11,6 +11,7 @@ import (
 const (
 	topic = "redteam"
 	brokerAddress = "localhost:9092"
+	partition = 1
 )
 
 func Produce(ctx context.Context) {
@@ -21,7 +22,6 @@ func Produce(ctx context.Context) {
 	w := kafka.Writer{
 		Addr: kafka.TCP(brokerAddress),
 		Topic: topic,
-
 	}
 
 	// Note 여기서 프로듀서가 메시지를 생성하는 것이다.
@@ -47,7 +47,7 @@ func Produce(ctx context.Context) {
 	}
 }
 
-func Consume(ctx context.Context) {
+func Consume2(ctx context.Context) string {
 	// 새로운 reader를 브로커와 토픽과 함께 초기화한다.
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{brokerAddress},
@@ -67,6 +67,8 @@ func Consume(ctx context.Context) {
 		}
 		// 메시지를 받은 다음에는 이것의 값을 기록한다.
 		fmt.Println("received: ", string(msg.Value))
+
+		return string(msg.Value)
 	}
 }
 

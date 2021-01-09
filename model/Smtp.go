@@ -66,62 +66,34 @@ func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
 	if err != nil {
 		return fmt.Errorf("Smtp connecting failed. : %v ", err)
 	}
-	sm.SendMail2()
+	//sm.SendMail2()
 	return nil
 }
 
-func (sm *Smtpinfo) SendMail() error {
-
-	port, _ := strconv.Atoi(sm.SmtpPort) //string -> int
-
-	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
-
-	s, err := d.Dial()
-
-	if err != nil {
-		return err
-	}
-
-	m := gomail.NewMessage()
-	// for _, r := range list {
-	m.SetHeader("From", "보내는 계정주소")
-	m.SetAddressHeader("To", "받는계정주소", "이름")
-	m.SetHeader("Subject", "메일제목")
-	m.SetBody("text/html", fmt.Sprintf("Hello %s!", "이름"))
-
-	if err := gomail.Send(s, m); err != nil {
-		return fmt.Errorf(
-			"Could not send email to %q: %v ", "보내는 계정주소", err)
-	}
-	m.Reset()
-	// }
-	return nil
-}
-
-func (sm *Smtpinfo) SendMail2() error {
-
-	port, _ := strconv.Atoi(sm.SmtpPort) //string -> int
-
-	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
-
-	s, err := d.Dial()
-
-	if err != nil {
-		return err
-	}
-
-	m := gomail.NewMessage()
-	// for _, r := range list {
-	m.SetHeader("From", sm.SmtpId) //보내는 사람
-	m.SetAddressHeader("To", sm.SmtpId, "김태호") //받는사람
-	m.SetHeader("Subject", "smtp test") //메일 제목
-	m.SetBody("text/html", fmt.Sprintf("Hello %s!", "이름 김태호")) //내용
-
-	if err := gomail.Send(s, m); err != nil {
-		return fmt.Errorf(
-			"Could not send email to %q: %v ", "보내는 계정주소", err)
-	}
-	m.Reset()
-	// }
-	return nil
-}
+//func (sm *Smtpinfo) SendMail2() error {
+//
+//	port, _ := strconv.Atoi(sm.SmtpPort) //string -> int
+//
+//	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
+//
+//	s, err := d.Dial()
+//
+//	if err != nil {
+//		return err
+//	}
+//
+//	m := gomail.NewMessage()
+//	// for _, r := range list {
+//	m.SetHeader("From", sm.SmtpId) //보내는 사람
+//	m.SetAddressHeader("To", sm.SmtpId, "받는분 이름") //받는사람
+//	m.SetHeader("Subject", "smtp test") //메일 제목
+//	m.SetBody("text/html", fmt.Sprintf("Hello %s!", " 김태호")) //내용
+//
+//	if err := gomail.Send(s, m); err != nil {
+//		return fmt.Errorf(
+//			"Could not send email to %q: %v ", "보내는 계정주소", err)
+//	}
+//	m.Reset()
+//	// }
+//	return nil
+//}

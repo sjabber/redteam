@@ -275,7 +275,7 @@
       if (r.readyState === 4) {
         if (r.status === 200) {
           rObj = JSON.parse(r.responseText);
-          //console.log(r.responseText);
+          console.log(r.responseText);
 
           if (rObj.project_list != null) {
             // table 비워주기

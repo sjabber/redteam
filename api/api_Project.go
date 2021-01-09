@@ -78,7 +78,12 @@ func EndProjectList(c *gin.Context) {
 			"status" : http.StatusBadRequest,
 			"isOk": 0,
 		})
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+		"isOk": 1,
+	})
 }
 
 func StartProjectList(c *gin.Context) {
@@ -88,9 +93,10 @@ func StartProjectList(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.Project{}
+	p := model.ProjectStart{}
 	c.ShouldBindJSON(&p)
 
+	// 프로젝트 상태변경
 	err := p.StartProject(&conn, num)
 	if err != nil {
 		log.Println(err.Error())
@@ -98,8 +104,24 @@ func StartProjectList(c *gin.Context) {
 			"status" : http.StatusBadRequest,
 			"isOk": 0,
 		})
+		return
 	}
 
+	//kafka producer & consumer
+	err = p.Kafka(&conn, num)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status" : http.StatusBadRequest,
+			"isOk": 0,
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"status": http.StatusOK,
+			"isOk": 1,
+		})
+	}
 }
 
 func GetTag(c *gin.Context) {

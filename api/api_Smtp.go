@@ -33,20 +33,20 @@ func SmtpConnectionCheck(c *gin.Context)  {
 	})
 }
 
-func SendMailTest(c *gin.Context) {
-	var sm model.Smtpinfo
-	err := c.BindJSON(&sm)
-	err = sm.SendMail()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": http.StatusBadRequest,
-			"isOk": 0,
-			"error": err.Error(),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"status": http.StatusOK,
-		"isOk": 1,
-	})
-}
+//func SendMail(c *gin.Context) {
+//	var sm model.Smtpinfo
+//	err := c.BindJSON(&sm)
+//	err = sm.SendMail()
+//	if err != nil {
+//		c.JSON(http.StatusBadRequest, gin.H{
+//			"status": http.StatusBadRequest,
+//			"isOk": 0,
+//			"error": err.Error(),
+//		})
+//		return
+//	}
+//	c.JSON(http.StatusOK, gin.H{
+//		"status": http.StatusOK,
+//		"isOk": 1,
+//	})
+//}
