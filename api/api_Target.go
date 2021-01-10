@@ -166,10 +166,17 @@ func ImportTargets(c *gin.Context) {
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
+	//err2 := os.Remove("./Spreadsheet/" + str + "/bulk.txt")
+	//if err2 != nil {
+	//	fmt.Println(err2)
+	//	panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
+	//}
+
 	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	}
+	os.Clearenv()
 }
 
 //사용자가 등록한 대상들을 엑셀파일로 추출한다.
@@ -199,7 +206,7 @@ func ExportTarget(c *gin.Context) {
 	str := strconv.Itoa(num)
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
 	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
-	destFile := "./Spreadsheet/Registered_Targets" + str + ".xlsx"
+	destFile := "./Spreadsheet/" + str + "/Registered_Targets.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
 		c.String(http.StatusOK, "%v", err)
@@ -210,7 +217,7 @@ func ExportTarget(c *gin.Context) {
 
 	// 사용자가 파일을 다운로드받으면 생성한 파일은 다시 지운다.
 	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정)
-	err3 := os.Remove("./Spreadsheet/Registered_Targets" + str + ".xlsx")
+	err3 := os.Remove("./Spreadsheet/" + str + "/Registered_Targets.xlsx")
 	if err3 != nil {
 		//현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 		panic(err3)
@@ -229,7 +236,6 @@ func RegTag(c *gin.Context) {
 	c.ShouldBindJSON(&tag)
 	err := tag.CreateTag(&conn, num)
 	if err != nil {
-		log.Println("RegTag error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
 	} else {

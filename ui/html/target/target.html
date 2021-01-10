@@ -321,6 +321,8 @@
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
 <script>
+    getTagForTargetInfo();
+
     function GetTarget(page) {
         console.log('GetTarget')
         getTagForTargetInfo();
@@ -380,8 +382,6 @@
 
                     // console.log(rObj.total);
                     paging(rObj.total, page);
-
-
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
@@ -573,7 +573,7 @@
                     console.log(tdArr[0])
                     r.send(JSON.stringify({target_list: tdArr}))
                 } else {
-                    alert("삭제할 대상을 선택해주세요.")
+                    alert("삭제할 대상을 선택해주세요.");
                 }
 
             }
@@ -600,6 +600,8 @@
                             "                        </td>\n" +
                             "                        </tr>");
 
+                    }else if(r.status === 400) {
+                        alert('태그명을 입력해 주세요.');
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
