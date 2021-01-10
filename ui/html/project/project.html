@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 </head>
 <body>
 <!--네이게이터-->
@@ -53,7 +54,7 @@
       </a>
       </li>
       <li class="header">Setting</li>
-      <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
+      <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
         <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
       </a>
         <ul class="tree">
@@ -230,7 +231,10 @@
                       </button>
                     </td>
                     <td>
-                      훈련템플릿1
+                      <button class="btn btn-attach" onclick="OpenModal(1)">
+                        훈련템플릿1
+                      </button>
+
                     </td>
                     <td>
                       151 명
@@ -308,6 +312,198 @@
   <script src="/js/main.js"></script>
   <script src="/js/demo.js"></script>
   <script src="/js/script.js"></script>
+  <script>
+    function GetTemplates() {
+      const r = new XMLHttpRequest();
+      r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        let rObj;
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            rObj = JSON.parse(r.responseText);
+            console.log(r.responseText);
+
+            if (rObj.tmpls.length > 0) {
+              // table 비워주기
+              $('#tmpls > tbody').empty();
+              // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
+              // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
+              for (let i = 0; i < rObj.tmpls.length; i++) {
+                $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                        rObj.tmpls[i].fake_no + '</td><td>' +
+                        '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                        ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
+                        '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                        '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
+                        rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
+                        '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+
+                //<button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
+                //data-modal="#tag_registry">태그 관리
+                //</button>
+              }
+            } else {
+              $('#tmpls > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
+                      '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                      '                </div></tr></td>');
+            }
+
+            // paging(rObj.total, page);
+
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              GetTemplates();
+              // console.log("true")
+            }
+          } else {
+            document.location.href = '/';
+          }
+        }
+      };
+      r.send();
+    }
+
+    function GetTmlDetail(tml_no) {
+      const r = new XMLHttpRequest();
+      r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        let rObj;
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            console.log(r.responseText);
+            rObj = JSON.parse(r.responseText);
+            // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
+            // todo 김태호 멘티 자체적으로 포멧 추가..
+
+            $('#tmp_division').val(rObj.tmpls.tmp_division);
+            $('#tmp_kind').val(rObj.tmpls.tmp_kind);
+            $('#tmp_no').val(rObj.tmpls.tmp_no);
+            $('#tmp_name').val(rObj.tmpls.tmp_name);
+            $('#file_info').val(rObj.tmpls.file_info);
+            $('#sender_name').val(rObj.tmpls.sender_name);
+            $('#title').val(rObj.tmpls.title);
+            // $('#content').val(rObj.tmpls.content);
+
+            CKEDITOR.instances.content.setData(rObj.tmpls.content);
+            // $('#content').val(rObj.tmpls.content);
+            $('#download_type').val(rObj.tmpls.download_type);
+
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              GetTmlDetail(tml_no);
+            }
+          } else {
+            document.location.href = '/';
+          }
+        }
+      };
+      r.send();
+    }
+
+    function editTml() {
+      const tmp_division = $('#tmp_division').val();
+      const tmp_kind = $('#tmp_kind').val();
+      const tmp_name = $('#tmp_name').val();
+      const tmp_no = $('#tmp_no').val();
+      const file_info = $('#file_info').val();
+      const sender_name = $('#sender_name').val();
+      const title = $('#title').val();
+      const content = CKEDITOR.instances.content.getData();
+      const download_type = $('#download_type').val();
+
+      const formData = {
+        tmp_no: parseInt(tmp_no),
+        tmp_division: tmp_division,
+        tmp_kind: tmp_kind,
+        tmp_name: tmp_name,
+        file_info: file_info,
+        sender_name: sender_name,
+        title: title,
+        content: content,
+        download_type: download_type
+      };
+      console.log(JSON.stringify(formData));
+
+      const r = new XMLHttpRequest();
+      r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            alert("템플릿 수정 완료했습니다.")
+            location.reload()
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              editTml();
+              console.log("true")
+            }
+          }
+        }
+      };
+      console.log(formData);
+      r.send(JSON.stringify(formData));
+
+    }
+
+    function delTml() {
+      const tmp_no = $('#tmp_no').val();
+
+      const formData = {
+        tmp_no: parseInt(tmp_no),
+      };
+
+      const r = new XMLHttpRequest();
+      r.open('POST', 'http://localhost:5000/setting/delTmp', true);
+      r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      r.withCredentials = true;
+      r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+          if (r.status === 200) {
+            alert("템플릿 삭제 완료했습니다.")
+            location.reload()
+          } else if (r.status === 403) {
+            const tokenResult = Refresh();
+            if (tokenResult) {
+              delTml();
+              console.log("true")
+            }
+          }
+        }
+      };
+      r.send(JSON.stringify(formData));
+    }
+
+    function OpenModal(i) {
+      console.log(i + "번호")
+
+      GetTmlDetail(i); //todo 김태호 멘티 test 용 추가함.
+
+      $("#my_modal").show().center();
+    }
+
+    function closeModal() {
+      $('#my_modal').hide();
+    }
+
+    jQuery.fn.center = function () {
+      this.css("position", "absolute");
+      this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
+              $(window).scrollTop()) + "px");
+      this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
+              $(window).scrollLeft()) + "px");
+      this.css("width", "700px")
+      return this;
+    }
+
+  </script>
 </body>
 
 </html>

@@ -70,7 +70,10 @@ app.get('/manager/template', function (req, res) {
     fs.createReadStream("./templates/template.html").pipe(res);
 })
 
-
+app.get('/warn/warning', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./warn/warning.html").pipe(res);
+})
 
 
 app.get('/setting')
