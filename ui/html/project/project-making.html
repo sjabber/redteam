@@ -201,6 +201,8 @@
                         $('#tag_2').append("<option value=''>훈련 대상 태그 선택하기</option>");
                         $('#tag_3').append("<option value=''>훈련 대상 태그 선택하기</option>");
                         for (let i = 0; i < rObj.tags.length; i++) {
+                            // <label className="badge badge-red">엘지전자</label>
+                            // <label className="badge badge-blue">레드팀</label>
                             $('#tag_1').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
                             $('#tag_2').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
                             $('#tag_3').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
