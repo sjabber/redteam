@@ -62,9 +62,10 @@ func GetProject(c *gin.Context) {
 }
 
 func EndProjectList(c *gin.Context) {
-	// 사용자 계정정보
+	// 계정정보
 	num := c.Keys["number"].(int)
 
+	// DB
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
@@ -107,29 +108,35 @@ func StartProjectList(c *gin.Context) {
 		return
 	}
 
+	// 이하 비동기처리
 	//kafka producer & consumer
 	err = p.Kafka(&conn, num)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status" : http.StatusBadRequest,
-			"isOk": 0,
+			"status": http.StatusBadRequest,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status": http.StatusOK,
-			"isOk": 1,
+			"isOk":   1,
 		})
 	}
 }
 
 func GetTag(c *gin.Context) {
+	// 계정정보
 	num := c.Keys["number"].(int)
+
+	// DB
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
 
 	c.JSON(http.StatusOK, gin.H{
 		"isOk":   1,
 		"status": http.StatusOK,
-		"tags":   model.GetTag(num), // 태그들
+		"tags":   model.GetTag(&conn , num), // 태그들
 	})
 }

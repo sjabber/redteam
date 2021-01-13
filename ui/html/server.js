@@ -38,10 +38,6 @@ app.get('/project/example', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
     fs.createReadStream("./project/example.html").pipe(res);
 })
-// app.get('/project/ing', function (req, res) {
-//     res.writeHead(200, {"Content-Type": "text/html"});
-//     fs.createReadStream("./project/project-ing.html").pipe(res);
-// })
 
 app.get('/project/create', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
@@ -70,6 +66,10 @@ app.get('/manager/template', function (req, res) {
     fs.createReadStream("./templates/template.html").pipe(res);
 })
 
+app.get('/warning', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./warning/warning.html").pipe(res);
+})
 
 
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"gopkg.in/gomail.v2"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -48,6 +49,7 @@ const (
 	brokerAddress = "localhost:9092"
 	partition = 1
 )
+var Msg string
 
 func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 
@@ -102,40 +104,64 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 }
 
 func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
-	query := `SELECT row_num,
-       p_no,
-       tmp_name,
-       p_name,
-       p_status,
-       to_char(p_start_date, 'YYYY-MM-DD'),
-       to_char(p_end_date, 'YYYY-MM-DD'),
-       T.tag1,
-       T.tag2,
-       T.tag3,
-       T.infection,
-       COUNT(target_no)
-FROM (SELECT ROW_NUMBER() over (ORDER BY p_no) AS row_num,
-             p_no,
-             ti.tmp_name,
-             p_name,
-             p_status,
-             p_start_date,
-             p_end_date,
-             p.tag1,
-             p.tag2,
-             p.tag3,
-             p.infection
-      FROM project_info as p
-               LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
-      WHERE p.user_no = $1
-     ) AS T
-         LEFT JOIN target_info ta on user_no = ta.user_no
-WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
-   or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
-   or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
-GROUP BY row_num, p_no, tmp_name, p_name, p_status, to_char(p_start_date, 'YYYY-MM-DD'),
-         to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, T.infection	
-ORDER BY row_num;`
+	// 프로젝트 읽어오기전에 해시테이블에 태그정보 한번 넣고 시작한다.
+	var query string
+
+	query = `SELECT tag_no, tag_name
+			  FROM tag_info
+			  WHERE user_no = $1
+			  ORDER BY tag_no asc`
+	hash, err := conn.Query(query, num)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	tg := Tag{}
+	for hash.Next() {
+		err = hash.Scan(&tg.TagNo, &tg.TagName)
+		Hashmap[tg.TagNo] = tg.TagName
+
+		if err != nil {
+			fmt.Printf("Tags scanning Error. : %v", err)
+			continue
+		}
+	}
+
+	query = `SELECT row_num,
+       				p_no,
+       				tmp_name,
+       				p_name,
+       				p_status,
+       				to_char(p_start_date, 'YYYY-MM-DD'),
+       				to_char(p_end_date, 'YYYY-MM-DD'),
+				    T.tag1,
+				    T.tag2,
+				    T.tag3,
+				    T.infection,
+				    COUNT(target_no)
+			FROM (SELECT ROW_NUMBER() over (ORDER BY p_no) AS row_num,
+					 p_no,
+					 ti.tmp_name,
+					 p_name,
+					 p_status,
+					 p_start_date,
+					 p_end_date,
+					 p.tag1,
+					 p.tag2,
+					 p.tag3,
+					 p.infection
+				FROM project_info as p
+					   LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
+			  	WHERE p.user_no = $1
+			) AS T
+				 LEFT JOIN target_info ta on user_no = ta.user_no
+		WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
+			or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
+			or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
+		GROUP BY row_num, p_no, tmp_name, p_name, p_status, to_char(p_start_date, 'YYYY-MM-DD'),
+				 to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, T.infection	
+		ORDER BY row_num;`
 
 	rows, err := conn.Query(query, num)
 	if err != nil {
@@ -247,21 +273,22 @@ func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 		}
 
 		// 파싱작업 수행
-		p.MailContent = Parsing(p.MailContent, p.TargetName, p.TargetOrganize,
+		p.MailContent = parsing(p.MailContent, p.TargetName, p.TargetOrganize,
 			p.TargetPosition, p.TargetPhone)
 
 		// 카프카에 작성할 내용들을 하나의 띄어쓰기로 구분짓고 하나의 string 으로 묶는다.
 		// 각각 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
 		message := p.SenderEmail + "//" + p.TargetEmail + "//" + p.TargetName + "//" + p.MailTitle + "//" + p.MailContent
 
-		// todo Kafka producer
-		err = w.WriteMessages(context.Background(), kafka.Message{
-			//Key: []byte("Key"),
-			Value: []byte(message),
-		})
-		if err != nil {
-			panic("could not write message " + err.Error())
-		}
+		go produce(message, w)
+		//// todo Kafka producer
+		//err = w.WriteMessages(context.Background(), kafka.Message{
+		//	//Key: []byte("Key"),
+		//	Value: []byte(message),
+		//})
+		//if err != nil {
+		//	panic("could not write message " + err.Error())
+		//}
 		i++
 	}
 
@@ -283,31 +310,45 @@ func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 
 	// todo Kafka consumer
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{brokerAddress},
-		Topic: topic,
-		GroupID: "redteam",
-		MinBytes: 5, //5 바이트
-		MaxBytes: 4132,//1kB
-		MaxWait: 3 * time.Second, //3초만 기다린다.
+		Brokers:     []string{brokerAddress},
+		Topic:       topic,
+		GroupID:     "redteam",
+		MinBytes:    5,                 //5 바이트
+		MaxBytes:    4132,              //1kB
+		MaxWait:     3 * time.Second,   //3초만 기다린다.
 		StartOffset: kafka.FirstOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
 		// 있는 경우 중단한 곳부터 계속된다.
 	})
 
 	for j := i; j > 0; j-- {
-		// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
-		msg, err := r.ReadMessage(context.Background())
-		if err != nil {
-			panic("could not read message " + err.Error())
-		}
+		go func() {
+			// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
+			Msg, err := r.ReadMessage(context.Background())
+			if err != nil {
+				log.Println("kafka consumer error. ")
+				panic("could not read message " + err.Error())
+			}
 
-		s := strings.Split(string(msg.Value), "//")
-		p.SendMail(s[0], s[1], s[2], s[3], s[4])
+			s := strings.Split(string(Msg.Value), "//")
+			p.sendMail(s[0], s[1], s[2], s[3], s[4])
+		}()
 	}
 
 	return nil
 }
 
-func (p *ProjectStart) SendMail(send string, receive string, name string, title string, content string) error {
+// todo Kafka producer function
+func produce (str string, w kafka.Writer) {
+	err := w.WriteMessages(context.Background(), kafka.Message{
+		//Key: []byte("Key"),
+		Value: []byte(str),
+	})
+	if err != nil {
+		panic("could not write message " + err.Error())
+	}
+}
+
+func (p *ProjectStart) sendMail(send string, receive string, name string, title string, content string) error {
 
 	port, _ := strconv.Atoi(p.SmtpPort) //string -> int
 
@@ -336,7 +377,7 @@ func (p *ProjectStart) SendMail(send string, receive string, name string, title 
 
 // 메일 내용 파싱함수
 // 이 파싱 메서드가 성능이 어떤지는 아직 제대로 점검해보지 않았음..
-func Parsing(str string, str1 string, str2 string, str3 string, str4 string) string {
+func parsing(str string, str1 string, str2 string, str3 string, str4 string) string {
 
 	if strings.Contains(str, "{{target_name}}") {
 		str = strings.Replace(str, "{{target_name}}", str1, -1)
