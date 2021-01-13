@@ -68,8 +68,14 @@ app.get('/manager/template', function (req, res) {
 
 app.get('/warn/warning', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
-    fs.createReadStream("./warn/warning.html").pipe(res);
+    fs.createReadStream("./warn/warning2.html").pipe(res);
 })
+
+app.get('/warn/warning2', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./warn/warning2.html").pipe(res);
+})
+
 
 
 app.get('/setting')

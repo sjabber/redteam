@@ -61,7 +61,33 @@ func GetProject(c *gin.Context) {
 	}
 }
 
-func EndProjectList(c *gin.Context) {
+//func EndProjectList(c *gin.Context) {
+//	// 계정정보
+//	num := c.Keys["number"].(int)
+//
+//	// DB
+//	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
+//	conn := db.(sql.DB)
+//
+//	p := model.Project{}
+//	c.ShouldBindJSON(&p)
+//
+//	err := p.EndProject(&conn, num)
+//	if err != nil {
+//		log.Println(err.Error())
+//		c.JSON(http.StatusBadRequest, gin.H{
+//			"status" : http.StatusBadRequest,
+//			"isOk": 0,
+//		})
+//		return
+//	}
+//	c.JSON(http.StatusOK, gin.H{
+//		"status": http.StatusOK,
+//		"isOk": 1,
+//	})
+//}
+
+func DeleteProject(c *gin.Context) {
 	// 계정정보
 	num := c.Keys["number"].(int)
 
@@ -69,22 +95,23 @@ func EndProjectList(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.Project{}
+	p := model.ProjectNumber{}
 	c.ShouldBindJSON(&p)
 
-	err := p.EndProject(&conn, num)
+	err := p.DeleteProject(&conn, num)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status" : http.StatusBadRequest,
-			"isOk": 0,
+			"status": http.StatusBadRequest,
+			"isOk":   0,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
-		"isOk": 1,
+		"isOk":   1,
 	})
+
 }
 
 func StartProjectList(c *gin.Context) {
@@ -106,24 +133,18 @@ func StartProjectList(c *gin.Context) {
 			"isOk": 0,
 		})
 		return
-	}
-
-	// 이하 비동기처리
-	//kafka producer & consumer
-	err = p.Kafka(&conn, num)
-	if err != nil {
-		log.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": http.StatusBadRequest,
-			"isOk":   0,
-		})
-		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status": http.StatusOK,
 			"isOk":   1,
 		})
 	}
+}
+
+// 카프카 컨슈머, 컴파일과 동시에 별도 고루틴에서 계속 작동한다.
+func Consumer() {
+	p := model.ProjectStart{}
+	p.Consumer()
 }
 
 func GetTag(c *gin.Context) {
@@ -140,3 +161,4 @@ func GetTag(c *gin.Context) {
 		"tags":   model.GetTag(&conn , num), // 태그들
 	})
 }
+

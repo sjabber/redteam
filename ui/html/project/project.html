@@ -104,6 +104,9 @@
           <div class="box">
             <div class="box-header">
               <h3>프로젝트 관리</h3>
+              <div class="btn-group" style="margin-left: 10px; position: relative; left: 10px;">
+                <button class="btn btn-primary active" id="del_project"><span>프로젝트 삭제</span></button>
+              </div>
             </div>
 
 <!--
@@ -197,6 +200,10 @@
                   <thead>
                   <tr>
                     <th style="visibility:hidden;position:absolute;"></th>
+                    <th>
+                      <div class="pgn-checkbox"><input type="checkbox" id="all_select"><span></span>
+                      </div>
+                    </th>
                     <th>No</th>
                     <th>프로젝트명</th>
                     <th>대상 태그</th>
@@ -210,6 +217,7 @@
                   </tr>
                   </thead>
                   <tbody>
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -328,7 +336,10 @@
                 infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
 
                 if (full_tag === '') {
-                  $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                  $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
+                          + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
+                          + '<td><div class="pgn-checkbox">'
+                          + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no
                           + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                           + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                           + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
@@ -339,7 +350,10 @@
                           + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                           + '</td></tr>');
                 } else {
-                $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
+                        + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
+                        + '<td><div class="pgn-checkbox">'
+                        + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no
                         + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                         + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                         + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
@@ -435,6 +449,56 @@
     console.log(p_no);
     r.send(JSON.stringify({"p_no": p_no}));
   }
+
+  $(function () {
+    $('#all_select').click(function () {
+      if ($("input:checkbox[id='all_select']").prop("checked")) {
+        $("input[type=checkbox]").prop("checked", true);
+      } else {
+        $("input[type=checkbox]").prop("checked", false);
+      }
+    });
+    $('#del_project').click(function () {
+      let tbodyTr = $('tbody tr');
+      const tdArr = [];	// 배열 선언
+      const td = tbodyTr.children();
+
+      td.each(function (i) {
+        if (td.eq(i).children().children().prop("checked")) {
+          tdArr.push(td.eq(i - 1).text());
+        }
+      });
+      if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
+        if (tdArr.length !== 0) {
+          const r = new XMLHttpRequest();
+          r.open('POST', 'http://localhost:5000/api/delProject', true);
+          r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          r.withCredentials = true;
+          r.onreadystatechange = function () {
+            if (r.readyState === 4) {
+              if (r.status === 200) {
+                alert("삭제가 완료되었습니다.");
+                location.reload();
+              } else if (r.status === 403) {
+                const tokenResult = Refresh();
+                if (tokenResult) {
+                  console.log("true")
+                }
+              } else {
+                alert("삭제 실패했습니다.");
+              }
+            }
+          };
+          console.log({project_list: tdArr})
+          console.log(tdArr[0])
+          r.send(JSON.stringify({project_list: tdArr}))
+        } else {
+          alert("삭제할 대상을 선택해주세요.");
+        }
+
+      }
+    });
+  });
 
   // getTag();
   GetDashBoard();

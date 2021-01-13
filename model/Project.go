@@ -3,10 +3,10 @@ package model
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"gopkg.in/gomail.v2"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -14,10 +14,10 @@ import (
 )
 
 type Project struct {
-	PDescription string   `json:"p_description"` // 프로젝트 설명
 	PNo          int      `json:"p_no"`          // 진짜 프로젝트 번호
 	FakeNo       int      `json:"fake_no"`       // 화면에 표시될 프로젝트의 번호
 	PName        string   `json:"p_name"`        // 프로젝트 이름
+	PDescription string   `json:"p_description"` // 프로젝트 설명
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
 	PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
 	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
@@ -28,20 +28,25 @@ type Project struct {
 }
 
 type ProjectStart struct {
-	PNo            int `json:"p_no"`
-	TargetNo       int
-	TargetName     string
-	TargetEmail    string
-	TargetOrganize string
-	TargetPosition string
-	TargetPhone    string
-	MailTitle      string
-	MailContent    string
-	SenderEmail    string
-	SmtpHost       string
-	SmtpPort       string
-	SmtpId         string
-	SmtpPw         string
+	PNo            int    `json:"p_no"`
+	UserNo         int    `json:"user_no"`
+	TargetNo       int    `json:"target_no"`       // 훈련대상자들 번호
+	TargetName     string `json:"target_name"`     // 훈련대상의 이름
+	TargetEmail    string `json:"target_email"`    // 훈련대상의 이메일주소
+	TargetOrganize string `json:"target_organize"` // 훈련대상의 소속
+	TargetPosition string `json:"target_position"` // 훈련대상의 직급
+	TargetPhone    string `json:"target_phone"`    // 훈련대상 전화번호
+	MailTitle      string `json:"mail_title"`      // 메일 제목
+	MailContent    string `json:"mail_content"`    // 메일 내용
+	SenderEmail    string `json:"sender_email"`    // 보내는사람(관리자) 이메일
+	SmtpHost       string `json:"smtp_host"`
+	SmtpPort       string `json:"smtp_port"`
+	SmtpId         string `json:"smtp_id"`
+	SmtpPw         string `json:"smtp_pw"`
+}
+
+type ProjectNumber struct {
+	ProjectNumber []string `json:"project_list"` //front javascript 와 이름을 일치시켜야함.
 }
 
 const (
@@ -202,17 +207,38 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 	return projects, nil
 }
 
-func (p *Project) EndProject(conn *sql.DB, num int) error {
-	_, err := conn.Exec(`UPDATE project_info
- 								SET p_status = 2
- 								WHERE user_no = $1 AND p_no = $2`,
- 								num, p.PNo)
-	if err != nil {
-		return fmt.Errorf("Error updating project status ")
+//func (p *Project) EndProject(conn *sql.DB, num int) error {
+//	_, err := conn.Exec(`UPDATE project_info
+// 								SET p_status = 2
+// 								WHERE user_no = $1 AND p_no = $2`,
+// 								num, p.PNo)
+//	if err != nil {
+//		return fmt.Errorf("Error updating project status ")
+//	}
+//
+//	return nil
+//}
+
+func (p *ProjectNumber) DeleteProject(conn *sql.DB, num int) error {
+
+	for i := 0; i < len(p.ProjectNumber); i++ {
+		number, _ := strconv.Atoi(p.ProjectNumber[i])
+
+		if p.ProjectNumber == nil {
+			return fmt.Errorf("Please enter the number of the object to be deleted. ")
+		}
+
+		// project_info 테이블에서 해당하는 프로젝트를 지운다.
+		_, err := conn.Exec("DELETE FROM project_info WHERE user_no = $1 AND p_no = $2", num, number)
+		if err != nil {
+			return fmt.Errorf("Error deleting target ")
+		}
 	}
 
 	return nil
 }
+
+
 
 func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 	// 프로젝트 상태를 1로 변경하며 프로젝트를 실행한다.
@@ -223,10 +249,7 @@ func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 	if err != nil {
 		return fmt.Errorf("Error : updating project status. ")
 	}
-	return nil
-}
 
-func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 	query := `SELECT distinct mail_title,
                mail_content,
                sender_name,
@@ -245,8 +268,8 @@ func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 			WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
    				or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
    				or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
-   				GROUP BY mail_title, mail_content, sender_name, target_name, target_email, target_organize, target_position,
-         				 target_phone, target_no
+   				GROUP BY mail_title, mail_content, sender_name, target_name, target_email, target_organize,
+   				         target_position, target_phone, target_no
 				ORDER BY target_no;`
 
 	rows, err := conn.Query(query, p.PNo, num)
@@ -254,60 +277,54 @@ func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 		return fmt.Errorf("project starting error : %v", err)
 	}
 
-	//todo 카프카
-	// 카프카에 넣을 메일 내용
+	//todo 카프카에 넣을 메일 내용
 	// 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용
 	w := kafka.Writer{
 		Addr:  kafka.TCP(brokerAddress),
 		Topic: topic,
 	}
 
-	i := 0
-	for rows.Next() {
-		// DB 로부터 토픽에 작성할 내용들을 불러온다.
-		err = rows.Scan(&p.MailTitle, &p.MailContent, &p.SenderEmail,
-			&p.TargetName, &p.TargetEmail, &p.TargetOrganize,
-			&p.TargetPosition, &p.TargetPhone, &p.TargetNo)
-		if err != nil {
-			fmt.Errorf("Error : sql error ")
+	msg := ProjectStart{}
+	msg.UserNo = num
+
+	// todo Kafka producer
+	go func() {
+		for rows.Next() {
+			// DB 로부터 토픽에 작성할 내용들을 불러온다.
+			err = rows.Scan(&msg.MailTitle, &msg.MailContent, &msg.SenderEmail,
+				&msg.TargetName, &msg.TargetEmail, &msg.TargetOrganize,
+				&msg.TargetPosition, &msg.TargetPhone, &msg.TargetNo)
+			if err != nil {
+				fmt.Errorf("Error : sql error ")
+			}
+
+			// 파싱작업 수행
+			msg.MailContent = parsing(msg.MailContent, msg.TargetName, msg.TargetOrganize,
+				msg.TargetPosition, msg.TargetPhone)
+
+			// 카프카에 작성할 내용들을 하나의 띄어쓰기로 구분짓고 하나의 string 으로 묶는다.
+			// 각각 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
+			message, _ := json.Marshal(msg)
+			produce(message, w)
 		}
+	}()
 
-		// 파싱작업 수행
-		p.MailContent = parsing(p.MailContent, p.TargetName, p.TargetOrganize,
-			p.TargetPosition, p.TargetPhone)
+	return nil
+}
 
-		// 카프카에 작성할 내용들을 하나의 띄어쓰기로 구분짓고 하나의 string 으로 묶는다.
-		// 각각 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
-		message := p.SenderEmail + "//" + p.TargetEmail + "//" + p.TargetName + "//" + p.MailTitle + "//" + p.MailContent
-
-		go produce(message, w)
-		//// todo Kafka producer
-		//err = w.WriteMessages(context.Background(), kafka.Message{
-		//	//Key: []byte("Key"),
-		//	Value: []byte(message),
-		//})
-		//if err != nil {
-		//	panic("could not write message " + err.Error())
-		//}
-		i++
-	}
-
-	// 메일을 보내기 위한 정보를 DB로 부터 가져온다.
-	row := conn.QueryRow(`SELECT smtp_host, smtp_port, smtp_id, smtp_pw
- 								FROM smtp_info
- 								WHERE user_no = $1`, num)
-	err = row.Scan(&p.SmtpHost, &p.SmtpPort, &p.SmtpId, &p.SmtpPw)
+// todo Kafka producer function
+func produce (messages []byte, w kafka.Writer) {
+	err := w.WriteMessages(context.Background(), kafka.Message{
+		//Key: []byte("Key"),
+		Value: messages,
+	})
 	if err != nil {
-		return fmt.Errorf("this account does not exist. ")
+		panic("could not write message " + err.Error())
 	}
-	// string -> int, smtp 연결을 테스트한다.
-	port, _ := strconv.Atoi(p.SmtpPort)
-	d := gomail.NewDialer(p.SmtpHost, port, p.SmtpId, p.SmtpPw)
-	_, err = d.Dial()
-	if err != nil {
-		return fmt.Errorf("Smtp connecting failed. : %v ", err)
-	}
+}
 
+// todo kafka consumer function
+func (p *ProjectStart)  Consumer() {
 	// todo Kafka consumer
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:     []string{brokerAddress},
@@ -316,60 +333,69 @@ func (p *ProjectStart) Kafka(conn *sql.DB, num int) error {
 		MinBytes:    5,                 //5 바이트
 		MaxBytes:    4132,              //1kB
 		MaxWait:     3 * time.Second,   //3초만 기다린다.
-		StartOffset: kafka.FirstOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
+		StartOffset: kafka.LastOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
 		// 있는 경우 중단한 곳부터 계속된다.
 	})
 
-	for j := i; j > 0; j-- {
-		go func() {
-			// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
-			Msg, err := r.ReadMessage(context.Background())
+	for {
+		// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
+		// json 객체로 받은 값들을 sendMail 메서드에 잘 적재시킨다.
+		Msg, err := r.ReadMessage(context.Background())
+		if err != nil {
+			panic("Could not read message " + err.Error())
+		}
+
+		// json -> ProjectStart 객체 각각에 값으로 들어가도록 한다.
+		json.Unmarshal(Msg.Value, p)
+
+		// 토픽의 값이 비어있지 않다면 값을 읽어 메일을 전송한다.
+		if p.SenderEmail != "" || p.TargetEmail != "" || p.MailTitle != "" || p.TargetName != ""{
+			err = p.sendMail(p.UserNo)
 			if err != nil {
-				log.Println("kafka consumer error. ")
-				panic("could not read message " + err.Error())
+				panic("Could not send email " + err.Error())
 			}
-
-			s := strings.Split(string(Msg.Value), "//")
-			p.sendMail(s[0], s[1], s[2], s[3], s[4])
-		}()
+		} else {
+			continue
+		}
 	}
-
-	return nil
 }
 
-// todo Kafka producer function
-func produce (str string, w kafka.Writer) {
-	err := w.WriteMessages(context.Background(), kafka.Message{
-		//Key: []byte("Key"),
-		Value: []byte(str),
-	})
+func (p *ProjectStart) sendMail(num int) error {
+	// 부득이하게 다른 DB connecting 방법 사용..
+	conn, err := ConnectDB()
 	if err != nil {
-		panic("could not write message " + err.Error())
+		return fmt.Errorf("db connection error")
 	}
-}
+	defer conn.Close()
 
-func (p *ProjectStart) sendMail(send string, receive string, name string, title string, content string) error {
+	// 메일을 보내기 위한 정보를 DB로 부터 가져온다.
+	row := conn.QueryRow(`SELECT smtp_host, smtp_port, smtp_id, smtp_pw
+ 								FROM smtp_info
+ 								WHERE user_no = $1`, num)
+	err = row.Scan(&p.SmtpHost, &p.SmtpPort, &p.SmtpId, &p.SmtpPw)
+	if err != nil {
+		panic("failed to write message: " + err.Error())
+	}
 
+	// string -> int, smtp 연결을 테스트한다.
 	port, _ := strconv.Atoi(p.SmtpPort) //string -> int
-
 	d := gomail.NewDialer(p.SmtpHost, port, p.SmtpId, p.SmtpPw)
-
 	s, err := d.Dial()
-
 	if err != nil {
-		return err
+		panic("failed to write message: " + err.Error())
 	}
 
 	m := gomail.NewMessage()
 	// for _, r := range list {
-	m.SetHeader("From", send)
-	m.SetAddressHeader("To", receive, name)
-	m.SetHeader("Subject", title)
-	m.SetBody("text/html", fmt.Sprintf(content))
+	m.SetHeader("From", p.SenderEmail)
+	m.SetAddressHeader("To", p.TargetEmail, p.TargetName)
+	m.SetHeader("Subject", p.MailTitle)
+	m.SetBody("text/html", fmt.Sprintf(p.MailContent))
 
+	//send close
 	if err := gomail.Send(s, m); err != nil {
 		return fmt.Errorf(
-			"Could not send email to %q: %v ", send, err)
+			"Could not send email to %q: %v ", p.SenderEmail, err)
 	}
 	m.Reset()
 	return nil
