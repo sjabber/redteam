@@ -53,10 +53,11 @@ func RegisterRoute(r *gin.Engine) {
 	apiV2.Use(middleware.TokenAuthMiddleWare())
 	{
 		apiV2.GET("/dashboard", api.Dashboard)
-		//apiV2.POST("/projectCreate", api.ProjectCreate)
-		//apiV2.GET("/getProject", api.getProject)
-		//apiV2.GET("/endProjectList", api.endProjectList)
-		//apiV2.GET("/bookingProjectList", api.BookingProjectList)
+		apiV2.POST("/projectCreate", api.ProjectCreate) //Note - spring boot
+		apiV2.GET("/smtpConnectSimpleCheck", api.SmtpConnectionCheck) //Note - spring boot
+		apiV2.GET("/getProject", api.GetProject)
+		apiV2.POST("/endProjectList", api.EndProjectList)
+		apiV2.POST("/startProjectList", api.StartProjectList)
 	}
 
 	//r.LoadHTMLGlob("./ui/html/target/*")

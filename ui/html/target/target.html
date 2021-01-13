@@ -325,8 +325,6 @@
 
     function GetTarget(page) {
         console.log('GetTarget')
-        getTagForTargetInfo();
-
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -92,7 +92,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	}
 
 	// 이름 형식검사 (한글, 영어 이름만 허용)
-	var validName, _ = regexp.MatchString("^[가-힣A-Za-z\\s]{1,30}$", t.TargetName)
+	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,30}$", t.TargetName)
 
 	if validName != true {
 		errcode = 402

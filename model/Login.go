@@ -55,7 +55,6 @@ func (u *User) GetAuthToken() (string, string, error) {
 	return authToken, refreshToken, err
 }
 
-
 // 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
 func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 	num := 200 // 기본적으로 200 (StatusOk의 값을 넣어놓는다.)
@@ -67,7 +66,8 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 		return fmt.Errorf("Please enter your account information. "), num
 	}
 
-	row := conn.QueryRowContext(context.Background(), "SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
+	row := conn.QueryRowContext(context.Background(),
+		"SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
 	if err != nil || u.UserNo == 0 || u.Name == "" {
 		num = 403 // 일치하는 계정이 존재하지 않을 경우.

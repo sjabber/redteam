@@ -226,7 +226,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5001/setting/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -234,7 +234,7 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 정상");
                 } else {
-                    alert("SMTP 정보를 확인해주세요.");
+                    alert("SMTP 연결실패, SMTP 정보를 확인해주세요.");
                 }
             }
         };
@@ -272,18 +272,20 @@
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/api/projectCreate', true);
-        r.setRequestHeader("Content-Type", "application/json");
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    alert("프로젝트 생성이 완료되었습니다.")
+                    alert("프로젝트 생성이 완료되었습니다.");
                     location.reload()
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
                         console.log("true")
                     }
+                } else if (r.status === 400) {
+                    alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았습니다.");
                 }
             }
         };
