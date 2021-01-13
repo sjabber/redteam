@@ -147,3 +147,23 @@ alter table target_info
     owner to postgres;
 
 
+create table count_info
+(
+    target_no         integer not null
+        constraint count_info_target_info2_target_no_fk
+            references target_info2,
+    project_no        integer not null
+        constraint count_info_project_info_p_no_fk
+            references project_info,
+    email_read_status boolean   default false,
+    link_click_status boolean   default false,
+    download_status   boolean   default false,
+    created_time      timestamp default now(),
+    modified_time     timestamp default now(),
+    constraint count_info_pk
+        primary key (target_no, project_no)
+);
+
+alter table count_info
+    owner to redteam;
+

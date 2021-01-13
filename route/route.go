@@ -28,6 +28,7 @@ func RegisterRoute(r *gin.Engine) {
 
 		apiV1.POST("/createUser", api.CreateUser)
 		apiV1.GET("/RefreshToken", api.RefreshToken)
+		apiV1.GET("/CountTarget", api.CountTarget)
 	}
 
 	setting := r.Group("/setting")
@@ -53,7 +54,7 @@ func RegisterRoute(r *gin.Engine) {
 	apiV2.Use(middleware.TokenAuthMiddleWare())
 	{
 		apiV2.GET("/dashboard", api.Dashboard)
-		apiV2.POST("/projectCreate", api.ProjectCreate) //Note - spring boot
+		apiV2.POST("/projectCreate", api.ProjectCreate)               //Note - spring boot
 		apiV2.GET("/smtpConnectSimpleCheck", api.SmtpConnectionCheck) //Note - spring boot
 		apiV2.GET("/getProject", api.GetProject)
 		apiV2.POST("/endProjectList", api.EndProjectList)
