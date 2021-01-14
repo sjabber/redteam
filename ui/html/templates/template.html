@@ -75,10 +75,10 @@
 
         <ul class="right">
             <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
-                                                                                                   src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
+                                                                                                   src="/image/user.png"/></a>
                 <div class="dropdown-box with-header">
                     <div class="dropdown-header"><img class="user-img user-img--lg"
-                                                      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/>
+                                                      src="/image/user.png"/>
                         <div class="user-info">
                             <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
                         </div>
@@ -176,16 +176,17 @@
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="download_type">다운로드 방식</label><select id="download_type">
-                                    <option selected value="">첨부파일 없음</option>
-                                    <option value="1">링크 첨부</option>
+                                    <option selected value="1">첨부파일 없음</option>
+                                    <option value="2">링크 첨부</option>
+                                    <option value="3">파일 첨부</option>
                                 </select>
                                 </div>
 
                             </div>
                             <div class="modal__footer">
                                 <button class="btn btn-ghost modal-dismiss" onclick="closeModal()">취소</button>
-                                <button class="btn btn-primary modal-dismiss" onclick="delTml()">삭제</button>
-                                <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()">수정하기
+                                <button class="btn btn-primary modal-dismiss" id="del" disabled="" onclick="delTml()">삭제</button>
+                                <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()"><span></span>
                                 </button>
                             </div>
                         </div>
@@ -233,6 +234,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <script>
     function GetTemplates() {
         const r = new XMLHttpRequest();
@@ -251,15 +253,30 @@
                         $('#tmpls > tbody').empty();
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
+
+
                         for (let i = 0; i < rObj.tmpls.length; i++) {
-                            $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
-                                rObj.tmpls[i].fake_no + '</td><td>' +
-                                '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
-                                ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
-                                '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
-                                '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
-                                rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
-                                '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            if (rObj.tmpls[i].tmp_division === "기본") {
+                                $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                                    rObj.tmpls[i].fake_no + '</td><td>' +
+                                    '<button class="btn btn-primary" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="fas fa-plus"></i></button>' +
+                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
+                                    rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
+                                    '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            } else if (rObj.tmpls[i].tmp_division === "사용자") {
+                                $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                                    rObj.tmpls[i].fake_no + '</td><td>' +
+                                    '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
+                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
+                                    rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
+                                    '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            }
+
+
 
                             //<button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
                             //data-modal="#tag_registry">태그 관리
@@ -267,7 +284,7 @@
                         }
                     } else {
                         $('#tmpls > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                            '                  <p>Info<span>등록된 템플릿이 존재하지 않습니다.</span></p>\n' +
                             '                </div></tr></td>');
                     }
 
@@ -400,11 +417,24 @@
         r.send(JSON.stringify(formData));
     }
 
+    var del_button = document.getElementById('del');
+    var reg_button = document.getElementById('reg_tag');
+
     function OpenModal(i) {
         console.log(i + "번호")
+        if (i <= 3) {
+            del_button.disabled = true;
+            $('#del').removeClass('btn btn-primary modal-dismiss');
+            $('#del').addClass('btn btn-disabled');
+            $('#tag_reg span').text('추가하기');
+        } else {
+            $('#del').removeClass('btn btn-disabled');
+            $('#del').addClass('btn btn-primary modal-dismiss');
+            del_button.disabled = false;
+            $('#tag_reg span').text('수정하기');
+        }
 
         GetTmlDetail(i); //todo 김태호 멘티 test 용 추가함.
-
         $("#my_modal").show().center();
     }
 

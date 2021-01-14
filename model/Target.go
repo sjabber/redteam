@@ -440,18 +440,18 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			//var tagNum string
 
 		Loop1:
-			for i := 0; i < len(tags); i++ {
-				if tags[i] == 0 {
-					tg.TargetTag[i] = ""
+			for k := 0; k < len(tags); k++ {
+				if tags[k] == 0 {
+					tg.TargetTag[k] = ""
 					continue Loop1
 				}
 
 				for key, val := range Hashmap {
-					if key == tags[i] {
-						tg.TargetTag[i] = val
+					if key == tags[k] {
+						tg.TargetTag[k] = val
 						break
 					} else {
-						tg.TargetTag[i] = ""
+						tg.TargetTag[k] = ""
 					}
 				}
 			}
@@ -554,18 +554,18 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			}
 
 		Loop2:
-			for i := 0; i < len(tags); i++ {
-				if tags[i] == 0 {
-					tg.TargetTag[i] = ""
+			for k := 0; k < len(tags); k++ {
+				if tags[k] == 0 {
+					tg.TargetTag[k] = ""
 					continue Loop2
 				}
 
 				for key, val := range Hashmap {
-					if key == tags[i] {
-						tg.TargetTag[i] = val
+					if key == tags[k] {
+						tg.TargetTag[k] = val
 						break
 					} else {
-						tg.TargetTag[i] = ""
+						tg.TargetTag[k] = ""
 					}
 				}
 			}
@@ -624,11 +624,7 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 }
 
 // todo 4 : tag_info 에서 사용자 번호로 태그정보를 가져온다.
-func GetTag(num int) []Tag {
-	db, err := ConnectDB()
-	if err != nil {
-		return nil
-	}
+func GetTag(conn *sql.DB, num int) []Tag {
 
 	var query string
 
@@ -637,7 +633,7 @@ func GetTag(num int) []Tag {
 			  WHERE user_no = $1
 			  ORDER BY tag_no asc
 `
-	tags, err := db.Query(query, num)
+	tags, err := conn.Query(query, num)
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -646,7 +642,6 @@ func GetTag(num int) []Tag {
 	var tag []Tag
 	tg := Tag{}
 
-	i := 0
 	for tags.Next() {
 		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
 		Hashmap[tg.TagNo] = tg.TagName
@@ -657,7 +652,6 @@ func GetTag(num int) []Tag {
 		}
 
 		tag = append(tag, tg)
-		i++
 	}
 
 	//for key, val := range Hashmap {

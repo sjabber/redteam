@@ -78,10 +78,10 @@
       </div>
       <ul class="right">
         <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
-                                                                                               src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
+                                                                                               src="/image/user.png"/></a>
           <div class="dropdown-box with-header">
             <div class="dropdown-header"><img class="user-img user-img--lg"
-                                              src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/>
+                                              src="/image/user.png"/>
               <div class="user-info">
                 <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
               </div>
@@ -104,12 +104,15 @@
           <div class="box">
             <div class="box-header">
               <h3>프로젝트 관리</h3>
+              <div class="btn-group" style="margin-left: 10px; position: relative; left: 10px;">
+                <button class="btn btn-primary active" id="del_project"><span>프로젝트 삭제</span></button>
+              </div>
             </div>
 
-<!--            템플릿 뷰어     -->
+<!--
             <div class="pgn-modal" id="my_modal">
               <div class="pgn-modal-wrapper ">
-                <!--   <div class="modal__header">
+                  <div class="modal__header">
                       <h5>템플릿 수정</h5>
                       <div class="toolbox">
                         <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
@@ -167,7 +170,7 @@
                   <textarea name="content" id="content"></textarea>
                  <script>
                     CKEDITOR.replace('content');
-                  </script> -->
+                  </script>
                   <div class="form-group">
                     <div style="color: red;font-weight: bold; font-size: small">
                       {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
@@ -178,7 +181,7 @@
                     <label for="download_type">다운로드 방식</label><select id="download_type">
                     <option selected value="">첨부파일 없음</option>
                     <option value="1">링크 첨부</option>
-                  </select> -->
+                  </select>
                   </div>
 
                 </div>
@@ -189,7 +192,7 @@
                   </button>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="toolbox">
               <div class="box-body pt-0 px-0 responsive">
@@ -197,6 +200,10 @@
                   <thead>
                   <tr>
                     <th style="visibility:hidden;position:absolute;"></th>
+                    <th>
+                      <div class="pgn-checkbox"><input type="checkbox" id="all_select"><span></span>
+                      </div>
+                    </th>
                     <th>No</th>
                     <th>프로젝트명</th>
                     <th>대상 태그</th>
@@ -210,6 +217,7 @@
                   </tr>
                   </thead>
                   <tbody>
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -232,39 +240,39 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
-  function getTag() {
-    console.log('getTagForTargetInfo')
-    const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/setting/getTag', true);
-    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    r.withCredentials = true;
-    r.onreadystatechange = function () {
-      //let rObj;
-      if (r.readyState === 4) {
-        if (r.status === 200) {
-          rObj = JSON.parse(r.responseText);
-          if (rObj.tags.length > 0) {
-            $('#tag_menage > tbody').empty();
-            for (let j = 0; j < rObj.tags.length; j++) {
-              $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
-                      "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
-                      "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
-                      "                        </tr>");
-            }
-          }
-        } else if (r.status === 403) {
-          const tokenResult = Refresh()
-          if (tokenResult) {
-            getTag();
-            console.log("true")
-          }
-        } else {
-          document.location.href = '/';
-        }
-      }
-    };
-    r.send();
-  }
+  // function getTag() {
+  //   console.log('getTagForTargetInfo')
+  //   const r = new XMLHttpRequest();
+  //   r.open('GET', 'http://localhost:5000/setting/getTag', true);
+  //   r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  //   r.withCredentials = true;
+  //   r.onreadystatechange = function () {
+  //     //let rObj;
+  //     if (r.readyState === 4) {
+  //       if (r.status === 200) {
+  //         rObj = JSON.parse(r.responseText);
+  //         if (rObj.tags.length > 0) {
+  //           $('#tag_menage > tbody').empty();
+  //           for (let j = 0; j < rObj.tags.length; j++) {
+  //             $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
+  //                     "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
+  //                     "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
+  //                     "                        </tr>");
+  //           }
+  //         }
+  //       } else if (r.status === 403) {
+  //         const tokenResult = Refresh()
+  //         if (tokenResult) {
+  //           getTag();
+  //           console.log("true")
+  //         }
+  //       } else {
+  //         document.location.href = '/';
+  //       }
+  //     }
+  //   };
+  //   r.send();
+  // }
 
   function GetProject() {
     const r = new XMLHttpRequest();
@@ -328,7 +336,10 @@
                 infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
 
                 if (full_tag === '') {
-                  $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                  $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
+                          + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
+                          + '<td><div class="pgn-checkbox">'
+                          + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no
                           + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                           + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                           + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
@@ -339,7 +350,10 @@
                           + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                           + '</td></tr>');
                 } else {
-                $('#project_list > tbody:last').append('<tr>' + '<td></td><td>' + rObj.project_list[i].fake_no
+                $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
+                        + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
+                        + '<td><div class="pgn-checkbox">'
+                        + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no
                         + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                         + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                         + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
@@ -436,9 +450,58 @@
     r.send(JSON.stringify({"p_no": p_no}));
   }
 
+  $(function () {
+    $('#all_select').click(function () {
+      if ($("input:checkbox[id='all_select']").prop("checked")) {
+        $("input[type=checkbox]").prop("checked", true);
+      } else {
+        $("input[type=checkbox]").prop("checked", false);
+      }
+    });
+    $('#del_project').click(function () {
+      let tbodyTr = $('tbody tr');
+      const tdArr = [];	// 배열 선언
+      const td = tbodyTr.children();
 
+      td.each(function (i) {
+        if (td.eq(i).children().children().prop("checked")) {
+          tdArr.push(td.eq(i - 1).text());
+        }
+      });
+      if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
+        if (tdArr.length !== 0) {
+          const r = new XMLHttpRequest();
+          r.open('POST', 'http://localhost:5000/api/delProject', true);
+          r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          r.withCredentials = true;
+          r.onreadystatechange = function () {
+            if (r.readyState === 4) {
+              if (r.status === 200) {
+                alert("삭제가 완료되었습니다.");
+                location.reload();
+              } else if (r.status === 403) {
+                const tokenResult = Refresh();
+                if (tokenResult) {
+                  console.log("true")
+                }
+              } else {
+                alert("삭제 실패했습니다.");
+              }
+            }
+          };
+          console.log({project_list: tdArr})
+          console.log(tdArr[0])
+          r.send(JSON.stringify({project_list: tdArr}))
+        } else {
+          alert("삭제할 대상을 선택해주세요.");
+        }
 
-  getTag();
+      }
+    });
+  });
+
+  // getTag();
+  GetDashBoard();
   GetProject();
   </script>
 </body>
