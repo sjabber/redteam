@@ -13,7 +13,6 @@ type CounterModel struct {
 }
 
 func (cm *CounterModel) UpdateCount(conn *sql.DB) error {
-	// todo 프로젝트 종료 시간과 현재 시간 비교로직 추가해야함
 	endTimeQuery := `
 select p_end_date
 from project_info
