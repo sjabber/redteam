@@ -15,13 +15,15 @@ import (
 
 type Project struct {
 	PNo          int      `json:"p_no"`          // 진짜 프로젝트 번호
+	TmlNo        int      `json:"tml_no"`        // 템플릿 번호
 	FakeNo       int      `json:"fake_no"`       // 화면에 표시될 프로젝트의 번호
 	PName        string   `json:"p_name"`        // 프로젝트 이름
 	PDescription string   `json:"p_description"` // 프로젝트 설명
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
 	PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
 	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
-	Infection    int      `json:"infection"`     // 감염비율
+	Infection    string   `json:"infection"`     // 감염비율
+	SendNo       int      `json:"send_no"`       // 메일 보낸 횟수
 	Targets      int      `json:"targets"`       // 훈련 대상자수
 	StartDate    string   `json:"start_date"`    // 프로젝트 시작일
 	EndDate      string   `json:"end_date"`      // 프로젝트 종료일
@@ -135,6 +137,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 
 	query = `SELECT row_num,
        				p_no,
+       				tmp_no,
        				tmp_name,
        				p_name,
        				p_status,
@@ -143,10 +146,12 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 				    T.tag1,
 				    T.tag2,
 				    T.tag3,
-				    T.infection,
-				    COUNT(target_no)
+				    T.send_no,
+				    COUNT(ta.target_no),
+       				COUNT(ci.target_no)
 			FROM (SELECT ROW_NUMBER() over (ORDER BY p_no) AS row_num,
 					 p_no,
+			         tmp_no,
 					 ti.tmp_name,
 					 p_name,
 					 p_status,
@@ -155,17 +160,18 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 					 p.tag1,
 					 p.tag2,
 					 p.tag3,
-					 p.infection
+					 p.send_no
 				FROM project_info as p
 					   LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
 			  	WHERE p.user_no = $1
 			) AS T
 				 LEFT JOIN target_info ta on user_no = ta.user_no
+				 LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
 		WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
 			or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
 			or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
-		GROUP BY row_num, p_no, tmp_name, p_name, p_status, to_char(p_start_date, 'YYYY-MM-DD'),
-				 to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, T.infection	
+		GROUP BY row_num, p_no, tmp_no, tmp_name, p_name, p_status, to_char(p_start_date, 'YYYY-MM-DD'),
+				 to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, T.send_no
 		ORDER BY row_num;`
 
 	rows, err := conn.Query(query, num)
@@ -177,8 +183,8 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 	var projects []Project // Project 구조체를 값으로 가지는 배열
 	for rows.Next() {
 		p := Project{}
-		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TemplateNo, &p.PName, &p.PStatus,
-			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.Infection, &p.Targets)
+		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TmlNo, &p.TemplateNo, &p.PName, &p.PStatus,
+			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.SendNo, &p.Targets, &p.Infection)
 		if err != nil {
 			return nil, fmt.Errorf("Project scanning error : %v ", err)
 		}
@@ -238,12 +244,15 @@ func (p *ProjectNumber) DeleteProject(conn *sql.DB, num int) error {
 	return nil
 }
 
-
-
+// 사용자가 시작버튼을 누른경우에만 동작한다.
 func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 	// 프로젝트 상태를 1로 변경하며 프로젝트를 실행한다.
-	_, err := conn.Exec(`UPDATE project_info
+/*	_, err := conn.Exec(`UPDATE project_info
  								SET p_status = 1
+ 								WHERE user_no = $1 AND p_no = $2`,
+		num, p.PNo)*/
+	_, err := conn.Exec(`UPDATE project_info
+ 								SET p_start_date = now()
  								WHERE user_no = $1 AND p_no = $2`,
 		num, p.PNo)
 	if err != nil {
@@ -258,8 +267,9 @@ func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
                target_organize,
                target_position,
                target_phone,
-               target_no
-			FROM (SELECT tml_no, tag1, tag2, tag3, user_no
+               target_no,
+               p_no
+			FROM (SELECT p_no, tml_no, tag1, tag2, tag3, user_no
      			FROM project_info
      			WHERE p_no = $1
        			AND user_no = $2) as T
@@ -269,7 +279,7 @@ func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
    				or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
    				or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
    				GROUP BY mail_title, mail_content, sender_name, target_name, target_email, target_organize,
-   				         target_position, target_phone, target_no
+   				         target_position, target_phone, target_no, p_no
 				ORDER BY target_no;`
 
 	rows, err := conn.Query(query, p.PNo, num)
@@ -293,14 +303,14 @@ func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 			// DB 로부터 토픽에 작성할 내용들을 불러온다.
 			err = rows.Scan(&msg.MailTitle, &msg.MailContent, &msg.SenderEmail,
 				&msg.TargetName, &msg.TargetEmail, &msg.TargetOrganize,
-				&msg.TargetPosition, &msg.TargetPhone, &msg.TargetNo)
+				&msg.TargetPosition, &msg.TargetPhone, &msg.TargetNo, &msg.PNo)
 			if err != nil {
 				fmt.Errorf("Error : sql error ")
 			}
 
 			// 파싱작업 수행
 			msg.MailContent = parsing(msg.MailContent, msg.TargetName, msg.TargetOrganize,
-				msg.TargetPosition, msg.TargetPhone)
+				msg.TargetPosition, msg.TargetPhone, strconv.Itoa(msg.TargetNo), strconv.Itoa(msg.PNo))
 
 			// 카프카에 작성할 내용들을 하나의 띄어쓰기로 구분짓고 하나의 string 으로 묶는다.
 			// 각각 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
@@ -397,13 +407,23 @@ func (p *ProjectStart) sendMail(num int) error {
 		return fmt.Errorf(
 			"Could not send email to %q: %v ", p.SenderEmail, err)
 	}
+
+	_, err = conn.Exec(`UPDATE project_info 
+	SET send_no = project_info.send_no + 1
+	WHERE	user_no = $1 AND p_no = $2`, num, p.PNo)
+	if err != nil {
+		return fmt.Errorf(
+			"Could not update information : %v ", err)
+	}
+
 	m.Reset()
 	return nil
 }
 
 // 메일 내용 파싱함수
 // 이 파싱 메서드가 성능이 어떤지는 아직 제대로 점검해보지 않았음..
-func parsing(str string, str1 string, str2 string, str3 string, str4 string) string {
+//메일내용, 대상이름, 대상소속, 대상직급, 대상전화번호, 대상번호, 프로젝트번호
+func parsing(str string, str1 string, str2 string, str3 string, str4 string, str5 string, str6 string) string {
 
 	if strings.Contains(str, "{{target_name}}") {
 		str = strings.Replace(str, "{{target_name}}", str1, -1)
@@ -422,9 +442,14 @@ func parsing(str string, str1 string, str2 string, str3 string, str4 string) str
 	}
 
 	// todo 추후 도메인 주소가 나오면 파싱할 항목을 하나 더 늘린다.
-	//if strings.Contains(str, "{{count_ip}}") {
-	//	str = strings.Replace(str, "{{count_ip}}", str5, -1)
-	//}
+	if strings.Contains(str, "{{count_ip}}") {
+		s := "<html>\n<body>\n<img src=\"http://localhost:5000/api/CountTarget?" +
+			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\">\n" +
+			"<a href=\"http://localhost:5000/api/CountTarget?" +
+			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\"></a>\n</body>\n</html>"
+
+		str = strings.Replace(str, "{{count_ip}}", s, -1)
+	}
 
 	return str
 }

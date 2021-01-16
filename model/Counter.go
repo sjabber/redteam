@@ -13,6 +13,7 @@ type CounterModel struct {
 }
 
 func (cm *CounterModel) UpdateCount(conn *sql.DB) error {
+	// 1차적으로 프로젝트의 날짜가 종료시점 이전인지 검사한다.
 	endTimeQuery := `
 select p_end_date
 from project_info
@@ -26,6 +27,7 @@ where p_no = $1
 		return nil
 	}
 
+	// 이후에 count_info 테이블에 해당하는 값이 존재하는지 조회하고
 	existQuery := `
 select target_no,
        project_no,
@@ -40,6 +42,7 @@ where ci.project_no = $1
 	resultCM := CounterModel{}
 	exist := conn.QueryRow(existQuery, cm.ProjectNo, cm.TargetNo)
 
+	// 존재하지 않으면 값을 삽입
 	err = exist.Scan(&resultCM.TargetNo, &resultCM.ProjectNo, &resultCM.EmailReadStatus, &resultCM.LinkClickStatus, &resultCM.DownloadStatus)
 	if err == sql.ErrNoRows {
 		_, err := conn.Exec(`
@@ -53,7 +56,8 @@ values ($1, $2, $3, $4, $5)
 		if err != nil {
 			return err
 		}
-	} else {
+	} else { // 존재하면 값을 갱신해준다. resultCM은 현재 DB에 있는 값을 가지고, cm은 Get 메소드로부터 받은 값을 가지고있는다.
+		// 한번 true 된 값은 변하지 않는다.
 		if resultCM.EmailReadStatus == true {
 			cm.EmailReadStatus = true
 		}
