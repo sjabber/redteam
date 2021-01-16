@@ -21,12 +21,12 @@ type Project struct {
 	PDescription string   `json:"p_description"` // 프로젝트 설명
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
 	//PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
-	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
-	Infection    string   `json:"infection"`     // 감염비율
-	SendNo       int      `json:"send_no"`       // 메일 보낸 횟수
-	Targets      int      `json:"targets"`       // 훈련 대상자수
-	StartDate    string   `json:"start_date"`    // 프로젝트 시작일
-	EndDate      string   `json:"end_date"`      // 프로젝트 종료일
+	TemplateNo string `json:"tmp_no"`     // 적용할 템플릿 번호나 이름
+	Infection  string `json:"infection"`  // 감염비율
+	SendNo     int    `json:"send_no"`    // 메일 보낸 횟수
+	Targets    int    `json:"targets"`    // 훈련 대상자수
+	StartDate  string `json:"start_date"` // 프로젝트 시작일
+	EndDate    string `json:"end_date"`   // 프로젝트 종료일
 }
 
 type ProjectStart struct {
@@ -52,9 +52,10 @@ type ProjectNumber struct {
 }
 
 const (
-	topic = "redteam"
+	topic         = "redteam"
 	brokerAddress = "localhost:9092"
 )
+
 var Msg string
 
 func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
@@ -71,45 +72,45 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 	}
 
 	switch len(p.TagArray) {
-		case 1:
-			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+	case 1:
+		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
  										tag1, tag2, tag3, user_no) 
  										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], 0, 0, num)
-			if err != nil {
-				fmt.Println(err)
-				return fmt.Errorf("Project Create error. ")
-			}
-		case 2:
-			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+			p.TagArray[0], 0, 0, num)
+		if err != nil {
+			fmt.Println(err)
+			return fmt.Errorf("Project Create error. ")
+		}
+	case 2:
+		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
 										tag1, tag2, tag3, user_no) 
 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], p.TagArray[1], 0, num)
-			if err != nil {
-				fmt.Println(err)
-				return fmt.Errorf("Project Create error. ")
-			}
-		case 3:
-			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+			p.TagArray[0], p.TagArray[1], 0, num)
+		if err != nil {
+			fmt.Println(err)
+			return fmt.Errorf("Project Create error. ")
+		}
+	case 3:
+		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
 										tag1, tag2, tag3, user_no) 
 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], p.TagArray[1], p.TagArray[2], num)
-			if err != nil {
-				fmt.Println(err)
-				return fmt.Errorf("Project Create error. ")
-			}
+		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+			p.TagArray[0], p.TagArray[1], p.TagArray[2], num)
+		if err != nil {
+			fmt.Println(err)
+			return fmt.Errorf("Project Create error. ")
+		}
 	}
 
 	return nil
 }
 
-func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
+func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 	// 프로젝트 읽어오기전에 해시테이블에 태그정보 한번 넣고 시작한다.
 	var query string
 
@@ -173,7 +174,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 
 	rows, err := conn.Query(query, num)
 	if err != nil {
-		return nil, fmt.Errorf("There was an error reading the projects. ")
+		return nil, sql.ErrNoRows //fmt.Errorf("There was an error reading the projects. ")
 	}
 
 	var tags [3]int
@@ -189,7 +190,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 		//Note 프로젝트 생성시 무조건 하나 이상의 태그가 들어가야 하기 때문에 하나 이상은 존재한다.
 		// 그렇지 않을 경우 버그가 발생한다!!!
 		//태그의 값을 이곳에 넣어준다.
-		Loop1 :
+	Loop1:
 		for i := 0; i < len(tags); i++ {
 			if tags[i] == 0 {
 				p.TagArray = append(p.TagArray, "")
@@ -244,10 +245,10 @@ func (p *ProjectNumber) DeleteProject(conn *sql.DB, num int) error {
 // 사용자가 시작버튼을 누른경우에만 동작한다.
 func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 	// 프로젝트 상태를 1로 변경하며 프로젝트를 실행한다.
-/*	_, err := conn.Exec(`UPDATE project_info
- 								SET p_status = 1
- 								WHERE user_no = $1 AND p_no = $2`,
-		num, p.PNo)*/
+	/*	_, err := conn.Exec(`UPDATE project_info
+	 								SET p_status = 1
+	 								WHERE user_no = $1 AND p_no = $2`,
+			num, p.PNo)*/
 	_, err := conn.Exec(`UPDATE project_info
  								SET p_start_date = now()
  								WHERE user_no = $1 AND p_no = $2`,
@@ -320,7 +321,7 @@ func (p *ProjectStart) StartProject(conn *sql.DB, num int) error {
 }
 
 // todo Kafka producer function
-func produce (messages []byte, w kafka.Writer) {
+func produce(messages []byte, w kafka.Writer) {
 	err := w.WriteMessages(context.Background(), kafka.Message{
 		//Key: []byte("Key"),
 		Value: messages,
@@ -331,15 +332,15 @@ func produce (messages []byte, w kafka.Writer) {
 }
 
 // todo kafka consumer function
-func (p *ProjectStart)  Consumer() {
+func (p *ProjectStart) Consumer() {
 	// todo Kafka consumer
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:     []string{brokerAddress},
 		Topic:       topic,
 		GroupID:     "redteam",
-		MinBytes:    5,                 //5 바이트
-		MaxBytes:    4132,              //1kB
-		MaxWait:     3 * time.Second,   //3초만 기다린다.
+		MinBytes:    5,                //5 바이트
+		MaxBytes:    4132,             //1kB
+		MaxWait:     3 * time.Second,  //3초만 기다린다.
 		StartOffset: kafka.LastOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
 		// 있는 경우 중단한 곳부터 계속된다.
 	})
