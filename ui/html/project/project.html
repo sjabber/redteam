@@ -213,7 +213,7 @@
                   <th>템플릿명</th>
                   <th>대상자 수</th>
                   <th>감염 현황(%)</th>
-                  <th>프로젝트 종료</th>
+                  <th>전송 현황(%)</th>
                   <th>시작일</th>
                   <th>종료일</th>
                 </tr>
@@ -295,13 +295,13 @@
             // table 비워주기
             $('#project_list > tbody').empty();
             // No, 프로젝트명, 대상 태그, 진행상태, 템플릿명, 대상자 수, 감염 현황(%), 프로젝트 종료, 시작일, 종료일
-            // No, p_name, tag_name, p_status, p_name, targets, infection, end_date, start_date
+            // No, p_name, tag_name, p_status, p_name, targets, send_no, end_date, start_date
             for (let i = 0; i < rObj.project_list.length; i++) {
               // 태그 분리작업
               let full_tag = ''
               let status = ''
-              let end = ''
-              let infection_percentage
+              let infection_percentage;
+              let send_percentage;
                 for (let j = 0; j < rObj.project_list[i].tag_no.length; j++) {
                   // console.log(rObj.project_list
                   if (rObj.project_list[i].tag_no[j] !== "") {
@@ -343,23 +343,22 @@
                           ' border: 2px solid transparent; border-radius: 3px;" ' +
                           'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
                           + rObj.project_list[i].p_status + '</button>'
-                  end += '<button class="btn btn-c-success" id="project_end" ' +
-                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
                 } else if (rObj.project_list[i].start_date <= today && today <= rObj.project_list[i].end_date) {
                   rObj.project_list[i].p_status = "진행";
                   status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
                           ' border: 2px solid transparent; border-radius: 3px;">'
                           + rObj.project_list[i].p_status + '</button>'
-                  end += '<button class="btn btn-c-success" id="project_end" ' +
-                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
                 } else if (rObj.project_list[i].end_date < today) {
                   rObj.project_list[i].p_status = "종료";
                   status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
-                  end += '<button class="btn btn-disabled" id="project_end" disabled="disabled" ' +
-                          'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
                 }
 
                 infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
+                infection_percentage = parseInt(infection_percentage);
+
+                // 소수점은 화면에 안보여주기 위해 int 형으로 형변환한다.
+                send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
+                send_percentage = parseInt(send_percentage);
 
                 if (full_tag === '') {
                   $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
@@ -369,10 +368,12 @@
                           + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                           + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                           + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
-                          + '<td><progress class="valign-middle" value=' + 'rObj.project_list[i].infection max='
-                          + 'rObj.project_list[i].targets></progress>' + infection_percentage
-                          + "%(" + rObj.project_list[i].infection +"명)"
-                          + '</td><td>' + end + '</td>'
+                          + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
+                          + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                          + "%(" + rObj.project_list[i].infection +"명)" + '</td>'
+                          + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
+                          + rObj.project_list[i].targets + '"></progress>' + send_percentage
+                          + "%(" + rObj.project_list[i].send_no +"명)" + '</td>'
                           + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                           + '</td></tr>');
                 } else {
@@ -383,13 +384,14 @@
                         + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                         + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                         + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
-                        + '<td><progress class="valign-middle" value=' + 'rObj.project_list[i].infection max='
-                        + 'rObj.project_list[i].targets></progress>' + infection_percentage
-                        + "%(" + rObj.project_list[i].infection +"명)"
-                        + '</td><td>' + end + '</td>'
+                        + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
+                        + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                        + "%(" + rObj.project_list[i].infection +"명)" + '</td>'
+                        + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
+                        + rObj.project_list[i].targets + '"></progress>' + send_percentage
+                        + "%(" + rObj.project_list[i].send_no +"명)" + '</td>'
                         + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                         + '</td></tr>');
-
               }
             }
           } else if (rObj.project_list === null) {
