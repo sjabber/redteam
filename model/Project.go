@@ -54,7 +54,6 @@ type ProjectNumber struct {
 const (
 	topic = "redteam"
 	brokerAddress = "localhost:9092"
-	partition = 1
 )
 var Msg string
 
@@ -74,33 +73,33 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 	switch len(p.TagArray) {
 		case 1:
 			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
- 										tag1, tag2, tag3, p_status, user_no) 
- 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`
+ 										tag1, tag2, tag3, user_no) 
+ 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
 			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], 0, 0, 0, num)
+				p.TagArray[0], 0, 0, num)
 			if err != nil {
 				fmt.Println(err)
 				return fmt.Errorf("Project Create error. ")
 			}
 		case 2:
 			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
-										tag1, tag2, tag3, p_status, user_no) 
-										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`
+										tag1, tag2, tag3, user_no) 
+										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
 			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], p.TagArray[1], 0, 0, num)
+				p.TagArray[0], p.TagArray[1], 0, num)
 			if err != nil {
 				fmt.Println(err)
 				return fmt.Errorf("Project Create error. ")
 			}
 		case 3:
 			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
-										tag1, tag2, tag3, p_status, user_no) 
-										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`
+										tag1, tag2, tag3, user_no) 
+										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
 			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-				p.TagArray[0], p.TagArray[1], p.TagArray[2], 0, num)
+				p.TagArray[0], p.TagArray[1], p.TagArray[2], num)
 			if err != nil {
 				fmt.Println(err)
 				return fmt.Errorf("Project Create error. ")
@@ -140,7 +139,6 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
        				tmp_no,
        				tmp_name,
        				p_name,
-       				p_status,
        				to_char(p_start_date, 'YYYY-MM-DD'),
        				to_char(p_end_date, 'YYYY-MM-DD'),
 				    T.tag1,
@@ -154,7 +152,6 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 			         tmp_no,
 					 ti.tmp_name,
 					 p_name,
-					 p_status,
 					 p_start_date,
 					 p_end_date,
 					 p.tag1,
@@ -170,7 +167,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 		WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
 			or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
 			or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
-		GROUP BY row_num, p_no, tmp_no, tmp_name, p_name, p_status, to_char(p_start_date, 'YYYY-MM-DD'),
+		GROUP BY row_num, p_no, tmp_no, tmp_name, p_name, to_char(p_start_date, 'YYYY-MM-DD'),
 				 to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, T.send_no
 		ORDER BY row_num;`
 
@@ -183,7 +180,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 	var projects []Project // Project 구조체를 값으로 가지는 배열
 	for rows.Next() {
 		p := Project{}
-		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TmlNo, &p.TemplateNo, &p.PName, &p.PStatus,
+		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TmlNo, &p.TemplateNo, &p.PName,
 			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.SendNo, &p.Targets, &p.Infection)
 		if err != nil {
 			return nil, fmt.Errorf("Project scanning error : %v ", err)
@@ -359,7 +356,7 @@ func (p *ProjectStart)  Consumer() {
 		json.Unmarshal(Msg.Value, p)
 
 		// 토픽의 값이 비어있지 않다면 값을 읽어 메일을 전송한다.
-		if p.SenderEmail != "" || p.TargetEmail != "" || p.MailTitle != "" || p.TargetName != ""{
+		if p.SenderEmail != "" || p.TargetEmail != "" || p.MailTitle != "" || p.TargetName != "" {
 			err = p.sendMail(p.UserNo)
 			if err != nil {
 				panic("Could not send email " + err.Error())
