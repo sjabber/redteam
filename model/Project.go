@@ -20,7 +20,7 @@ type Project struct {
 	PName        string   `json:"p_name"`        // 프로젝트 이름
 	PDescription string   `json:"p_description"` // 프로젝트 설명
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
-	PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
+	//PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
 	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
 	Infection    string   `json:"infection"`     // 감염비율
 	SendNo       int      `json:"send_no"`       // 메일 보낸 횟수
