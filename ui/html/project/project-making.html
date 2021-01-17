@@ -25,23 +25,13 @@
     <div class="sidebar-wrapper">
         <ul class="list-menu">
             <li class="header">Total Info</li>
-            <li class="has-children"><a href="javascript:"><i
-                    class="la la-dashboard"></i><span>대시보드</span>
-                <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
+
+            <li class="tree-item"><a href="/dashboard/total"><i class="la la-group"></i><span>대시보드</span>
+                <div class="right-container"></div>
             </a>
-                <ul class="tree">
-                    <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
-                    <li class="tree-item"><a href="/dashboard/total"><i
-                            class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
-                    <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
-                    <li class="tree-item"><a href="/dashboard/detail"><i
-                            class="la la-circle"></i><span
-                            style="font-size:0.8em;">프로젝트상세</span></a>
-                    </li>
-                </ul>
-            </li>
+
             <li class="header">Project Info</li>
-            <li class="tree-item"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 진행 현황</span>
+            <li class="tree-item"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 관리</span>
                 <div class="right-container"></div>
             </a>
 
@@ -80,15 +70,15 @@
 <div class="main-content">
     <div class="header">
         <div class="left">
-            <p>프로젝트 생성</p>
+            <p></p>
             <div class="breadcrumb"><span>프로젝트 생성</span></div>
         </div>
         <ul class="right">
             <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
-                                                                                                   src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
+                                                                                                   src="/image/user.png"/></a>
                 <div class="dropdown-box with-header">
                     <div class="dropdown-header"><img class="user-img user-img--lg"
-                                                      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/>
+                                                      src="/image/user.png"/>
                         <div class="user-info">
                             <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
                         </div>
@@ -211,6 +201,8 @@
                         $('#tag_2').append("<option value=''>훈련 대상 태그 선택하기</option>");
                         $('#tag_3').append("<option value=''>훈련 대상 태그 선택하기</option>");
                         for (let i = 0; i < rObj.tags.length; i++) {
+                            // <label className="badge badge-red">엘지전자</label>
+                            // <label className="badge badge-blue">레드팀</label>
                             $('#tag_1').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
                             $('#tag_2').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
                             $('#tag_3').append("<option value='" + rObj.tags[i].tag_no + "'>" + rObj.tags[i].tag_name + "</option>");
@@ -234,7 +226,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5001/setting/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -242,7 +234,7 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 정상");
                 } else {
-                    alert("SMTP 정보를 확인해주세요.");
+                    alert("SMTP 연결실패, SMTP 정보를 확인해주세요.");
                 }
             }
         };
@@ -280,28 +272,29 @@
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/api/projectCreate', true);
-        r.setRequestHeader("Content-Type", "application/json");
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    alert("프로젝트 생성이 완료되었습니다.")
+                    alert("프로젝트 생성이 완료되었습니다.");
                     location.reload()
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
                         console.log("true")
                     }
+                } else if (r.status === 400) {
+                    alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았습니다.");
                 }
             }
         };
         console.log(formData);
         r.send(JSON.stringify(formData));
     }
-
-    GetTmplProjectCreate()
-    GetTag()
-
+    GetDashBoard();
+    GetTag();
+    GetTmplProjectCreate();
 </script>
 
 </body>

@@ -27,23 +27,11 @@
     <div class="sidebar-wrapper">
         <ul class="list-menu">
             <li class="header">Total Info</li>
-            <li class="has-children"><a href="javascript:;"><i
-                    class="la la-dashboard"></i><span>대시보드</span>
-                <div class="right-container"><i class="la la-chevron-down tree-icon"></i></div>
+            <li class="tree-item"><a href="/dashboard/total"><i class="la la-group"></i><span>대시보드</span>
+                <div class="right-container"></div>
             </a>
-                <ul class="tree">
-                    <!--   전체적인 진황 현황 등 그래프와 진행 상태 표현             -->
-                    <li class="tree-item"><a href="/dashboard/total"><i
-                            class="la la-circle"></i><span style="font-size:0.8em;">전체진행현황</span></a></li>
-                    <!--   프로젝트 별 진행 상태 및 설정 현황 표현             -->
-                    <li class="tree-item"><a href="/dashboard/detail"><i
-                            class="la la-circle"></i><span
-                            style="font-size:0.8em;">프로젝트상세</span></a>
-                    </li>
-                </ul>
-            </li>
             <li class="header">Project Info</li>
-            <li class="tree-item"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 진행 현황</span>
+            <li class="tree-item"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 관리</span>
                 <div class="right-container"></div>
             </a>
             <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
@@ -80,17 +68,17 @@
 <div class="main-content">
     <div class="header">
         <div class="left">
-            <p>템플릿관리</p>
+            <p></p>
             <div class="breadcrumb"><span>템플릿관리</span></div>
         </div>
 
 
         <ul class="right">
             <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
-                                                                                                   src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/></a>
+                                                                                                   src="/image/user.png"/></a>
                 <div class="dropdown-box with-header">
                     <div class="dropdown-header"><img class="user-img user-img--lg"
-                                                      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/101e1fb9-0b2e-4f2d-acfb-a777dc48f629/d4sn4w7-2a5d1fdf-2af2-408a-9300-08f28cd12951.png"/>
+                                                      src="/image/user.png"/>
                         <div class="user-info">
                             <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
                         </div>
@@ -110,6 +98,7 @@
                 class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
                 class="la la-ellipsis-v"></i></a></div>
     </div>
+
     <div class="content-wrapper">
         <div class="row">
             <div class="col-12">
@@ -182,21 +171,22 @@
                                 <div class="form-group">
                                     <div style="color: red;font-weight: bold; font-size: small">
                                         {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
-                                        : 직급, {{targer_orgarnize}} : 조직, {{targer_phone}} : 훈련 대상자의 전화번호
+                                        : 직급, {{target_orgarnize}} : 조직, {{target_phone}} : 훈련 대상자의 전화번호
                                     </div>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="download_type">다운로드 방식</label><select id="download_type">
-                                    <option selected value="">첨부파일 없음</option>
-                                    <option value="1">링크 첨부</option>
+                                    <option selected value="1">첨부파일 없음</option>
+                                    <option value="2">링크 첨부</option>
+                                    <option value="3">파일 첨부</option>
                                 </select>
                                 </div>
 
                             </div>
                             <div class="modal__footer">
                                 <button class="btn btn-ghost modal-dismiss" onclick="closeModal()">취소</button>
-                                <button class="btn btn-primary modal-dismiss" onclick="delTml()">삭제</button>
-                                <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()">수정하기
+                                <button class="btn btn-primary modal-dismiss" id="del" disabled="" onclick="delTml()">삭제</button>
+                                <button class="btn btn-primary pull-right" id="tag_reg" onclick="editTml()"><span></span>
                                 </button>
                             </div>
                         </div>
@@ -244,7 +234,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
-
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <script>
     function GetTemplates() {
         const r = new XMLHttpRequest();
@@ -263,15 +253,30 @@
                         $('#tmpls > tbody').empty();
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
+
+
                         for (let i = 0; i < rObj.tmpls.length; i++) {
-                            $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
-                                rObj.tmpls[i].fake_no + '</td><td>' +
-                                '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
-                                ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
-                                '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
-                                '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
-                                rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
-                                '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            if (rObj.tmpls[i].tmp_division === "기본") {
+                                $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                                    rObj.tmpls[i].fake_no + '</td><td>' +
+                                    '<button class="btn btn-primary" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="fas fa-plus"></i></button>' +
+                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
+                                    rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
+                                    '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            } else if (rObj.tmpls[i].tmp_division === "사용자") {
+                                $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
+                                    rObj.tmpls[i].fake_no + '</td><td>' +
+                                    '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
+                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
+                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
+                                    rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
+                                    '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
+                            }
+
+
 
                             //<button class="btn btn-c-success" style="margin-left: 10px;" id="reg_tag"
                             //data-modal="#tag_registry">태그 관리
@@ -279,7 +284,7 @@
                         }
                     } else {
                         $('#tmpls > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
+                            '                  <p>Info<span>등록된 템플릿이 존재하지 않습니다.</span></p>\n' +
                             '                </div></tr></td>');
                     }
 
@@ -400,7 +405,7 @@
                 if (r.status === 200) {
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
-                } else if (r.status === 403) {
+                } else if (r.status === 403 || r.status === 500) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
                         delTml();
@@ -412,11 +417,24 @@
         r.send(JSON.stringify(formData));
     }
 
+    var del_button = document.getElementById('del');
+    var reg_button = document.getElementById('reg_tag');
+
     function OpenModal(i) {
         console.log(i + "번호")
+        if (i <= 3) {
+            del_button.disabled = true;
+            $('#del').removeClass('btn btn-primary modal-dismiss');
+            $('#del').addClass('btn btn-disabled');
+            $('#tag_reg span').text('추가하기');
+        } else {
+            $('#del').removeClass('btn btn-disabled');
+            $('#del').addClass('btn btn-primary modal-dismiss');
+            del_button.disabled = false;
+            $('#tag_reg span').text('수정하기');
+        }
 
         GetTmlDetail(i); //todo 김태호 멘티 test 용 추가함.
-
         $("#my_modal").show().center();
     }
 

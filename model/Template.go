@@ -127,9 +127,11 @@ ORDER BY row_num;`
 		}
 
 		switch tmp.DownloadType {
-		case "1":
-			tmp.DownloadType = "링크 첨부"
+		case "1" :
+			tmp.DownloadType = "첨부파일 없음"
 		case "2":
+			tmp.DownloadType = "링크 첨부"
+		case "3":
 			tmp.DownloadType = "파일 첨부"
 		}
 
@@ -228,13 +230,13 @@ func (t *Template) Delete(conn *sql.DB, userNo int) error {
 }
 
 // 템플릿 테이블의 모든 정보를 삭제한다. -> 아직 template API에는 적용안한상태.
-func (t *Template) DeleteAll(conn *sql.DB) error {
-	_, err := conn.Exec("DELETE FROM template_info")
-	if err != nil {
-		fmt.Printf("Error updating template: (%v)", err)
-		return fmt.Errorf("Error deleting template ")
-	}
-
-	return nil
-
-}
+//func (t *Template) DeleteAll(conn *sql.DB) error {
+//	_, err := conn.Exec("DELETE FROM template_info")
+//	if err != nil {
+//		fmt.Printf("Error updating template: (%v)", err)
+//		return fmt.Errorf("Error deleting template ")
+//	}
+//
+//	return nil
+//
+//}

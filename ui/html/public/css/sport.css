@@ -228,7 +228,7 @@
       color: #4fa4f3; }
   .btn.btn-c-info {
     background: #c8e3f5;
-    color: #434738; }
+    color: white; }
     .btn.btn-c-info.btn-invert {
       background: white;
       border-color: #c8e3f5;
@@ -271,7 +271,6 @@
   .btn.btn-ghost {
     background: transparent;
     border-color: transparent; }
-
 .btn-group .btn {
   border-radius: 0; }
   .btn-group .btn:first-child {
