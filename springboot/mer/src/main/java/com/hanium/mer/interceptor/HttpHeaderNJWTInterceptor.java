@@ -30,12 +30,13 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
-        System.out.println(cookies.length);
+        System.out.println("cookie num: "+ cookies.length);
         if (cookies != null) {
             for (Cookie c : cookies) {
 
                 try{
                     if (c.getName().equals("access-token")) {
+                        System.out.println(c.getValue());
                         TokenUtils.isValidToken(c.getValue());
                         return true;
                     }
@@ -43,6 +44,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(403, "token expired");
+                        System.out.println("토큰 익스파이어");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -52,7 +54,9 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(405, "token tempered");
-                        return false;
+                        e.printStackTrace();
+                        System.out.println("토큰 파괴");
+                        return true;
                     }catch(IOException ex){
                         ex.printStackTrace();
                         return false;
@@ -61,6 +65,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(405, "token null");
+                        System.out.println("토큰 없음");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -70,6 +75,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(405, "unsupportedEncoding");
+                        System.out.println("토큰 인코딩에러");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -78,6 +84,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
                 }catch(NoSuchMethodError e){
                     try {
                         response.sendError(403, "토큰을 확인해주세요");
+                        System.out.println("nosuchMetodh");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -90,7 +97,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
         try {
 
             response.sendError(403, "null cookies");
-
+            System.out.println("쿠키없음");
             return false;
         }catch(IOException ex){
             ex.printStackTrace();
@@ -115,7 +122,8 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
         //하지만 에러시 controller까지 가지 않으므로 설정을 해줘야한다.
         //만약 preHandler에서 true라면 붙어서 cors헤더가 붙어서 올것이다.
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        //TODO 환경설정시 cors 포트 변경
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8888");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");

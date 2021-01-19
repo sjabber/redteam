@@ -16,6 +16,7 @@ public class TokenUtils {
 
     public static int isValidToken(String token) throws UnsupportedEncodingException, ExpiredJwtException, JwtException, NullPointerException  {
 
+        //System.out.println("jwt token java :" + create());
         Claims claims = Jwts.parser().setSigningKey(KEY.getBytes("UTF-8")).parseClaimsJws(token).getBody();
 
         //System.out.println("expireTime :" + claims.getExpiration());
@@ -44,10 +45,10 @@ public class TokenUtils {
                 .setHeaderParam("alg","HS256")
                 .setHeaderParam("typ", "JWT")
                 .claim("authorized", true)
-                .claim("exp", 1604063991)
-                .claim("user_email","test@naver.com")
-                .claim("user_name", "테스터")
-                .claim("user_no", 1)
+                .claim("exp", 1610889330)
+                .claim("user_email","gc5215@nate.com")
+                .claim("user_name", "Kwangchae Kim")
+                .claim("user_no", 4)
                 .signWith(SignatureAlgorithm.HS256, KEY.getBytes("UTF-8"))  //같은 값나옴
                 .compact();
         return jwt;
