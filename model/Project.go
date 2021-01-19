@@ -2,7 +2,9 @@ package model
 
 import (
 	"context"
+	"crypto/aes"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/segmentio/kafka-go"
@@ -383,6 +385,16 @@ func (p *ProjectStart) sendMail(num int) error {
 	if err != nil {
 		panic("failed to write message: " + err.Error())
 	}
+
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	password, _ := base64.StdEncoding.DecodeString(p.SmtpPw)
+	password = Decrypt(block, password)
+	p.SmtpPw = string(password)
 
 	// string -> int, smtp 연결을 테스트한다.
 	port, _ := strconv.Atoi(p.SmtpPort) //string -> int

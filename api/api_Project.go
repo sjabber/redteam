@@ -111,7 +111,6 @@ func DeleteProject(c *gin.Context) {
 		"status": http.StatusOK,
 		"isOk":   1,
 	})
-
 }
 
 func StartProjectList(c *gin.Context) {
