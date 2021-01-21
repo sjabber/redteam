@@ -1,7 +1,6 @@
 package com.hanium.mer.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor//
-@NoArgsConstructor(access = AccessLevel.PROTECTED)//
+@NoArgsConstructor()//
 @Entity(name="project_info")
 public class ProjectVo {
 
@@ -26,21 +25,22 @@ public class ProjectVo {
     @JsonProperty(value = "user_no")
     private Long userNo;
 
-    @Column(name = "tmp_no")
+    @Column(name = "tml_no")
     @JsonProperty(value = "tmp_no")
-    private Long tmpNo;
+    private Long tmlNo;
 
-    @Column(name = "tag_1")
-    @JsonProperty(value = "tag_1")
-    private Long tagFirst;
 
-    @Column(name = "tag_2")
-    @JsonProperty(value = "tag_2")
-    private Long tagSecond;
+    @Column(name = "tag1")
+    @JsonProperty(value = "tag1")
+    private int tagFirst;
 
-    @Column(name = "tag_3")
-    @JsonProperty(value = "tag_3")
-    private Long tagThird;
+    @Column(name = "tag2")
+    @JsonProperty(value = "tag2")
+    private int tagSecond;
+
+    @Column(name = "tag3")
+    @JsonProperty(value = "tag3")
+    private int tagThird;
 
     @Column(name = "p_name")
     @JsonProperty(value = "p_name")
@@ -50,11 +50,11 @@ public class ProjectVo {
     @JsonProperty(value = "p_description")
     private String pDescription;
 
-    @Column(name = "start_date")
+    @Column(name = "p_start_date")
     @JsonProperty(value = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "p_end_date")
     @JsonProperty(value = "end_date")
     private LocalDate endDate;
 
@@ -65,5 +65,7 @@ public class ProjectVo {
     @Column(name = "modified_time")
     @JsonProperty(value = "modified_time")
     private LocalDateTime modifiedTime;
+
+    private int send_no;
 
 }

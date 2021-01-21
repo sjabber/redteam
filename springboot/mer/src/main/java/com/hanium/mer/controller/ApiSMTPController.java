@@ -1,6 +1,7 @@
 package com.hanium.mer.controller;
 
 import com.hanium.mer.TokenUtils;
+import com.hanium.mer.service.AESService;
 import com.hanium.mer.service.SMTPService;
 import com.hanium.mer.vo.SmtpVo;
 import com.hanium.mer.vo.Smtp_setting;
@@ -21,6 +22,8 @@ public class ApiSMTPController {
 
     @Autowired
     SMTPService smtpService;
+    @Autowired
+    AESService aesService;
 
     @GetMapping("/setting/smtpSetting")
     public ResponseEntity<Object> getSMTPSetting(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -45,7 +48,9 @@ public class ApiSMTPController {
         Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try{
-                smtpService.setSMTP(Long.parseLong(claims.get("user_no").toString()), newSmtp);
+                if ( !smtpService.setSMTP(Long.parseLong(claims.get("user_no").toString()), newSmtp)){
+                    return new ResponseEntity<Object>("ID를 이메일 형식으로 입력해주세요.", HttpStatus.BAD_REQUEST);
+                }
                 System.out.println(newSmtp.toString());
                 return new ResponseEntity<Object>(newSmtp.toString(), HttpStatus.OK);
             }catch(Exception e){
@@ -63,7 +68,10 @@ public class ApiSMTPController {
     @PostMapping("/setting/smtpConnectCheck")
     public ResponseEntity<Object> connectSTMPTest(@RequestBody SmtpVo smtp){
         try {
-            smtpService.connectCheck(smtp);
+            if(!smtpService.connectCheck(smtp)){
+
+                return new ResponseEntity<Object>("ID는 이메일 형식으로 입력해주세요.", HttpStatus.UNAUTHORIZED);
+            }
         }catch (IllegalStateException e) {
             e.printStackTrace();
             return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
@@ -82,7 +90,7 @@ public class ApiSMTPController {
     }
 
     //project 생성 시
-    @GetMapping("/setting/smtpConnectSimpleCheck")
+    @GetMapping("/api/smtpConnectSimpleCheck")
     public ResponseEntity<Object> connectionSTMPTest(HttpServletRequest request) throws UnsupportedEncodingException{
 
         Optional<SmtpVo> smtp = null;
@@ -94,6 +102,7 @@ public class ApiSMTPController {
         }
 
         try {
+            smtp.get().setSmtpPw(aesService.decAES(smtp.get().getSmtpPw()));
             smtpService.connectCheck(smtp.get());
         }catch (IllegalStateException e) {
             e.printStackTrace();
