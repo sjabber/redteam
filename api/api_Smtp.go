@@ -23,7 +23,7 @@ func SmtpConnectionCheck(c *gin.Context)  {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
 			"isOK": 0,
-			"error": err,
+			//"error": err,
 		})
 		return
 	}

@@ -54,6 +54,9 @@ func RegisterRoute(r *gin.Engine) {
 	apiV2.Use(middleware.TokenAuthMiddleWare())
 	{
 		apiV2.GET("/dashboard", api.Dashboard)
+		apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo1) // 맨위, 전체 현황
+		//apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo2) // 가운데, 진행중인 현황
+		//apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo3) // 맨아래, 전체 프로젝트 리스트
 		apiV2.POST("/projectCreate", api.ProjectCreate)               //Note - spring boot
 		apiV2.GET("/smtpConnectSimpleCheck", api.SmtpConnectionCheck) //Note - spring boot
 		apiV2.GET("/getProject", api.GetProject)

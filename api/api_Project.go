@@ -47,11 +47,10 @@ func GetProject(c *gin.Context) {
 	// 프로젝트 조회
 	projects, err := model.ReadProject(&conn, num)
 	if err != nil {
-		log.Println("GetProject error occured, account :", c.Keys["email"])
+		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk": 0,
-			"error": err,
 		})
 		return
 	} else {

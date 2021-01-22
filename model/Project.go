@@ -28,11 +28,12 @@ type Project struct {
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
 	//PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
 	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
-	Infection    string   `json:"infection"`     // 감염비율
-	SendNo       int      `json:"send_no"`       // 메일 보낸 횟수
-	Targets      int      `json:"targets"`       // 훈련 대상자수
-	StartDate    string   `json:"start_date"`    // 프로젝트 시작일
-	EndDate      string   `json:"end_date"`      // 프로젝트 종료일
+	Reading      string   `json:"reading"`	  //읽은 사람
+	Infection    string   `json:"infection"`  // 감염비율
+	SendNo       int      `json:"send_no"`    // 메일 보낸 횟수
+	Targets      int      `json:"targets"`    // 훈련 대상자수
+	StartDate    string   `json:"start_date"` // 프로젝트 시작일
+	EndDate      string   `json:"end_date"`   // 프로젝트 종료일
 }
 
 // 프로젝트 시작(Consumer)에서 사용하는 구조체
@@ -164,7 +165,8 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 				    T.tag3,
 				    T.send_no,
 				    COUNT(ta.target_no),
-       				COUNT(ci.target_no)
+       				COUNT(ci.target_no),
+       				COUNT(CASE WHEN ci.link_click_status THEN 1 END)
 			FROM (SELECT ROW_NUMBER() over (ORDER BY p_no) AS row_num,
 					 p_no,
 			         tmp_no,
@@ -199,7 +201,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 	for rows.Next() {
 		p := Project{}
 		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TmlNo, &p.TemplateNo, &p.PName,
-			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.SendNo, &p.Targets, &p.Infection)
+			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.SendNo, &p.Targets, &p.Reading, &p.Infection)
 		if err != nil {
 			return nil, fmt.Errorf("Project scanning error : %v ", err)
 		}
