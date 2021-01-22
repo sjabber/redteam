@@ -714,7 +714,7 @@
                     } else if (r.status === 400) {
                         rObj = JSON.parse(r.responseText);
                         if (rObj.dateCompare === true) {
-                            alert("종료일을 변경할 수 없는 설정입니다")
+                            alert("적용할 수 없는 종료일입니다")
                             location.reload();
                         }
                     }
