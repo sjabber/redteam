@@ -27,13 +27,13 @@ type Project struct {
 	PDescription string   `json:"p_description"` // 프로젝트 설명
 	TagArray     []string `json:"tag_no"`        // 등록할 태그 대상자들
 	//PStatus      string   `json:"p_status"`      // 프로젝트 진행행태
-	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
-	Reading      string   `json:"reading"`	  //읽은 사람
-	Infection    string   `json:"infection"`  // 감염비율
-	SendNo       int      `json:"send_no"`    // 메일 보낸 횟수
-	Targets      int      `json:"targets"`    // 훈련 대상자수
-	StartDate    string   `json:"start_date"` // 프로젝트 시작일
-	EndDate      string   `json:"end_date"`   // 프로젝트 종료일
+	TemplateNo string `json:"tmp_no"`     // 적용할 템플릿 번호나 이름
+	Reading    string `json:"reading"`    //읽은 사람
+	Infection  string `json:"infection"`  // 감염비율
+	SendNo     int    `json:"send_no"`    // 메일 보낸 횟수
+	Targets    int    `json:"targets"`    // 훈련 대상자수
+	StartDate  string `json:"start_date"` // 프로젝트 시작일
+	EndDate    string `json:"end_date"`   // 프로젝트 종료일
 }
 
 // 프로젝트 시작(Consumer)에서 사용하는 구조체
@@ -70,7 +70,7 @@ type ProjectDelete struct {
 }
 
 const (
-	topic = "redteam"
+	topic         = "redteam"
 	brokerAddress = "localhost:9092"
 )
 
@@ -128,7 +128,7 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 	return nil
 }
 
-func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
+func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 	// 프로젝트 읽어오기전에 해시테이블에 태그정보 한번 넣고 시작한다.
 	var query string
 
@@ -209,7 +209,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project ,error) {
 		//Note 프로젝트 생성시 무조건 하나 이상의 태그가 들어가야 하기 때문에 하나 이상은 존재한다.
 		// 그렇지 않을 경우 버그가 발생한다!!!
 		//태그의 값을 이곳에 넣어준다.
-	Loop1 :
+	Loop1:
 		for i := 0; i < len(tags); i++ {
 			if tags[i] == 0 {
 				p.TagArray = append(p.TagArray, "")
@@ -414,7 +414,7 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 }
 
 // todo Kafka producer function
-func produce (messages []byte, w kafka.Writer) {
+func produce(messages []byte, w kafka.Writer) {
 	err := w.WriteMessages(context.Background(), kafka.Message{
 		//Key: []byte("Key"),
 		Value: messages,
@@ -578,4 +578,24 @@ func parsing(str string, str1 string, str2 string, str3 string, str4 string, str
 	}
 
 	return str
+}
+
+func (p *Project) EndDateModify(conn *sql.DB, num int) (bool, error) {
+	// 진행상태가 종료인 경우 종료일 변경 불가
+	result := 0
+	err := conn.QueryRow(`
+UPDATE project_info
+SET p_end_date = $1
+WHERE user_no = $2
+  AND p_no = $3
+  and p_end_date > now()
+  and p_end_date < $1
+  returning 1`, p.EndDate, num, p.PNo).Scan(&result)
+	if result == 0 {
+		return true, err
+	}
+	if err != nil {
+		return false, err
+	}
+	return false, nil
 }

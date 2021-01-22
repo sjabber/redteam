@@ -23,14 +23,14 @@ func ProjectCreate(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
-			"isOk": 0,
-			"error": err,
+			"isOk":   0,
+			"error":  err,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status": http.StatusOK,
-			"isOk": 1,
+			"isOk":   1,
 		})
 		return
 	}
@@ -50,14 +50,41 @@ func GetProject(c *gin.Context) {
 		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_list" : projects,
+			"project_list": projects,
 		})
 	}
+}
+
+func ModifyProject(c *gin.Context) {
+	p := model.Project{}
+	c.ShouldBindJSON(&p)
+
+	num := c.Keys["number"].(int)
+
+	// DB
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+	result, err := p.EndDateModify(&conn, num)
+
+	if err != nil {
+		log.Println("GetProject error occurred, account :", c.Keys["email"])
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":      http.StatusInternalServerError,
+			"isOk":        false,
+			"dateCompare": result,
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
+	}
+
 }
 
 //func EndProjectList(c *gin.Context) {
@@ -127,8 +154,8 @@ func StartProjectList(c *gin.Context) {
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status" : http.StatusBadRequest,
-			"isOk": 0,
+			"status": http.StatusBadRequest,
+			"isOk":   0,
 		})
 		return
 	} else {
@@ -156,7 +183,6 @@ func GetTag(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"isOk":   1,
 		"status": http.StatusOK,
-		"tags":   model.GetTag(&conn , num), // 태그들
+		"tags":   model.GetTag(&conn, num), // 태그들
 	})
 }
-
