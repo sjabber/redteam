@@ -20,3 +20,14 @@ func Dashboard(c *gin.Context) {
 
 	return
 }
+
+func OverallStatus() {
+
+}
+
+func InProgress (c *gin.Context) {
+
+
+
+	return
+}

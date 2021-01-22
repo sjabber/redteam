@@ -95,7 +95,7 @@ func DeleteProject(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectNumber{}
+	p := model.ProjectDelete{}
 	c.ShouldBindJSON(&p)
 
 	err := p.DeleteProject(&conn, num)
@@ -120,7 +120,7 @@ func StartProjectList(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectStart{}
+	p := model.ProjectStart2{}
 	c.ShouldBindJSON(&p)
 
 	// 프로젝트 상태변경
