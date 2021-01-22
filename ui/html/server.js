@@ -39,10 +39,10 @@ app.get('/project/example', function (req, res) {
     fs.createReadStream("./project/example.html").pipe(res);
 })
 
-app.get('/project/create', function (req, res) {
-    res.writeHead(200, {"Content-Type": "text/html"});
-    fs.createReadStream("./project/project-making.html").pipe(res);
-})
+// app.get('/project/create', function (req, res) {
+//     res.writeHead(200, {"Content-Type": "text/html"});
+//     fs.createReadStream("./project/project-making.html").pipe(res);
+// })
 
 app.get('/setting/user', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
