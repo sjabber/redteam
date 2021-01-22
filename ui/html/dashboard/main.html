@@ -96,19 +96,8 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-users"></i>
-                            <div class="card-content">
+                            <div class="card-content" id="PI_1">
                                 <h4>훈련 대상자</h4>
-                                <p>90</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card card-simple-1">
-                        <div class="card-body"><i class="la la-calendar-check-o"></i>
-                            <div class="card-content">
-                                <h4>진행중인 프로젝트</h4>
-                                <p>2</p>
                             </div>
                         </div>
                     </div>
@@ -116,19 +105,26 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar"></i>
-                            <div class="card-content">
-                                <h4>종료된 프로젝트</h4>
-                                <p>9</p>
+                            <div class="card-content" id="PI_2">
+                                <h4>예약된 프로젝트</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card card-simple-1">
-                        <div class="card-body"><i class="la la-user-plus"></i>
-                            <div class="card-content">
-                                <h4>재훈련 대상자</h4>
-                                <p>32</p>
+                        <div class="card-body"><i class="la la-calendar-check-o"></i>
+                            <div class="card-content" id="PI_3">
+                                <h4>진행중인 프로젝트</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-simple-1">
+                        <div class="card-body"><i class="la la-calendar-times-o"></i>
+                            <div class="card-content" id="PI_4">
+                                <h4>종료된 프로젝트</h4>
                             </div>
                         </div>
                     </div>
@@ -371,8 +367,46 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
-    // CheckLogin();
+    function GetDashBoard_Info1() {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info1', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText);
+                    if (rObj.info1.length > 0) {
+                        $('#PI_1').append('<p>' + project_info[0] + '</p>')
+                        $('#PI_2').append('<p>' + project_info[1] + '</p>')
+                        $('#PI_3').append('<p>' + project_info[2] + '</p>')
+                        $('#PI_4').append('<p>' + project_info[3] + '</p>')
+                    } else {
+                        $('#PI_1').append('<p>0</p>')
+                        $('#PI_2').append('<p>0</p>')
+                        $('#PI_3').append('<p>0</p>')
+                        $('#PI_4').append('<p>0</p>')
+                    }
+
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetProject();
+                    } else {
+                        document.location.href = '/';
+                    }
+                }
+            }
+        };
+        r.send();
+    }
+
+    GetDashBoard_Info1();
     GetDashBoard();
+
+
 </script>
 <!--<script type="text/javascript">-->
 <!--    $(document).ready(function () {-->

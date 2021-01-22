@@ -47,11 +47,10 @@ func GetProject(c *gin.Context) {
 	// 프로젝트 조회
 	projects, err := model.ReadProject(&conn, num)
 	if err != nil {
-		log.Println("GetProject error occured, account :", c.Keys["email"])
+		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk": 0,
-			"error": err,
 		})
 		return
 	} else {
@@ -95,7 +94,7 @@ func DeleteProject(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectNumber{}
+	p := model.ProjectDelete{}
 	c.ShouldBindJSON(&p)
 
 	err := p.DeleteProject(&conn, num)
@@ -120,7 +119,7 @@ func StartProjectList(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectStart{}
+	p := model.ProjectStart2{}
 	c.ShouldBindJSON(&p)
 
 	// 프로젝트 상태변경

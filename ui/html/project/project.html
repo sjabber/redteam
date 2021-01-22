@@ -212,6 +212,7 @@
                   <th>진행상태</th>
                   <th>템플릿명</th>
                   <th>대상자 수</th>
+                  <th>열람 현황(%)</th>
                   <th>감염 현황(%)</th>
                   <th>전송 현황(%)</th>
                   <th>시작일</th>
@@ -360,7 +361,8 @@
                 send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
                 send_percentage = parseInt(send_percentage);
 
-                if (full_tag === '') {
+
+                if (full_tag === '') {// 태그가 없는경우 (존재해서는 안되는 case)
                   $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
                           + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
                           + '<td><div class="pgn-checkbox">'
@@ -368,12 +370,15 @@
                           + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                           + '<td>' + status + '</td><td>' + rObj.project_list[i].tmp_no + '</td>'
                           + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
+                          + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
+                          + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                          + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
                           + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
                           + rObj.project_list[i].targets + '"></progress>' + infection_percentage
-                          + "%(" + rObj.project_list[i].infection +"명)" + '</td>'
+                          + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
                           + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
                           + rObj.project_list[i].targets + '"></progress>' + send_percentage
-                          + "%(" + rObj.project_list[i].send_no +"명)" + '</td>'
+                          + "%(" + rObj.project_list[i].send_no +"명)" + '</td>' // 전송현황
                           + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                           + '</td></tr>');
                 } else {
@@ -384,19 +389,22 @@
                         + '</td><td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                         + '<td>' + status + '</td><td><button onclick="OpenModal('+rObj.project_list[i].tml_no+')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
                         + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
+                        + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
+                        + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                        + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
                         + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
                         + rObj.project_list[i].targets + '"></progress>' + infection_percentage
-                        + "%(" + rObj.project_list[i].infection +"명)" + '</td>'
+                        + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
                         + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
                         + rObj.project_list[i].targets + '"></progress>' + send_percentage
-                        + "%(" + rObj.project_list[i].send_no +"명)" + '</td>'
+                        + "%(" + rObj.project_list[i].send_no +"명)" + '</td>' // 전송현황
                         + '<td>' + rObj.project_list[i].start_date + '</td><td>' + rObj.project_list[i].end_date
                         + '</td></tr>');
               }
             }
           } else if (rObj.project_list === null) {
             document.getElementById('under').style.background="#f2eff1";
-            $('#project_list').append('<tr style="background-color:white"><td colspan="11" align="center">' +
+            $('#project_list').append('<tr style="background-color:white"><td colspan="12" align="center">' +
                     '<div class="alert alert" style="background-color:white">' +
                     '<p align="center"><span style="border: 1px; font-size:15px;' +
                     'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
