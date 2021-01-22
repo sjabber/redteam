@@ -46,7 +46,6 @@ func GetDashboardInfo1(c *gin.Context) {
 			"info1" : Info1,
 		})
 	}
-
 }
 
 // 진행중인 프로젝트 현황

@@ -96,8 +96,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-users"></i>
-                            <div class="card-content" id="PI_1">
+                            <div class="card-content">
                                 <h4>훈련 대상자</h4>
+                                <p id="PI_1"></p>
                             </div>
                         </div>
                     </div>
@@ -105,8 +106,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar"></i>
-                            <div class="card-content" id="PI_2">
+                            <div class="card-content">
                                 <h4>예약된 프로젝트</h4>
+                                <p id="PI_2"></p>
                             </div>
                         </div>
                     </div>
@@ -114,8 +116,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar-check-o"></i>
-                            <div class="card-content" id="PI_3">
+                            <div class="card-content">
                                 <h4>진행중인 프로젝트</h4>
+                                <p id="PI_3"></p>
                             </div>
                         </div>
                     </div>
@@ -123,8 +126,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar-times-o"></i>
-                            <div class="card-content" id="PI_4">
+                            <div class="card-content">
                                 <h4>종료된 프로젝트</h4>
+                                <p id="PI_4"></p>
                             </div>
                         </div>
                     </div>
@@ -378,17 +382,11 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     console.log(r.responseText);
-                    if (rObj.info1.length > 0) {
-                        $('#PI_1').append('<p>' + project_info[0] + '</p>')
-                        $('#PI_2').append('<p>' + project_info[1] + '</p>')
-                        $('#PI_3').append('<p>' + project_info[2] + '</p>')
-                        $('#PI_4').append('<p>' + project_info[3] + '</p>')
-                    } else {
-                        $('#PI_1').append('<p>0</p>')
-                        $('#PI_2').append('<p>0</p>')
-                        $('#PI_3').append('<p>0</p>')
-                        $('#PI_4').append('<p>0</p>')
-                    }
+
+                    $('#PI_1').text(rObj.info1.targets);
+                    $('#PI_2').text(rObj.info1.scheduled);
+                    $('#PI_3').text(rObj.info1.ongoing);
+                    $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();

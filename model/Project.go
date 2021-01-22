@@ -265,7 +265,7 @@ func (p *ProjectDelete) DeleteProject(conn *sql.DB, num int) error {
 // cron(스케쥴링)을 활용하여 매일 특정 시간에 프로젝트들의 진행상황을 체크한다.
 func AutoStartProject() {
 	wg := &sync.WaitGroup{}
-	wg.Add(1) // WaitGroup의 고루틴 개수 1개 증가
+	wg.Add(1) // WaitGroup 의 고루틴 개수 1개 증가
 
 	kor, _ := time.LoadLocation("Asia/Seoul")
 	c := cron.New(cron.WithLocation(kor))
@@ -279,7 +279,7 @@ func AutoStartProject() {
 }
 
 func Auto() {
-	var Pno, num, send, date string
+	var Pno, num, status, date string
 
 	// DB 연결
 	conn, err := ConnectDB()
@@ -288,7 +288,7 @@ func Auto() {
 	}
 	defer conn.Close()
 
-	query := `SELECT p_no, user_no, send_no, to_char(p_start_date, 'YYYY-MM-DD') FROM project_info`
+	query := `SELECT p_no, user_no, p_status, to_char(p_start_date, 'YYYY-MM-DD') FROM project_info`
 
 	rows, err := conn.Query(query)
 	if err != nil {
@@ -296,13 +296,13 @@ func Auto() {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&Pno, &num, &send, &date)
+		err = rows.Scan(&Pno, &num, &status, &date)
 		if err != nil {
 			fmt.Errorf("Error : sql error ")
 		}
 
-		// 날짜가 오늘 && 메일을 보낸적이 한번도 없는 경우 -> 프로젝트를 실행시킨다.
-		if date == time.Now().Format("2006-01-02") && send == "0" {
+		// 날짜가 오늘 && 프로젝트 상태가 1인 경우 -> 프로젝트를 실행시킨다.
+		if date == time.Now().Format("2006-01-02") && status == "0" {
 
 			query := `SELECT distinct p_no,
                 						  tml_no,
@@ -403,7 +403,7 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 
 	// 프로젝트 시작날짜를 오늘로 변경하며 프로젝트를 실행한다.
 	_, err = conn.Exec(`UPDATE project_info
- 								SET p_start_date = now()
+ 								SET p_start_date = now(), p_status = 1
  								WHERE user_no = $1 AND p_no = $2`,
 		num, p.PNo)
 	if err != nil {
