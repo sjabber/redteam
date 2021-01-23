@@ -434,6 +434,35 @@
         r.send();
     }
 
+    function GetDashBoard_Info3() {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info1', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText);
+
+                        // todo 광채형이 여기에 추가해야 합니다.
+
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetDashBoard_Info1();
+                    } else {
+                        document.location.href = '/';
+                    }
+                }
+            }
+        };
+        r.send();
+    }
+
+
+    //GetDashBoard_Info3();
     //GetDashBoard_Info2();
     GetDashBoard_Info1();
     GetDashBoard();
