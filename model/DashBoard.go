@@ -11,6 +11,8 @@ type PInfo1 struct {
 	Closed    int `json:"closed"`
 }
 
+
+
 func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
 	// 프로젝트 읽어오기전에 해시테이블에 태그정보 한번 넣고 시작한다.
 	var query string
@@ -39,4 +41,9 @@ func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
 	}
 
 	return pi, nil
+}
+
+func GetDashboardInfo2(conn *sql.DB, num int) () {
+
+
 }

@@ -301,7 +301,8 @@ func Auto() {
 			fmt.Errorf("Error : sql error ")
 		}
 
-		// 날짜가 오늘 && 프로젝트 상태가 1인 경우 -> 프로젝트를 실행시킨다.
+		//
+		// 날짜가 오늘 && 프로젝트가 예약상태인 경우 -> 프로젝트를 실행시킨다.
 		if date == time.Now().Format("2006-01-02") && status == "0" {
 
 			query := `SELECT distinct p_no,

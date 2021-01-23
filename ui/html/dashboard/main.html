@@ -391,7 +391,7 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        GetProject();
+                        GetDashBoard_Info1();
                     } else {
                         document.location.href = '/';
                     }
@@ -401,6 +401,40 @@
         r.send();
     }
 
+    function GetDashBoard_Info2() {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info2', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    if (rObj.tmpls.length > 0) {
+                        // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
+                        // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
+                        $('#template').append("<option value=''>훈련 템플릿 선택하기</option>");
+                        for (let i = 0; i < rObj.tmpls.length; i++) {
+                            $('#template').append("<option value='" + rObj.tmpls[i].tmp_no + "'>" + rObj.tmpls[i].tmp_name + "</option>");
+                        }
+                    } else {
+                        $('#template').append("<option value=''>등록된 템플릿이 없습니다.</option>");
+                    }
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        console.log("true")
+                    }
+                } else {
+                    document.location.href = '/';
+                }
+            }
+        };
+        r.send();
+    }
+
+    //GetDashBoard_Info2();
     GetDashBoard_Info1();
     GetDashBoard();
 

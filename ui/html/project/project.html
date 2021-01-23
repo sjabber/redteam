@@ -2,347 +2,356 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="theme-color" content="#FFFFFF">
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>REDTEAM | 프로젝트 관리</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
-  <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
-  <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
-  <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-  <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>REDTEAM | 프로젝트 관리</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 </head>
 <body>
 <!--네이게이터-->
 <div class="sidebar">
-  <div class="sidebar-header"><a href="#">
-    <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
-  </a>
-    <div class="sidebar-control"><i class="la la-navicon"></i></div>
-  </div>
-  <div class="sidebar-wrapper">
-    <ul class="list-menu">
-      <li class="header">Total Info</li>
+    <div class="sidebar-header"><a href="#">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+    </a>
+        <div class="sidebar-control"><i class="la la-navicon"></i></div>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="list-menu">
+            <li class="header">Total Info</li>
 
-      <li class="tree-item"><a href="/dashboard/total"><i class="la la-group"></i><span>대시보드</span>
-        <div class="right-container"></div>
-      </a>
+            <li class="tree-item"><a href="/dashboard/total"><i class="la la-group"></i><span>대시보드</span>
+                <div class="right-container"></div>
+            </a>
 
-      <li class="header">Project Info</li>
-      <li class="tree-item active"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 관리</span>
-        <div class="right-container"></div>
-      </a>
+            <li class="header">Project Info</li>
+            <li class="tree-item active"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 관리</span>
+                <div class="right-container"></div>
+            </a>
 
-        <!--      <li class="tree-item active"><a href="/project/example"><i class="la la-group"></i><span>테스트</span>-->
-        <!--        <div class="right-container"></div>-->
-        <!--      </a>-->
+                <!--      <li class="tree-item active"><a href="/project/example"><i class="la la-group"></i><span>테스트</span>-->
+                <!--        <div class="right-container"></div>-->
+                <!--      </a>-->
 
-      </li>
-      <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
-        <div class="right-container"></div>
-      </a>
+            </li>
+            <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
+                <div class="right-container"></div>
+            </a>
 
-      </li>
-      <li class="tree-item"><a href="/manager/template"><i class="la la-file-text"></i><span>템플릿관리</span>
-        <div class="right-container"></div>
-      </a>
-      </li>
-<!--      <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>-->
-<!--        <div class="right-container"></div>-->
-<!--      </a>-->
-<!--      </li>-->
-      <li class="header">Setting</li>
-      <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
-        <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
-      </a>
-        <ul class="tree">
-          <li class="tree-item"><a href="/setting/user"><i
-                  class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
-          <li class="tree-item"><a href="/setting/smtp"><i
-                  class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+            </li>
+            <li class="tree-item"><a href="/manager/template"><i class="la la-file-text"></i><span>템플릿관리</span>
+                <div class="right-container"></div>
+            </a>
+            </li>
+            <!--      <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>-->
+            <!--        <div class="right-container"></div>-->
+            <!--      </a>-->
+            <!--      </li>-->
+            <li class="header">Setting</li>
+            <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/setting/user"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
+                    <li class="tree-item"><a href="/setting/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
         </ul>
-      </li>
-    </ul>
-  </div>
+    </div>
 </div>
 <!--네이게이터-->
 
 
 <div class="main-content">
-  <div class="header">
-    <div class="left">
-      <p></p>
-      <div class="breadcrumb"><span>프로젝트 관리</span></div>
-    </div>
-    <ul class="right">
-      <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
-                                                                                             src="/image/user.png"/></a>
-        <div class="dropdown-box with-header">
-          <div class="dropdown-header"><img class="user-img user-img--lg"
-                                            src="/image/user.png"/>
-            <div class="user-info">
-              <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
-            </div>
-          </div>
-          <ul class="dropdown-body">
-            <li><a href="/setting/user" target="_blank"><i
-                    class="la la-user"></i><span>사용자 정보</span></a></li>
-            <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
-            <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
-          </ul>
+    <div class="header">
+        <div class="left">
+            <p></p>
+            <div class="breadcrumb"><span>프로젝트 관리</span></div>
         </div>
-      </li>
-    </ul>
-    <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
-            class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
-            class="la la-ellipsis-v"></i></a></div>
-  </div>
-
-  <div class="content-wrapper">
-    <div class="row">
-      <div class="col-12">
-        <div class="box">
-          <div class="box-header">
-            <h3>프로젝트 관리</h3>
-              <div class="toolbox" style="justify-content: center">
-                  <div class="btn-group" style="margin-left: 10px;">
-
-                      <button class="btn btn-primary active" id="reg_project" onclick="OpenProjectCreateModal()"><span>프로젝트 등록</span></button>
-                      <button class="btn btn-primary" id="del_project"><span>프로젝트 삭제</span></button>
-                  </div>
-
-              </div>
-          </div>
-
-          <div class="pgn-modal" id="tml_viewer">
-            <div class="pgn-modal-wrapper ">
-              <div class="modal__header">
-                <h5>템플릿 수정</h5>
-                <div class="toolbox">
-                  <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
-                          class="la la-times"></i></button>
-                </div>
-              </div>
-              <div class="modal__body">
-                <div class="form-group w-50">
-                  <label for="tmp_division">구분</label><select disabled id="tmp_division">
-                  <option value="1" selected>기본</option>
-                  <option value="2">사용자</option>
-                </select>
-                </div>
-
-                <div class="form-group w-50">
-                  <label for="tmp_kind">훈련유형</label><select disabled id="tmp_kind">
-                  <option value="1" selected>경고 안내</option>
-                  <option value="2">피싱 유도</option>
-                  <option value="3">실태 조사</option>
-                </select>
-                </div>
-
-                <div class="form-group w-50">
-                  <label for="file_info">첨부파일 정보</label><select disabled id="file_info">
-                  <option selected value="">첨부파일 없음</option>
-                  <option value="1">EXE</option>
-                  <option value="2">HTML</option>
-                  <option value="3">Excel</option>
-                </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="tmp_name">템플릿명</label>
-                  <input disabled type="text"
-                         id="tmp_name"
-                         maxlength="30">
-                  <input type="hidden" id="tmp_no">
-                </div>
-
-                <div class="form-group">
-                  <label for="sender_name">발송자명</label>
-                  <input disabled type="text"
-                         id="sender_name"
-                         maxlength="30">
-                </div>
-                <!-- <label>발송자</label> -->
-
-                <div class="form-group">
-                  <label for="title">메일 제목</label>
-                  <input disabled type="text"
-                         id="title" maxlength="60"></div>
-                <!-- <label>메일 제목(최대 30자)</label> -->
-
-
-                <textarea name="content" id="content"></textarea>
-                <script>
-                  CKEDITOR.replace('content');
-                </script>
-                <div class="form-group">
-                  <div style="color: red;font-weight: bold; font-size: small">
-                    {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
-                    : 직급, {{target_orgarnize}} : 조직, {{target_phone}} : 훈련 대상자의 전화번호
-                  </div>
-                </div>
-                <div class="form-group w-50">
-                  <label for="download_type">다운로드 방식</label><select disabled id="download_type">
-                  <option selected value="1">첨부파일 없음</option>
-                  <option value="2">링크 첨부</option>
-                  <option value="3">파일 첨부</option>
-                </select>
-                </div>
-
-              </div>
-              <div class="modal__footer">
-                <button class="btn btn-primary" onclick="closeModal()">닫기</button>
-
-                </button>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="pgn-modal" id="project_regist">
-            <div class="pgn-modal-wrapper">
-              <div class="modal__header">
-                <h5>프로젝트 등록</h5>
-                <div class="toolbox">
-                  <button class="btn-modal-close" onclick="CloseProjectCreateModal()"><i class="la la-times"></i></button>
-                </div>
-              </div>
-              <div class="modal__body">
-                <div class="form-group">
-                    <label>프로젝트 이름</label>
-                    <input type="text" id="p_name">
-                </div>
-                <div class="form-group">
-                    <textarea type="text" id="p_description" placeholder="프로젝트 설명" cols="50"></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="start_date">프로젝트 시작일</label>
-                  <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">
-                </div>
-                <div class="form-group">
-                  <label for="end_date">프로젝트 종료일</label>
-                  <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">
-                </div>
-                <div class="form-group">
-                  <label for="template">템플릿 선택</label>
-                    <select id="template"></select>
-                </div>
-                <div class="form-group w-50">
-                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">
-                </select>
-                </div>
-                <div class="form-group w-50">
-                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">
-                </select>
-                </div>
-                <div class="form-group w-50">
-                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">
-                </select>
-                </div>
-              </div>
-              <div class="modal__footer">
-                  <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP 연결 테스트
-                  </button>
-                  <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
-                <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">등록</button>
-
-              </div>
-            </div>
-          </div>
-
-            <div class="pgn-modal" id="project_modify">
-                <div class="pgn-modal-wrapper">
-                    <div class="modal__header">
-                        <h5>프로젝트 수정</h5>
-                        <div class="toolbox">
-                            <button class="btn-modal-close" onclick="CloseProjectModifyModal()"><i class="la la-times"></i></button>
+        <ul class="right">
+            <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
+                                                                                                   src="/image/user.png"/></a>
+                <div class="dropdown-box with-header">
+                    <div class="dropdown-header"><img class="user-img user-img--lg"
+                                                      src="/image/user.png"/>
+                        <div class="user-info">
+                            <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
                         </div>
                     </div>
-                    <div class="modal__body">
-                        <div class="form-group">
-                            <label>프로젝트 이름</label>
-                            <input type="text" id="p_name">
-                        </div>
-                        <div class="form-group">
-                            <textarea type="text" id="p_description" placeholder="프로젝트 설명" cols="50"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="start_date">프로젝트 시작일</label>
-                            <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">
-                        </div>
-                        <div class="form-group">
-                            <label for="end_date">프로젝트 종료일</label>
-                            <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">
-                        </div>
-                        <div class="form-group">
-                            <label for="template">템플릿 선택</label>
-                            <select id="template"></select>
-                        </div>
-                        <div class="form-group w-50">
-                            <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">
-                        </select>
-                        </div>
-                        <div class="form-group w-50">
-                            <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">
-                        </select>
-                        </div>
-                        <div class="form-group w-50">
-                            <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">
-                        </select>
-                        </div>
-                    </div>
-                    <div class="modal__footer">
-                        <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP 연결 테스트
-                        </button>
-                        <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
-                        <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">등록</button>
-
-                    </div>
+                    <ul class="dropdown-body">
+                        <li><a href="/setting/user" target="_blank"><i
+                                class="la la-user"></i><span>사용자 정보</span></a></li>
+                        <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
+                        <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
+                    </ul>
                 </div>
-            </div>
-
-          <div class="toolbox">
-            <div class="box-body pt-0 px-0 responsive">
-              <table id="project_list">
-                <thead>
-                <tr>
-                  <th style="visibility:hidden;position:absolute;"></th>
-                  <th>
-                    <div class="pgn-checkbox"><input type="checkbox" id="all_select"><span></span>
-                    </div>
-                  </th>
-                  <th>No</th>
-                  <th>프로젝트명</th>
-                  <th>대상 태그</th>
-                  <th>진행상태</th>
-                  <th>템플릿명</th>
-                  <th>대상자 수</th>
-                  <th>열람 현황(%)</th>
-                  <th>감염 현황(%)</th>
-                  <th>전송 현황(%)</th>
-                  <th>시작일</th>
-                  <th>종료일</th>
-<!--                  <th><i class="la la-pencil-square"></i></th>-->
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-
-          <div class="pagination-wrapper clearfix" id="under">
-            <ul class="pagination float--right" id="pages">
-            </ul>
-          </div>
-
-        </div>
-      </div>
+            </li>
+        </ul>
+        <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
+                class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
+                class="la la-ellipsis-v"></i></a></div>
     </div>
-  </div>
+
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3>프로젝트 관리</h3>
+                        <div class="toolbox" style="justify-content: center">
+                            <div class="btn-group" style="margin-left: 10px;">
+
+                                <button class="btn btn-primary active" id="reg_project"
+                                        onclick="OpenProjectCreateModal()"><span>프로젝트 등록</span></button>
+                                <button class="btn btn-primary" id="del_project"><span>프로젝트 삭제</span></button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="pgn-modal" id="tml_viewer">
+                        <div class="pgn-modal-wrapper ">
+                            <div class="modal__header">
+                                <h5>템플릿 수정</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
+                                            class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group w-50">
+                                    <label for="tmp_division">구분</label><select disabled id="tmp_division">
+                                    <option value="1" selected>기본</option>
+                                    <option value="2">사용자</option>
+                                </select>
+                                </div>
+
+                                <div class="form-group w-50">
+                                    <label for="tmp_kind">훈련유형</label><select disabled id="tmp_kind">
+                                    <option value="1" selected>경고 안내</option>
+                                    <option value="2">피싱 유도</option>
+                                    <option value="3">실태 조사</option>
+                                </select>
+                                </div>
+
+                                <div class="form-group w-50">
+                                    <label for="file_info">첨부파일 정보</label><select disabled id="file_info">
+                                    <option selected value="">첨부파일 없음</option>
+                                    <option value="1">EXE</option>
+                                    <option value="2">HTML</option>
+                                    <option value="3">Excel</option>
+                                </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tmp_name">템플릿명</label>
+                                    <input disabled type="text"
+                                           id="tmp_name"
+                                           maxlength="30">
+                                    <input type="hidden" id="tmp_no">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sender_name">발송자명</label>
+                                    <input disabled type="text"
+                                           id="sender_name"
+                                           maxlength="30">
+                                </div>
+                                <!-- <label>발송자</label> -->
+
+                                <div class="form-group">
+                                    <label for="title">메일 제목</label>
+                                    <input disabled type="text"
+                                           id="title" maxlength="60"></div>
+                                <!-- <label>메일 제목(최대 30자)</label> -->
+
+
+                                <textarea name="content" id="content"></textarea>
+                                <script>
+                                    CKEDITOR.replace('content');
+                                </script>
+                                <div class="form-group">
+                                    <div style="color: red;font-weight: bold; font-size: small">
+                                        {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
+                                        : 직급, {{target_orgarnize}} : 조직, {{target_phone}} : 훈련 대상자의 전화번호
+                                    </div>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="download_type">다운로드 방식</label><select disabled id="download_type">
+                                    <option selected value="1">첨부파일 없음</option>
+                                    <option value="2">링크 첨부</option>
+                                    <option value="3">파일 첨부</option>
+                                </select>
+                                </div>
+
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-primary" onclick="closeModal()">닫기</button>
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="pgn-modal" id="project_regist">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>프로젝트 등록</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close" onclick="CloseProjectCreateModal()"><i
+                                            class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group">
+                                    <label>프로젝트 이름</label>
+                                    <input type="text" id="p_name">
+                                </div>
+                                <div class="form-group">
+                                    <textarea type="text" id="p_description" placeholder="프로젝트 설명" cols="50"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="start_date">프로젝트 시작일</label>
+                                    <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">프로젝트 종료일</label>
+                                    <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">
+                                </div>
+                                <div class="form-group">
+                                    <label for="template">템플릿 선택</label>
+                                    <select id="template"></select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">
+                                </select>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP
+                                    연결 테스트
+                                </button>
+                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
+                                <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">
+                                    등록
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pgn-modal" id="project_modify">
+                        <div class="pgn-modal-wrapper">
+                            <div class="modal__header">
+                                <h5>프로젝트 수정</h5>
+                                <div class="toolbox">
+                                    <button class="btn-modal-close" onclick="CloseProjectModifyModal()"><i
+                                            class="la la-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal__body">
+                                <div class="form-group">
+                                    <label>프로젝트 이름</label>
+                                    <input type="text" id="p_name1">
+                                </div>
+                                <div class="form-group">
+                                    <textarea type="text" id="p_description1" placeholder="프로젝트 설명" cols="50"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="start_date">프로젝트 시작일</label>
+                                    <input id="start_date1" type="date" value="xxx" min="yyy" max="zzz">
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">프로젝트 종료일</label>
+                                    <input id="end_date1" type="date" value="xxx" min="yyy" max="zzz">
+                                </div>
+                                <div class="form-group">
+                                    <label for="template">템플릿 선택</label>
+                                    <select id="template1"></select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag1_1">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag1_2">
+                                </select>
+                                </div>
+                                <div class="form-group w-50">
+                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag1_3">
+                                </select>
+                                </div>
+                            </div>
+                            <div class="modal__footer">
+                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP
+                                    연결 테스트
+                                </button>
+                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
+                                <button class="btn btn-primary pull-right" id="project_reg1" onclick="CreateProject()">
+                                    등록
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="toolbox">
+                        <div class="box-body pt-0 px-0 responsive">
+                            <table id="project_list">
+                                <thead>
+                                <tr>
+                                    <th style="visibility:hidden;position:absolute;"></th>
+                                    <th>
+                                        <div class="pgn-checkbox"><input type="checkbox" id="all_select"><span></span>
+                                        </div>
+                                    </th>
+                                    <th>No</th>
+                                    <th>프로젝트명</th>
+                                    <th>대상 태그</th>
+                                    <th>진행상태</th>
+                                    <th>템플릿명</th>
+                                    <th>대상자 수</th>
+                                    <th>열람 현황(%)</th>
+                                    <th>감염 현황(%)</th>
+                                    <th>전송 현황(%)</th>
+                                    <th>시작일</th>
+                                    <th>종료일</th>
+                                    <!--                  <th><i class="la la-pencil-square"></i></th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="pagination-wrapper clearfix" id="under">
+                        <ul class="pagination float--right" id="pages">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="/js/lib/Sortable.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -390,6 +399,7 @@
         };
         r.send();
     }
+
     function GetTmpl() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
@@ -422,135 +432,140 @@
         };
         r.send();
     }
+
     function GetProject() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/getProject', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
-          let rObj;
-          if (r.readyState === 4) {
-            if (r.status === 200) {
-              rObj = JSON.parse(r.responseText);
-              console.log(r.responseText);
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText);
 
-              let date = new Date();
-              let today = date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
+                    let date = new Date();
+                    let today = date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
 
-              if (rObj.project_list != null) {
-                // table 비워주기
-                $('#project_list > tbody').empty();
-                // No, 프로젝트명, 대상 태그, 진행상태, 템플릿명, 대상자 수, 감염 현황(%), 프로젝트 종료, 시작일, 종료일
-                // No, p_name, tag_name, p_status, p_name, targets, send_no, end_date, start_date
-                for (let i = 0; i < rObj.project_list.length; i++) {
-                  // 태그 분리작업
-                  let full_tag = ''
-                  let status = ''
-                  let infection_percentage;
-                  let send_percentage;
-                    for (let j = 0; j < rObj.project_list[i].tag_no.length; j++) {
-                      // console.log(rObj.project_list
-                      if (rObj.project_list[i].tag_no[j] !== "") {
-                        if (j === 0) {
-                          full_tag += '<label class="badge badge-green">' + rObj.project_list[i].tag_no[j] + '</label>'
-                        } else if (j === 1) {
-                          full_tag += '<label class="badge badge-red">' + rObj.project_list[i].tag_no[j] + '</label>'
-                        } else if (j === 2) {
-                          full_tag += '<label class="badge badge-blue">' + rObj.project_list[i].tag_no[j] + '</label>'
+                    if (rObj.project_list != null) {
+                        // table 비워주기
+                        $('#project_list > tbody').empty();
+                        // No, 프로젝트명, 대상 태그, 진행상태, 템플릿명, 대상자 수, 감염 현황(%), 프로젝트 종료, 시작일, 종료일
+                        // No, p_name, tag_name, p_status, p_name, targets, send_no, end_date, start_date
+                        for (let i = 0; i < rObj.project_list.length; i++) {
+                            // 태그 분리작업
+                            let full_tag = ''
+                            let status = ''
+                            let infection_percentage;
+                            let send_percentage;
+                            for (let j = 0; j < rObj.project_list[i].tag_no.length; j++) {
+                                // console.log(rObj.project_list
+                                if (rObj.project_list[i].tag_no[j] !== "") {
+                                    if (j === 0) {
+                                        full_tag += '<label class="badge badge-green">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                    } else if (j === 1) {
+                                        full_tag += '<label class="badge badge-red">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                    } else if (j === 2) {
+                                        full_tag += '<label class="badge badge-blue">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                    }
+                                }
+                            }
+                            // 프로젝트 진행 상황에 따라 버튼들의 색들을 다 다르게한다.
+                            // if (rObj.project_list[i].p_status === "0") {
+                            //   rObj.project_list[i].p_status = "예약"
+                            //   status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
+                            //           ' border: 2px solid transparent; border-radius: 3px;" ' +
+                            //           'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
+                            //           + rObj.project_list[i].p_status + '</button>'
+                            //   end += '<button class="btn btn-c-success" id="project_end" ' +
+                            //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                            // } else if (rObj.project_list[i].p_status == "1") {
+                            //   rObj.project_list[i].p_status = "진행";
+                            //   status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
+                            //           ' border: 2px solid transparent; border-radius: 3px;">'
+                            //           + rObj.project_list[i].p_status + '</button>'
+                            //   end += '<button class="btn btn-c-success" id="project_end" ' +
+                            //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                            // } else if (rObj.project_list[i].p_status == "2") {
+                            //   rObj.project_list[i].p_status = "종료";
+                            //   status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
+                            //   end += '<button class="btn btn-disabled" id="project_end" disabled="disabled" ' +
+                            //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
+                            // }
+
+                            if (today < rObj.project_list[i].start_date) {
+                                rObj.project_list[i].p_status = "예약";
+                                status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
+                                    ' border: 2px solid transparent; border-radius: 3px;" ' +
+                                    'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
+                                    + rObj.project_list[i].p_status + '</button>'
+                            } else if (rObj.project_list[i].start_date <= today && today <= rObj.project_list[i].end_date) {
+                                rObj.project_list[i].p_status = "진행";
+                                status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
+                                    ' border: 2px solid transparent; border-radius: 3px;">'
+                                    + rObj.project_list[i].p_status + '</button>'
+                            } else if (rObj.project_list[i].end_date < today) {
+                                rObj.project_list[i].p_status = "종료";
+                                status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
+                            }
+
+                            reading_percentage = (rObj.project_list[i].reading / rObj.project_list[i].targets) * 100;
+                            reading_percentage = parseInt(reading_percentage);
+
+                            infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
+                            infection_percentage = parseInt(infection_percentage);
+
+                            // 소수점은 화면에 안보여주기 위해 int 형으로 형변환한다.
+                            send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
+                            send_percentage = parseInt(send_percentage);
+
+
+                            if (full_tag === '') {// 태그가 없는경우 (존재해서는 안되는 case)
+                                return
+                            } else {
+                                $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
+                                    + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
+                                    + '<td><div class="pgn-checkbox">'
+                                    + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no + '</td>'
+                                    + '<td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
+                                    + '<td>' + status + '</td><td><button onclick="OpenModal(' + rObj.project_list[i].tml_no + ')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
+                                    + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + reading_percentage
+                                    + "%(" + rObj.project_list[i].reading + "명)" + '</td>' // 메일 읽은 사람 수
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                                    + "%(" + rObj.project_list[i].infection + "명)" + '</td>' // 메일 읽은 사람 수
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + send_percentage
+                                    + "%(" + rObj.project_list[i].send_no + "명)" + '</td>' // 전송현황
+                                    + '<td><input disabled id="start_date" type="date" value="' + rObj.project_list[i].start_date + '">'
+                                    + '</td><td><input disabled id="end_date_' + rObj.project_list[i].p_no + '" type="date" value="' + rObj.project_list[i].end_date + '">'
+                                    + '<button class="btn btn-primary" onclick="modifyEndDate(' + rObj.project_list[i].p_no + ')"><i class="la la-pencil"></i></button></td></tr>');
+                            }
                         }
-                      }
+                    } else if (rObj.project_list === null) {
+                        document.getElementById('under').style.background = "#f2eff1";
+                        $('#project_list').append('<tr style="background-color:white"><td colspan="12" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center"><span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
+                            '</div></td></tr>');
                     }
-                    // 프로젝트 진행 상황에 따라 버튼들의 색들을 다 다르게한다.
-                    // if (rObj.project_list[i].p_status === "0") {
-                    //   rObj.project_list[i].p_status = "예약"
-                    //   status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
-                    //           ' border: 2px solid transparent; border-radius: 3px;" ' +
-                    //           'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
-                    //           + rObj.project_list[i].p_status + '</button>'
-                    //   end += '<button class="btn btn-c-success" id="project_end" ' +
-                    //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
-                    // } else if (rObj.project_list[i].p_status == "1") {
-                    //   rObj.project_list[i].p_status = "진행";
-                    //   status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
-                    //           ' border: 2px solid transparent; border-radius: 3px;">'
-                    //           + rObj.project_list[i].p_status + '</button>'
-                    //   end += '<button class="btn btn-c-success" id="project_end" ' +
-                    //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
-                    // } else if (rObj.project_list[i].p_status == "2") {
-                    //   rObj.project_list[i].p_status = "종료";
-                    //   status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
-                    //   end += '<button class="btn btn-disabled" id="project_end" disabled="disabled" ' +
-                    //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
-                    // }
-
-                    if (today < rObj.project_list[i].start_date) {
-                      rObj.project_list[i].p_status = "예약";
-                      status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
-                              ' border: 2px solid transparent; border-radius: 3px;" ' +
-                              'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
-                              + rObj.project_list[i].p_status + '</button>'
-                    } else if (rObj.project_list[i].start_date <= today && today <= rObj.project_list[i].end_date) {
-                      rObj.project_list[i].p_status = "진행";
-                      status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
-                              ' border: 2px solid transparent; border-radius: 3px;">'
-                              + rObj.project_list[i].p_status + '</button>'
-                    } else if (rObj.project_list[i].end_date < today) {
-                      rObj.project_list[i].p_status = "종료";
-                      status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
-                    }
-
-                    infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
-                    infection_percentage = parseInt(infection_percentage);
-
-                    // 소수점은 화면에 안보여주기 위해 int 형으로 형변환한다.
-                    send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
-                    send_percentage = parseInt(send_percentage);
-
-
-                    if (full_tag === '') {// 태그가 없는경우 (존재해서는 안되는 case)
-                      return
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetProject();
                     } else {
-                    $('#project_list > tbody:last').append('<tr>' + '<td id=' + rObj.project_list[i].p_no
-                            + '" style="visibility:hidden;position:absolute;">' + rObj.project_list[i].p_no + '</td>'
-                            + '<td><div class="pgn-checkbox">'
-                            + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no + '</td>'
-                            + '<td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
-                            + '<td>' + status + '</td><td><button onclick="OpenModal('+rObj.project_list[i].tml_no+')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
-                            + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
-                            + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
-                            + rObj.project_list[i].targets + '"></progress>' + infection_percentage
-                            + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
-                            + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
-                            + rObj.project_list[i].targets + '"></progress>' + infection_percentage
-                            + "%(" + rObj.project_list[i].infection +"명)" + '</td>' // 메일 읽은 사람 수
-                            + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
-                            + rObj.project_list[i].targets + '"></progress>' + send_percentage
-                            + "%(" + rObj.project_list[i].send_no +"명)" + '</td>' // 전송현황
-                            + '<td><input disabled id="start_date" type="date" value="' + rObj.project_list[i].start_date +  '">'
-                            + '</td><td><input disabled id="end_date_'+ rObj.project_list[i].p_no +'" type="date" value="' + rObj.project_list[i].end_date + '">'
-                            + '<button class="btn btn-primary" onclick="modifyEndDate('+rObj.project_list[i].p_no+')"><i class="la la-pencil"></i></button></td></tr>');
-                  }
+                        document.location.href = '/';
+                    }
                 }
-              } else if (rObj.project_list === null) {
-                document.getElementById('under').style.background="#f2eff1";
-                $('#project_list').append('<tr style="background-color:white"><td colspan="12" align="center">' +
-                        '<div class="alert alert" style="background-color:white">' +
-                        '<p align="center"><span style="border: 1px; font-size:15px;' +
-                        'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
-                        '</div></td></tr>');
-              }
-            } else if (r.status === 403) {
-              const tokenResult = Refresh();
-              if (tokenResult) {
-                GetProject();
-              } else {
-                document.location.href = '/';
-              }
             }
-          }
         };
         r.send();
-      }
+    }
+
     function CreateProject() {
         const p_name = $('#p_name').val();
         const p_description = $('#p_description').val();
@@ -602,6 +617,7 @@
         console.log(formData);
         r.send(JSON.stringify(formData));
     }
+
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
@@ -618,79 +634,78 @@
         };
         r.send();
     }
-      //종료하기 버튼 누른경우 작동하는 기능
+
+    //종료하기 버튼 누른경우 작동하는 기능
     function ProjectEnd(p_no) {
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 종료하시겠습니까?");
         if (verify === true) {
-          r.open('POST', 'http://localhost:5000/api/endProjectList', true);
-          r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-          r.withCredentials = true;
-          r.onreadystatechange = function () {
-            if (r.readyState === 4) {
-              if (r.status === 200) {
-                alert('해당 프로젝트가 종료되었습니다.');
-                document.location.reload();
-              } else if (r.status === 403) {
-                const tokenResult = Refresh();
-                if (tokenResult) {
-                  ProjectEnd(p_no);
+            r.open('POST', 'http://localhost:5000/api/endProjectList', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            r.withCredentials = true;
+            r.onreadystatechange = function () {
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        alert('해당 프로젝트가 종료되었습니다.');
+                        document.location.reload();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            ProjectEnd(p_no);
+                        }
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
-              } else {
-                document.location.href = '/';
-              }
-            }
-          };
-        }
-        else {
-          alert("취소되었습니다.");
+            };
+        } else {
+            alert("취소되었습니다.");
         }
 
         console.log(p_no);
         r.send(JSON.stringify({"p_no": p_no}));
-      }
+    }
 
     function ProjectStart(p_no) {
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 실행하시겠습니까?");
         if (verify === true) {
-          r.open('POST', 'http://localhost:5000/api/startProjectList', true);
-          r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-          r.withCredentials = true;
-          r.onreadystatechange = function () {
-            if (r.readyState === 4) {
-              if (r.status === 200) {
-                alert('프로젝트가 시작되었습니다.');
-                document.location.reload();
-              } else if (r.status === 403) {
-                const tokenResult = Refresh();
-                if (tokenResult) {
-                  ProjectStart(p_no);
+            r.open('POST', 'http://localhost:5000/api/startProjectList', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            r.withCredentials = true;
+            r.onreadystatechange = function () {
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        alert('프로젝트가 시작되었습니다.');
+                        document.location.reload();
+                    } else if (r.status === 403) {
+                        const tokenResult = Refresh();
+                        if (tokenResult) {
+                            ProjectStart(p_no);
+                        }
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
-              } else {
-                document.location.href = '/';
-              }
-            }
-          };
-        }
-        else {
-          alert("취소되었습니다.");
+            };
+        } else {
+            alert("취소되었습니다.");
         }
 
         console.log(p_no);
         r.send(JSON.stringify({"p_no": p_no}));
-      }
+    }
 
     function modifyEndDate(p_no) {
-        if (document.getElementById("end_date_"+p_no).disabled) {
-            document.getElementById("end_date_"+p_no).disabled = false;
+        if (document.getElementById("end_date_" + p_no).disabled) {
+            document.getElementById("end_date_" + p_no).disabled = false;
         } else {
             if (!confirm('종료일을 수정하시겠습니까?')) {
                 location.reload()
             }
-            document.getElementById("end_date_"+p_no).disabled = true;
+            document.getElementById("end_date_" + p_no).disabled = true;
 
-            const end_date = $('#end_date_'+p_no).val();
+            const end_date = $('#end_date_' + p_no).val();
             const formData = {
                 p_no: p_no,
                 end_date: end_date,
@@ -724,58 +739,58 @@
             r.send(JSON.stringify(formData));
         }
 
-      }
+    }
 
-      
+
     $(function () {
         $('#all_select').click(function () {
-          if ($("input:checkbox[id='all_select']").prop("checked")) {
-            $("input[type=checkbox]").prop("checked", true);
-          } else {
-            $("input[type=checkbox]").prop("checked", false);
-          }
+            if ($("input:checkbox[id='all_select']").prop("checked")) {
+                $("input[type=checkbox]").prop("checked", true);
+            } else {
+                $("input[type=checkbox]").prop("checked", false);
+            }
         });
         $('#del_project').click(function () {
-          let tbodyTr = $('tbody tr');
-          const tdArr = [];	// 배열 선언
-          const td = tbodyTr.children();
+            let tbodyTr = $('tbody tr');
+            const tdArr = [];	// 배열 선언
+            const td = tbodyTr.children();
 
-          td.each(function (i) {
-            if (td.eq(i).children().children().prop("checked")) {
-              tdArr.push(td.eq(i - 1).text());
-            }
-          });
-          if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
-            if (tdArr.length !== 0) {
-              const r = new XMLHttpRequest();
-              r.open('POST', 'http://localhost:5000/api/delProject', true);
-              r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-              r.withCredentials = true;
-              r.onreadystatechange = function () {
-                if (r.readyState === 4) {
-                  if (r.status === 200) {
-                    alert("삭제가 완료되었습니다.");
-                    location.reload();
-                  } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                      console.log("true")
-                    }
-                  } else {
-                    alert("삭제 실패했습니다.");
-                  }
+            td.each(function (i) {
+                if (td.eq(i).children().children().prop("checked")) {
+                    tdArr.push(td.eq(i - 1).text());
                 }
-              };
-              console.log({project_list: tdArr})
-              console.log(tdArr[0])
-              r.send(JSON.stringify({project_list: tdArr}))
-            } else {
-              alert("삭제할 대상을 선택해주세요.");
-            }
+            });
+            if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
+                if (tdArr.length !== 0) {
+                    const r = new XMLHttpRequest();
+                    r.open('POST', 'http://localhost:5000/api/delProject', true);
+                    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    r.withCredentials = true;
+                    r.onreadystatechange = function () {
+                        if (r.readyState === 4) {
+                            if (r.status === 200) {
+                                alert("삭제가 완료되었습니다.");
+                                location.reload();
+                            } else if (r.status === 403) {
+                                const tokenResult = Refresh();
+                                if (tokenResult) {
+                                    console.log("true")
+                                }
+                            } else {
+                                alert("삭제 실패했습니다.");
+                            }
+                        }
+                    };
+                    console.log({project_list: tdArr})
+                    console.log(tdArr[0])
+                    r.send(JSON.stringify({project_list: tdArr}))
+                } else {
+                    alert("삭제할 대상을 선택해주세요.");
+                }
 
-          }
+            }
         });
-      });
+    });
 
     // var del_button = document.getElementById('del');
     // var reg_button = document.getElementById('reg_tag');
@@ -783,32 +798,35 @@
     function OpenModal(i) {
         GetTmlDetailPrjMgr(i); //todo 김태호 멘티 test 용 추가함.
         $("#tml_viewer").show().center();
-      }
-    function OpenProjectCreateModal(){
+    }
+
+    function OpenProjectCreateModal() {
         GetTag();
         GetTmpl();
         $("#project_regist").show().center();
-      }
+    }
+
     function CloseProjectCreateModal() {
-          $("#project_regist").hide();
-      }
+        $("#project_regist").hide();
+    }
+
     function CloseProjectModifyModal() {
         $("#project_regist").hide();
     }
 
     function closeModal() {
         $('#tml_viewer').hide();
-      }
+    }
 
     jQuery.fn.center = function () {
         this.css("position", "absolute");
         this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
-                $(window).scrollTop()) + "px");
+            $(window).scrollTop()) + "px");
         this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
-                $(window).scrollLeft()) + "px");
+            $(window).scrollLeft()) + "px");
         this.css("width", "700px")
         return this;
-      }
+    }
 
     function GetTmlDetailPrjMgr(tml_no) {
         const r = new XMLHttpRequest();
@@ -816,38 +834,38 @@
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
-          let rObj;
-          if (r.readyState === 4) {
-            if (r.status === 200) {
-              console.log(r.responseText);
-              rObj = JSON.parse(r.responseText);
-              // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
-              // todo 김태호 멘티 자체적으로 포멧 추가..
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    console.log(r.responseText);
+                    rObj = JSON.parse(r.responseText);
+                    // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
+                    // todo 김태호 멘티 자체적으로 포멧 추가..
 
-              $('#tmp_division').val(rObj.tmpls.tmp_division);
-              $('#tmp_kind').val(rObj.tmpls.tmp_kind);
-              $('#tmp_no').val(rObj.tmpls.tmp_no);
-              $('#tmp_name').val(rObj.tmpls.tmp_name);
-              $('#file_info').val(rObj.tmpls.file_info);
-              $('#sender_name').val(rObj.tmpls.sender_name);
-              $('#title').val(rObj.tmpls.title);
-              CKEDITOR.instances.content.setData(rObj.tmpls.content);
-              CKEDITOR.instances.content.setReadOnly(true);
-              // $('#content').val(rObj.tmpls.content);
-              $('#download_type').val(rObj.tmpls.download_type);
+                    $('#tmp_division').val(rObj.tmpls.tmp_division);
+                    $('#tmp_kind').val(rObj.tmpls.tmp_kind);
+                    $('#tmp_no').val(rObj.tmpls.tmp_no);
+                    $('#tmp_name').val(rObj.tmpls.tmp_name);
+                    $('#file_info').val(rObj.tmpls.file_info);
+                    $('#sender_name').val(rObj.tmpls.sender_name);
+                    $('#title').val(rObj.tmpls.title);
+                    CKEDITOR.instances.content.setData(rObj.tmpls.content);
+                    CKEDITOR.instances.content.setReadOnly(true);
+                    // $('#content').val(rObj.tmpls.content);
+                    $('#download_type').val(rObj.tmpls.download_type);
 
-            } else if (r.status === 403) {
-              const tokenResult = Refresh();
-              if (tokenResult) {
-                GetTmlDetail(tml_no);
-              }
-            } else {
-              document.location.href = '/';
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetTmlDetail(tml_no);
+                    }
+                } else {
+                    document.location.href = '/';
+                }
             }
-          }
         };
         r.send();
-      }
+    }
 
     function editTml() {
         const tmp_division = $('#tmp_division').val();
@@ -861,15 +879,15 @@
         const download_type = $('#download_type').val();
 
         const formData = {
-          tmp_no: parseInt(tmp_no),
-          tmp_division: tmp_division,
-          tmp_kind: tmp_kind,
-          tmp_name: tmp_name,
-          file_info: file_info,
-          sender_name: sender_name,
-          title: title,
-          content: content,
-          download_type: download_type
+            tmp_no: parseInt(tmp_no),
+            tmp_division: tmp_division,
+            tmp_kind: tmp_kind,
+            tmp_name: tmp_name,
+            file_info: file_info,
+            sender_name: sender_name,
+            title: title,
+            content: content,
+            download_type: download_type
         };
         console.log(JSON.stringify(formData));
 
@@ -878,28 +896,28 @@
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
-          if (r.readyState === 4) {
-            if (r.status === 200) {
-              alert("템플릿 수정 완료했습니다.")
-              location.reload()
-            } else if (r.status === 403) {
-              const tokenResult = Refresh();
-              if (tokenResult) {
-                editTml();
-                console.log("true")
-              }
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    alert("템플릿 수정 완료했습니다.")
+                    location.reload()
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        editTml();
+                        console.log("true")
+                    }
+                }
             }
-          }
         };
         console.log(formData);
         r.send(JSON.stringify(formData));
 
-      }
+    }
 
-      // getTag();
+    // getTag();
     GetDashBoard();
     GetProject();
-  </script>
+</script>
 </body>
 
 </html>
