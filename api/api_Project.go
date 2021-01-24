@@ -23,14 +23,14 @@ func ProjectCreate(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
-			"isOk": 0,
-			"error": err,
+			"isOk":   0,
+			"error":  err,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status": http.StatusOK,
-			"isOk": 1,
+			"isOk":   1,
 		})
 		return
 	}
@@ -47,18 +47,44 @@ func GetProject(c *gin.Context) {
 	// 프로젝트 조회
 	projects, err := model.ReadProject(&conn, num)
 	if err != nil {
-		log.Println("GetProject error occured, account :", c.Keys["email"])
+		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
-			"error": err,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_list" : projects,
+			"project_list": projects,
 		})
 	}
+}
+
+func ModifyProject(c *gin.Context) {
+	p := model.Project{}
+	c.ShouldBindJSON(&p)
+
+	num := c.Keys["number"].(int)
+
+	// DB
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+	result, err := p.EndDateModify(&conn, num)
+
+	if err != nil {
+		log.Println("GetProject error occurred, account :", c.Keys["email"])
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":      http.StatusInternalServerError,
+			"isOk":        false,
+			"dateCompare": result,
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
+	}
+
 }
 
 //func EndProjectList(c *gin.Context) {
@@ -95,7 +121,7 @@ func DeleteProject(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectNumber{}
+	p := model.ProjectDelete{}
 	c.ShouldBindJSON(&p)
 
 	err := p.DeleteProject(&conn, num)
@@ -111,7 +137,6 @@ func DeleteProject(c *gin.Context) {
 		"status": http.StatusOK,
 		"isOk":   1,
 	})
-
 }
 
 func StartProjectList(c *gin.Context) {
@@ -121,7 +146,7 @@ func StartProjectList(c *gin.Context) {
 	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
 	conn := db.(sql.DB)
 
-	p := model.ProjectStart{}
+	p := model.ProjectStart2{}
 	c.ShouldBindJSON(&p)
 
 	// 프로젝트 상태변경
@@ -129,8 +154,8 @@ func StartProjectList(c *gin.Context) {
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status" : http.StatusBadRequest,
-			"isOk": 0,
+			"status": http.StatusBadRequest,
+			"isOk":   0,
 		})
 		return
 	} else {
@@ -158,7 +183,6 @@ func GetTag(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"isOk":   1,
 		"status": http.StatusOK,
-		"tags":   model.GetTag(&conn , num), // 태그들
+		"tags":   model.GetTag(&conn, num), // 태그들
 	})
 }
-

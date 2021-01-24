@@ -1,7 +1,11 @@
 package model
 
 import (
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"os"
@@ -14,6 +18,7 @@ import (
 var (
 	tokenSecret  = []byte(os.Getenv("TOKEN_SECRET"))
 	tokenRefresh = []byte(os.Getenv("TOKEN_REFRESH"))
+	key = "qlwkndlqiwndlian"
 )
 
 func (u *User) CreateUsers() (int, error) {
@@ -43,7 +48,7 @@ func (u *User) CreateUsers() (int, error) {
 	}
 
 	// 비밀번호 길이 16자 미만
-	if len(u.Password) > 16 || len(u.PasswordCheck) > 16 {
+	if len(u.Password) > 17 || len(u.PasswordCheck) > 17 {
 		num = 402 // 비밀번호나 이메일 형식이 올바르지 않습니다.
 		return num, fmt.Errorf("Password must be 16 characters or less. ")
 	}
@@ -82,6 +87,7 @@ func (u *User) CreateUsers() (int, error) {
 		return num, fmt.Errorf("This account already exists. ")
 	}
 
+	// 패스워드 해싱
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		num = 500 // 405에러, 계정생성 오류발생
@@ -89,11 +95,24 @@ func (u *User) CreateUsers() (int, error) {
 	}
 	u.PasswordHash = string(pwdHash)
 
+	// 회원 정보를 등록한다.
 	_, err = db.Exec(`INSERT INTO user_info (user_name, user_email, user_pw_hash, created_time)
         VALUES ($1, $2, $3, $4)`, u.Name, u.Email, u.PasswordHash, time.Now())
 	if err != nil {
 		return 500, fmt.Errorf("A database error has occurred. (1)")
 	}
+
+
+	// Note smtp_info 테이블에 삽입될 비밀번호를 암호화한다.
+	block, err := aes.NewCipher([]byte(key)) // key 값을 블록에 집어넣는다.
+	if err != nil {
+		num = 500
+		fmt.Println(err)
+		return num, err
+	}
+
+	// AES 암호화 알고리즘 적용
+	pwdAES := base64.StdEncoding.EncodeToString(Encrypt(block, []byte(u.Password)))// byte[]타입
 
 	// Smtp 디폴트 정보 삽입
 	query = "SELECT user_no FROM user_info WHERE user_email = $1"
@@ -101,7 +120,7 @@ func (u *User) CreateUsers() (int, error) {
 
 	err = row.Scan(&u.UserNo)
 	_, err = db.Exec(`INSERT INTO smtp_info (user_no, smtp_id, smtp_pw)
-        VALUES ($1, $2, $3)`, u.UserNo, u.Email, u.PasswordHash)
+        VALUES ($1, $2, $3)`, u.UserNo, u.Email, pwdAES)
 	if err != nil {
 		return 500, fmt.Errorf("A database error has occurred. (2)")
 	}
@@ -109,22 +128,44 @@ func (u *User) CreateUsers() (int, error) {
 	return num, err
 }
 
-func (u *User) InsertSmtp() error {
-	db, err := ConnectDB()
-	if err != nil {
-		return fmt.Errorf("db connection error")
+// 암호화
+func Encrypt(b cipher.Block, plaintext []byte) []byte {
+	// plaintext(원본)의 크기가 블록크기의 배수가 아니면 채워준다(padding)
+	mod := len(plaintext) % aes.BlockSize
+	// 남는 공간에 패딩값을 삽입한다. (남는공간이 3이면 3을 세번 넣는다.)
+	padding := bytes.Repeat([]byte{byte(aes.BlockSize - mod)}, aes.BlockSize-mod)
+	plaintext = append(plaintext, padding...) // ...은 padding 슬라이스의 모든 컬렉션을 표현하는것
+
+	ciphertext := make([]byte, len(plaintext)) // 16바이트의 배수로 맞춘 byte 배열공간을 만든다.
+
+	// CBC(Cipher Block Chaining) 방식을 사용하여 암호화
+	// 첫번째 블록은 직전 암호문이 없으므로 초기화 백터(iv)를 입력받는다.
+	iv := []byte("0987654321654321") // 16byte 의 크기를 갖는다. Note + iv값 환경변수 & 암호화
+	mode := cipher.NewCBCEncrypter(b, iv) // 암호화 블록과 초기화 벡터를 넣어서 암호화 블록 mode 인스턴스를 생성한다.
+	mode.CryptBlocks(ciphertext, plaintext) // 암호화 블록 mode 인스턴스로 암호화
+
+	return ciphertext
+}
+
+// 복호화
+func Decrypt(b cipher.Block, ciphertext []byte) []byte {
+
+	if len(ciphertext)%aes.BlockSize != 0 {
+		// 암호화된 데이터의 길이기 블록크기의 배수가 아니면 작동이 안됨.
+		fmt.Println("The length of decrypted data must be a multiple of the block size. ")
+		return nil
 	}
-	defer db.Close()
+	iv := []byte("0987654321654321")
 
-	query := "SELECT user_no FROM user_info WHERE user_email = $1"
-	row := db.QueryRow(query, u.Email)
+	plaintext := make([]byte, len(ciphertext)) // 평문 데이터를 저장할 공간을 생성한다.
+	mode := cipher.NewCBCDecrypter(b, iv) // 암호화 블록과 초기화 벡터를 넣어 복호화된 블록모드의 인스턴스를 생성한다.
 
-	err = row.Scan(u.UserNo)
-	if err != sql.ErrNoRows {
+	mode.CryptBlocks(plaintext, ciphertext) //
 
-	}
+	padding := plaintext[len(plaintext)-1] //가장 마지막 값(패딩값)을 가져온다.
+	plaintext = plaintext[:len(plaintext)-int(padding)] // 패딩값을 빼준다.
 
-	return nil
+	return plaintext
 }
 
 // 비밀번호 형식을 검사하는 메서드

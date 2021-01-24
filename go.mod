@@ -9,6 +9,7 @@ require (
 	github.com/itsjamie/gin-cors v0.0.0-20160420130702-97b4a9da7933
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.8.0
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/segmentio/kafka-go v0.4.8
 	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
