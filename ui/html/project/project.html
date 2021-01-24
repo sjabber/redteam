@@ -63,7 +63,23 @@
           <li class="tree-item"><a href="/setting/smtp"><i
                   class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
         </ul>
+
       </li>
+        <li class="header">Help</li>
+        <li class="has-children"><a href="javascript:"><i class="la la-question"></i><span>도움말</span>
+           <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+        </a>
+            <ul class="tree">
+                <li class="tree-item"><a href="/help/project"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">프로젝트 관리</span></a></li>
+                <li class="tree-item"><a href="/help/target"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">대상 관리</span></a></li>
+                <li class="tree-item"><a href="/help/template"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">템플릿 관리</span></a></li>
+                <li class="tree-item"><a href="/help/smtp"><i
+                        class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+            </ul>
+        </li>
     </ul>
   </div>
 </div>
@@ -313,6 +329,9 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     if (rObj.tags.length > 0) {
+                        $('#tag_1').empty();
+                        $('#tag_2').empty();
+                        $('#tag_3').empty();
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
                         $('#tag_1').append("<option value=''>훈련 대상 태그 선택하기</option>");
@@ -351,6 +370,7 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     if (rObj.tmpls.length > 0) {
+                        $('#template').empty();
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
                         $('#template').append("<option value=''>훈련 템플릿 선택하기</option>");
