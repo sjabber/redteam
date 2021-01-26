@@ -11,13 +11,13 @@ import com.hanium.mer.vo.ProjectVo;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
@@ -60,19 +62,28 @@ public class ApiProjectController {
                 //todo 유효성검사(빈칸, 시작날짜, 끝 날짜 논리 순서), p_status는 시작 예약 종료? 한글로?
                 newProject.setUserNo(Long.parseLong(claims.get("user_no").toString()));
 
+                String pattern = "^[a-zA-Z0-9가-힣]{2,100}$";
+                Matcher matcher = Pattern.compile(pattern).matcher(projectDto.getP_name());
+                if(!matcher.matches()){
+                    return new ResponseEntity<Object>("프로젝트 이름을 확인해주세요.", HttpStatus.BAD_REQUEST);
+                }
+                newProject.setPName(projectDto.getP_name());
+
+                if(projectDto.getP_description().length() >= 1000){
+                    return new ResponseEntity<Object>("프로젝트 설명을 확인해주세요.", HttpStatus.BAD_REQUEST);
+                }
+                newProject.setPDescription(projectDto.getP_description());
+
                 //JPA AUTO에 NULL값을 넣음. vo에서 따로 처리해줘도됌
-                if(projectDto.getEnd_date().isBefore(projectDto.getStart_date())
-                        || projectDto.getEnd_date().isBefore(LocalDate.now())){
+                //log.info("{} {} {}", projectDto.getStart_date(), LocalDate.now(), projectDto.getStart_date().isBefore(LocalDate.now()));
+                if( projectDto.getEnd_date().isBefore(projectDto.getStart_date())
+                        || projectDto.getEnd_date().isBefore(LocalDate.now())
+                        || projectDto.getStart_date().isBefore(LocalDate.now())){
+                    log.info("{} {} {}", projectDto.getStart_date(), LocalDate.now(), projectDto.getStart_date().isBefore(LocalDate.now()));
                     return new ResponseEntity<Object>("날짜를 제대로 선택해주세요.", HttpStatus.BAD_REQUEST);
                 }
                 newProject.setStartDate(projectDto.getStart_date());
                 newProject.setEndDate(projectDto.getEnd_date());
-
-                if(StringUtils.isEmpty(projectDto.getP_name()) || StringUtils.isEmpty(projectDto.getP_description())){
-                    return new ResponseEntity<Object>("프로젝트 정보를 제대로 생성해주세요.", HttpStatus.BAD_REQUEST);
-                }
-                newProject.setPName(projectDto.getP_name());
-                newProject.setPDescription(projectDto.getP_description());
 
                 if(projectDto.getTmp_no() == 0){
                     return new ResponseEntity<Object>("프로젝트 템플릿을 선택해주세요.", HttpStatus.BAD_REQUEST);
@@ -96,7 +107,12 @@ public class ApiProjectController {
                 newProject.setTagSecond(Integer.parseInt(projectDto.getTag_no().get(1)));
                 newProject.setTagThird(Integer.parseInt(projectDto.getTag_no().get(2)));
 
-
+                //TODO p_status 설정, 안해도 자동 진행으로 저장됨 db default값
+                if(LocalDate.now().isBefore(projectDto.getStart_date())){
+                    newProject.setPStatus(2);
+                }else{
+                    newProject.setPStatus(1);
+                }
                 newProject.setCreatedTime(LocalDateTime.now());
                 log.info("new project info: {}", newProject.toString());
                 projectService.addProject(newProject);
@@ -110,16 +126,20 @@ public class ApiProjectController {
         return new ResponseEntity<Object>("토큰을 확인해주세요", HttpStatus.FORBIDDEN);
     }
 
+    //TODO page, size를 front에서 파라미터로 넘기면 됨, 정렬도 생각해보기
+    //TODO front 코드 가져오면 됨
     @GetMapping("/api/getProjects")
-    public ResponseEntity<Object> addProject(HttpServletRequest request)
+    public ResponseEntity<Object> addProject(HttpServletRequest request, @RequestParam(defaultValue = "1") int page)
             throws UnsupportedEncodingException {
 
         Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try {
                 Map<String,Object> map = new HashMap<>();
-                List<ProjectVo> project_list = projectService.getProjects(Long.parseLong(claims.get("user_no").toString()));
-                map.put("projects", project_list);
+                Pageable pageable = PageRequest.of(page - 1, 5, Sort.by("createdTime").descending());
+                Page<ProjectVo> project_list = projectService.getProjects(Long.parseLong(claims.get("user_no").toString()), pageable);
+                map.put("project_list", project_list);
+                log.info(map.toString());
                 return new ResponseEntity<Object>(map, HttpStatus.OK);
             }catch(Exception e){
                 e.printStackTrace();
@@ -133,7 +153,6 @@ public class ApiProjectController {
     public ResponseEntity<Object> sendMessageTest(HttpServletRequest request, Long p_no)
             throws UnsupportedEncodingException {
 
-        //TODO token user_id 가져오기
         Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         System.out.println(TokenUtils.create());
         if (claims != null) {
@@ -148,10 +167,10 @@ public class ApiProjectController {
 
                 for (Object[] m : targets) {
                     KafkaMessage kafkaMessage = new KafkaMessage();
-                    kafkaMessage.setTargetNo( (int) m[0]);
-                    kafkaMessage.setPNo(project.get().getPNo());
-                    kafkaMessage.setTmpNo(project.get().getTmlNo());
-                    kafkaMessage.setUserNo(project.get().getUserNo());
+                    kafkaMessage.setTarget_no( (int) m[0]);
+                    kafkaMessage.setP_no(project.get().getPNo());
+                    kafkaMessage.setTmp_no(project.get().getTmlNo());
+                    kafkaMessage.setUser_no(project.get().getUserNo());
 
                     kafkaProducerService.sendMessage(kafkaMessage);
                 }

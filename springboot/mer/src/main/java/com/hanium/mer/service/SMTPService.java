@@ -120,8 +120,10 @@ public class SMTPService {
         //여러 사람에게 보내기 List InternetAddress 형태? 검색필요
         //InternetAddress를 배열로 받아서 후에 프로젝트에서 target의 메일들을 받아보내면 됨
         MimeMessage message = mailSender.createMimeMessage();
-        //todo sender getId고치기+naver.com
+
+        //발신자
         message.setFrom(new InternetAddress(smtp_info.getSmtpId()));// + "@" + smtp_info.getSmtpHost().substring(7)));
+
         //수신자
         log.info("target Email {}", target.getTargetEmail());
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(target.getTargetEmail()));

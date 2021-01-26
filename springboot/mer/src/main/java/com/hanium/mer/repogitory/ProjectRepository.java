@@ -1,6 +1,8 @@
 package com.hanium.mer.repogitory;
 
 import com.hanium.mer.vo.ProjectVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,7 +28,7 @@ public interface ProjectRepository extends JpaRepository<ProjectVo, Long> {
                                             @Param("tag2") Integer tagSecond,
                                             @Param("tag3") Integer tagThird);
 
-    List<ProjectVo> findByUserNo(Long user_no);
+    Page<ProjectVo> findByUserNo(Long user_no, Pageable pageable);
 
     Optional<ProjectVo> findBypNoAndUserNo(Long p_no, Long user_no);
 

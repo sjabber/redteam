@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 public class KafkaMessage {
 
-    private Long pNo;
+    private Long p_no;
 
-    private Long userNo;
+    private Long user_no;
 
-    private int targetNo;
+    private int target_no;
 
-    private Long tmpNo;
+    private Long tmp_no;
 //    private SmtpVo smtp;
 //
 //    private TargetVo target;

@@ -22,5 +22,7 @@ public class ProjectDto {
     private LocalDate start_date;
 
     private LocalDate end_date;
+
+    private int p_status;
     
 }
