@@ -76,6 +76,22 @@ app.get('/warn/warning2', function (req, res) {
     fs.createReadStream("./warn/warning2.html").pipe(res);
 })
 
+app.get('/help/project', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./help/project_help.html").pipe(res);
+})
+app.get('/help/smtp', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./help/smtp_help.html").pipe(res);
+})
+app.get('/help/target', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./help/target_help.html").pipe(res);
+})
+app.get('/help/template', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./help/tml_help.html").pipe(res);
+})
 
 
 app.get('/setting')
