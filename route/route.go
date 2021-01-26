@@ -42,6 +42,8 @@ func RegisterRoute(r *gin.Engine) {
 		setting.POST("/delTmp", api.DelTml)
 		setting.GET("/getTag", api.GetTag)
 
+		setting.POST("/delUser", api.DelUser)
+
 		//setting.GET("/userSetting", api.GetUserSetting) //Note - spring boot
 		//setting.POST("/userSetting", api.SetUserSetting) //Note - spring boot
 		//setting.GET("/smtpSetting", api.GetSmtpSetting) //Note - spring boot

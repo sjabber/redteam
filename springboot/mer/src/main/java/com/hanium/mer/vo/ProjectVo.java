@@ -66,6 +66,12 @@ public class ProjectVo {
     @JsonProperty(value = "modified_time")
     private LocalDateTime modifiedTime;
 
-    private int send_no;
+    @Column(name = "send_no")
+    @JsonProperty(value = "send_no")
+    private int sendNo;
+
+    @Column(name = "p_status")
+    @JsonProperty(value = "p_status")
+    private int pStatus;
 
 }
