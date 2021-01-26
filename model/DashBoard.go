@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type PInfo1 struct {
@@ -11,13 +12,34 @@ type PInfo1 struct {
 	Closed    int `json:"closed"`
 }
 
+type PInfo2 struct {
+	TmpNo       int      `json:"tmp_no"`
+	MailTitle   string   `json:"mail_title"`
+	SenderEmail string   `json:"sender_email"`
+	StartDate   string   `json:"start_date"`
+	EndDate     string   `json:"end_date"`
+	TagArray    []string `json:"tag_no"`
+	Targets     string   `json:"targets"`
+	SendNo      string   `json:"send_no"`
+	Reading     string   `json:"reading"`
+	Infection   string   `json:"infection"`
+}
+
+// p_no ,p_name , p_status, end_date
+type PInfo3 struct {
+	PNo			int		`json:"p_no"`
+	FakeNo		int		`json:"fake_no"`
+	PName		string	`json:"p_name"`
+	PStatus		string	`json:"p_status"`
+	EndDate		string	`json:"end_date"`
+}
 
 
 func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
-	// 프로젝트 읽어오기전에 해시테이블에 태그정보 한번 넣고 시작한다.
+
 	var query string
 
-	pi := PInfo1{}
+	pi1 := PInfo1{}
 
 	query = `SELECT count(DISTINCT target_no), ready, ing, closed
 			 FROM target_info as ti
@@ -35,15 +57,126 @@ func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
    				or ti.tag3 > 0 and (ti.tag3 = pi.tag1 or ti.tag3 = pi.tag2 or ti.tag3 = pi.tag3)
 			 GROUP BY ready, ing, closed;`
 	rows := conn.QueryRow(query, num)
-	err := rows.Scan(&pi.Targets, &pi.Scheduled, &pi.Ongoing, &pi.Closed)
+	err := rows.Scan(&pi1.Targets, &pi1.Scheduled, &pi1.Ongoing, &pi1.Closed)
 	if err != nil {
-		return pi, err
+		return PInfo1{}, err
 	}
 
-	return pi, nil
+	return pi1, nil
 }
 
-func GetDashboardInfo2(conn *sql.DB, num int) () {
+func GetDashboardInfo2(conn *sql.DB, num int, pnum int) (PInfo2, error) {
 
+	var query string
 
+	query = `SELECT tag_no, tag_name
+			  FROM tag_info
+			  WHERE user_no = $1
+			  ORDER BY tag_no asc`
+	hash, err := conn.Query(query, num)
+	if err != nil {
+		fmt.Println(err)
+		return PInfo2{}, err
+	}
+
+	tg := Tag{}
+	for hash.Next() {
+		err = hash.Scan(&tg.TagNo, &tg.TagName)
+		Hashmap[tg.TagNo] = tg.TagName
+
+		if err != nil {
+			fmt.Printf("Tags scanning Error. : %v", err)
+			continue
+		}
+	}
+
+	pi2 := PInfo2{}
+
+	var tags [3]int
+
+	query = `SELECT tml_no,
+					 mail_title,
+       			 	sender_name,
+       			 	to_char(p_start_date, 'YYYY-MM-DD'),
+       			 	to_char(p_end_date, 'YYYY-MM-DD'),
+       			 	T.tag1,
+       			 	T.tag2,
+       			 	T.tag3,
+       			 	COUNT(ta.target_no) as Targets,
+       			 	T.send_no,
+       			 	count(ci.target_no) as Read,
+       			 	COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Infection
+			 	FROM (SELECT p_no,
+             			 	 tml_no,
+             			 	 mail_title,
+             			 	 sender_name,
+             			 	 p_start_date,
+            			 	 p_end_date,
+             			 	 tag1,
+             			 	 tag2,
+            			 	 tag3,
+             			 	 send_no,
+             			 	 p.user_no
+      			 	FROM project_info as p
+               			 	LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
+      			 	WHERE p.user_no = $1 AND p.p_no = $2) AS T
+         			 	LEFT JOIN target_info ta on T.user_no = ta.user_no
+         			 	LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
+			 	WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
+						 	or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
+						 	or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
+      			 	GROUP BY tml_no, mail_title, sender_name, p_start_date, p_end_date, T.tag1, T.tag2, T.tag3, T.send_no
+      			 	ORDER BY tml_no;`
+
+	row := conn.QueryRow(query, num, pnum)
+
+	// 프로젝트 상세에 필요한 정보들을 바인딩
+	err = row.Scan(&pi2.TmpNo, &pi2.MailTitle, &pi2.SenderEmail, &pi2.StartDate, &pi2.EndDate,
+		&tags[0], &tags[1], &tags[2], &pi2.Targets, &pi2.SendNo, &pi2.Reading, &pi2.Infection)
+	if err != nil {
+		return PInfo2{}, fmt.Errorf("%v", err)
+	}
+
+	Loop1:
+		for i := 0; i < len(tags); i++ {
+			if tags[i] == 0 {
+				pi2.TagArray = append(pi2.TagArray, "")
+				continue Loop1
+			}
+
+			for key, val := range Hashmap {
+				if key == tags[i] {
+					pi2.TagArray = append(pi2.TagArray, val)
+					break
+				}
+			}
+		}
+
+	defer conn.Close()
+
+	return pi2, nil
+}
+
+func GetDashboardInfo3(conn *sql.DB, num int) ([]PInfo3, error) {
+
+	query := `SELECT p_no, ROW_NUMBER() over (ORDER BY p_no) as row_num, p_name, p_status, to_char(p_end_date, 'YYYY-MM-DD')
+			  FROM project_info
+			  WHERE user_no = $1`
+	rows, err := conn.Query(query, num)
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	var project []PInfo3
+	pi3 := PInfo3{}
+	for rows.Next() {
+		err = rows.Scan(&pi3.PNo, &pi3.FakeNo, &pi3.PName, &pi3.PStatus, &pi3.EndDate)
+		if err != nil {
+			return nil, fmt.Errorf("%v", err)
+		}
+
+		project = append(project, pi3)
+	}
+
+	return project, nil
 }

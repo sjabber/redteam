@@ -125,6 +125,8 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
 		}
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
@@ -177,12 +179,13 @@ func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 					 p.tag1,
 					 p.tag2,
 					 p.tag3,
+			         p.user_no,
 					 p.send_no
 				FROM project_info as p
 					   LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
 			  	WHERE p.user_no = $1
 			) AS T
-				 LEFT JOIN target_info ta on user_no = ta.user_no
+				 LEFT JOIN target_info ta on T.user_no = ta.user_no
 				 LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
 		WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
 			or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
@@ -227,6 +230,8 @@ func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 		projects = append(projects, p)
 	}
 
+	defer conn.Close()
+
 	return projects, nil
 }
 
@@ -258,6 +263,8 @@ func (p *ProjectDelete) DeleteProject(conn *sql.DB, num int) error {
 			return fmt.Errorf("Error deleting target ")
 		}
 	}
+
+	defer conn.Close()
 
 	return nil
 }
@@ -410,6 +417,8 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 	if err != nil {
 		return fmt.Errorf("Error : updating project status. ")
 	}
+
+	defer conn.Close()
 
 	return nil
 }
@@ -598,5 +607,7 @@ WHERE user_no = $2
 	if err != nil {
 		return false, err
 	}
+
+	defer conn.Close()
 	return false, nil
 }

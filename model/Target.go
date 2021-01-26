@@ -180,6 +180,8 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
 	}
 
+	defer conn.Close()
+
 	var targets []Target
 	tg := Target{}
 
@@ -277,6 +279,8 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 			return fmt.Errorf("Error deleting target ")
 		}
 	}
+
+	defer conn.Close()
 
 	return nil
 }
@@ -383,6 +387,8 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	defer conn.Close()
 
 	//bulkFile.Close()
 
@@ -596,6 +602,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		}
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
@@ -611,6 +619,8 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) error {
 		return fmt.Errorf("Tag create error. ")
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
@@ -619,6 +629,8 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 	if err != nil {
 		return fmt.Errorf("Error deleting tag on tag_info ")
 	}
+
+	defer conn.Close()
 
 	return nil
 }
@@ -657,6 +669,8 @@ func GetTag(conn *sql.DB, num int) []Tag {
 	//for key, val := range Hashmap {
 	//	fmt.Println(key, val)
 	//}
+
+	defer conn.Close()
 
 	return tag
 }
@@ -780,6 +794,8 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
+
+	defer conn.Close()
 
 	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
 	return targets, total, pages, nil

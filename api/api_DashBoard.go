@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"redteam/model"
+	"strconv"
 )
 // 토큰안에 이름도 넣는다.
 var Account interface{}
@@ -46,36 +47,62 @@ func GetDashboardInfo1(c *gin.Context) {
 			"info1" : Info1,
 		})
 	}
+
+	return
 }
 
-// 진행중인 프로젝트 현황
-//func GetDashboardInfo2(c *gin.Context) {
-//	// 계정번호
-//	num := c.Keys["number"].(int)
-//
-//	// db연결
-//	db, _ := c.Get("db")
-//	conn := db.(sql.DB)
-//
-//	Info1, err := model.GetDashboardInfo2(&conn, num)
-//	if err != nil {
-//		log.Println(err)
-//		c.JSON(http.StatusInternalServerError, gin.H{
-//			"status": http.StatusInternalServerError,
-//			"isOk": 0,
-//		})
-//		return
-//	} else {
-//		c.JSON(http.StatusOK, gin.H{
-//			"info2" : Info1,
-//		})
-//	}
-//
-//
-//	return
-//}
+// 대시보드 그래프
+func GetDashboardInfo2(c *gin.Context) {
+	// 계정번호
+	num := c.Keys["number"].(int)
+
+	// db연결
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+
+	// URL 에 포함된 프로젝트 번호를 pnum 변수에 int 로 형변환 후 바인딩.
+	pg := c.Query("p_num")
+	pnum, _ := strconv.Atoi(pg)
+
+	Info2, err := model.GetDashboardInfo2(&conn, num, pnum)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+			"isOk": 0,
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"project_detail" : Info2,
+		})
+	}
+
+	return
+}
 
 // 맨아래 전체 프로젝트 리스트
-func OverallList() {
+func GetDashboardInfo3(c *gin.Context) {
+	// 계정번호
+	num := c.Keys["number"].(int)
 
+	// db연결
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+
+	Info3, err := model.GetDashboardInfo3(&conn, num)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+			"isOk": 0,
+		})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"project_list" : Info3,
+		})
+	}
+
+	return
 }
