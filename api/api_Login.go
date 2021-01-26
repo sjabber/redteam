@@ -52,5 +52,25 @@ func Login(c *gin.Context) {
 		return
 	}
 
+}
+
+func DelUser(c *gin.Context) {
+	num := c.Keys["number"].(int)
+
+	db, _ := c.Get("db") // httpheader.go 의 DBMiddleware 에 셋팅되어있음.
+	conn := db.(sql.DB)
+	user := model.User{}
+	user.UserNo = num
+
+	err := user.DelUser(&conn)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"isOk": true,
+	})
 	return
 }

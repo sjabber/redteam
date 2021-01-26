@@ -137,7 +137,8 @@
                                                                                   id="password_check"><label>새 비밀번호
                                     확인</label></div>
                             </form>
-                            <button class="btn btn-primary btn-lg btn-block" onclick="new SetUserSetting()">저 장</button>
+                            <button class="btn btn-secondary btn-lg btn-block" onclick="SetUserSetting()">저 장</button>
+                            <button class="btn btn-primary btn-lg btn-block" onclick="deleteAccount()">회원 탈퇴</button>
                         </div>
                     </div>
                 </div>
@@ -214,6 +215,28 @@
         r.send(JSON.stringify(formData));
     }
 
+    function deleteAccount() {
+        if (!confirm('회원 탈퇴하시겠습니까?')){
+            return
+        }
+
+        const r = new XMLHttpRequest();
+        r.open('POST', 'http://localhost:5000/setting/delUser', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    alert("정상적으로 계정이 삭제되었습니다.");
+                    Logout();
+                } else {
+                    alert("계정 삭제 실패했습니다.")
+                }
+            }
+        };
+        r.send();
+        
+    }
 </script>
 </body>
 
