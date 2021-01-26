@@ -307,7 +307,7 @@
                         </table>
                     </div>
                     </div>
-                    <div class="pagination-wrapper clearfix">
+                    <div class="pagination-wrapper clearfix" id="under">
                         <ul class="pagination float--right" id="pages">
                         </ul>
                     </div>
@@ -339,7 +339,7 @@
 
                     console.log(r.responseText);
 
-                    if (rObj.targets.length > 0) {
+                    if (rObj.targets != null) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj.targets.length; i++) {
@@ -375,9 +375,11 @@
                             }
                         }
                     } else {
-                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
-                            '                </div></tr></td>');
+                        $('#targets > tbody:last').append('<tr style="background-color:white"><td colspan="10" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center">Info<span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">등록된 대상자가 없습니다.</span></p>' +
+                            '</div></td></tr>');
                     }
 
                     // console.log(rObj.total);
@@ -823,7 +825,7 @@
                 if (r.status === 200) {
                     rObj2 = JSON.parse(r.responseText);
 
-                    if (rObj2.targets.length > 0) {
+                    if (rObj2.targets != null) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj2.targets.length; i++) {
@@ -845,9 +847,11 @@
 
                         }
                     } else {
-                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
-                            '                </div></tr></td>');
+                        $('#targets > tbody:last').append('<tr style="background-color:white"><td colspan="10" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center">Info<span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">해당하는 대상자가 없습니다.</span></p>' +
+                            '</div></td></tr>');
                     }
 
                     search_paging(rObj2.total, page);
@@ -856,7 +860,7 @@
                         $('#tag_menage > tbody').empty();
                         $('#tag_select').empty();
                         for (let j = 0; j < rObj2.tags.length; j++) {
-                            $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
+                            $('#tag_menage > tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
                                 "                        <td>" + rObj2.tags[j].tag_name + "</td>\n" +
                                 "                        <td>" + rObj2.tags[j].created_t + "</td>\n" +
                                 "                        <td>\n" +

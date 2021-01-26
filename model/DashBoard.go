@@ -58,9 +58,14 @@ func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
 			 GROUP BY ready, ing, closed;`
 	rows := conn.QueryRow(query, num)
 	err := rows.Scan(&pi1.Targets, &pi1.Scheduled, &pi1.Ongoing, &pi1.Closed)
-	if err != nil {
+	if err == sql.ErrNoRows { //프로젝트가 존재하지 않는 경우
+		pi1.Targets, pi1.Scheduled, pi1.Ongoing, pi1.Closed = 0, 0, 0 ,0
+		return pi1, nil
+	} else if err != nil {
 		return PInfo1{}, err
 	}
+
+	defer conn.Close()
 
 	return pi1, nil
 }
@@ -177,6 +182,8 @@ func GetDashboardInfo3(conn *sql.DB, num int) ([]PInfo3, error) {
 
 		project = append(project, pi3)
 	}
+
+	defer conn.Close()
 
 	return project, nil
 }

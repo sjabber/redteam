@@ -77,7 +77,7 @@ FROM (SELECT ROW_NUMBER() over (ORDER BY tmp_no) AS row_num,
              download_type,
              created_time
       FROM template_info
-      WHERE user_no = 0 OR user_no = $1
+      WHERE tmp_no > 0 and (user_no = 0 OR user_no = $1)
      ) AS T
 ORDER BY row_num;`
 

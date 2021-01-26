@@ -148,19 +148,20 @@
                             </div>
                         </div>
                         <div class="box-body">
-                            <div class="canvas-wrapper pb-2" style="height: 300px;">
-                                <div class="row p-2">
-                                    <div class="canvas-wrapper" style="margin-left: 80px">
+                            <div class="canvas-wrapper pb-2" style="height: 300px">
+                                <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
+                                         font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
+                                <div class="row p-2" style="text-align: center">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category"></canvas>
                                     </div>
-
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category1"></canvas>
                                     </div>
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category2"></canvas>
                                     </div>
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category3"></canvas>
                                     </div>
                                 </div>
@@ -221,7 +222,7 @@
                                 </tbody>
                             </table>
 <!--                            <div class="canvas-wrapper">-->
-<!--                                <canvas class="pie-chart" id="pie-chart-category"></canvas>-->
+<!--                                <canvas class="pie-chart" id="under2"></canvas>-->
 <!--                            </div>-->
                         </div>
                     </div>
@@ -251,10 +252,10 @@
                             </table>
                         </div>
                     </div>
-<!--                    <div class="pagination-wrapper clearfix" id="under">-->
-<!--                        <ul class="pagination float&#45;&#45;right" id="pages">-->
-<!--                        </ul>-->
-<!--                    </div>-->
+                    <div class="pagination-wrapper clearfix" id="under">
+                        <ul class="pagination float--right" id="pages">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,11 +311,12 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText)
+                    //console.log(r.responseText)
 
                     if (rObj.project_detail != null) {
                         // table 비워주기
                         $('#project_detail > tbody').empty();
+                        $('#NoProject').empty();
 
                         // Note json 형식
                         // 사용템플릿, 메일제목, 메일전송계정, 훈련기간, 훈련대상자 태그, 훈련대상자 수, 발송, 열람, 감염
@@ -333,7 +335,6 @@
                         let r_per = rObj.project_detail.reading;
                         let i_per = rObj.project_detail.infection;
                         let t_per = rObj.project_detail.targets;
-
 
                         if (ctxPieCategory) {
                             ctxPieCategory.width = 229;
@@ -534,8 +535,9 @@
                             );
                         }
 
-                    } else if (rObj.project_list === null) {
-                        document.getElementById('under').style.background = "#f2eff1";
+                    } else if (rObj.project_detail === null) {
+
+                        document.getElementById('under2').style.background = "#f2eff1";
                         $('#project_list').append('<tr style="background-color:white"><td colspan="6" align="center">' +
                             '<div class="alert alert" style="background-color:white">' +
                             '<p align="center"><span style="border: 1px; font-size:15px;' +

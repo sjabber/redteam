@@ -165,10 +165,10 @@ func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 				    T.tag1,
 				    T.tag2,
 				    T.tag3,
-				    T.send_no,
 				    COUNT(ta.target_no),
        				COUNT(ci.target_no),
-       				COUNT(CASE WHEN ci.link_click_status THEN 1 END)
+       				COUNT(CASE WHEN ci.link_click_status THEN 1 END),
+					T.send_no
 			FROM (SELECT ROW_NUMBER() over (ORDER BY p_no) AS row_num,
 					 p_no,
 			         tmp_no,
@@ -204,7 +204,7 @@ func ReadProject(conn *sql.DB, num int) ([]Project, error) {
 	for rows.Next() {
 		p := Project{}
 		err = rows.Scan(&p.FakeNo, &p.PNo, &p.TmlNo, &p.TemplateNo, &p.PName,
-			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.SendNo, &p.Targets, &p.Reading, &p.Infection)
+			&p.StartDate, &p.EndDate, &tags[0], &tags[1], &tags[2], &p.Targets, &p.Reading, &p.Infection, &p.SendNo)
 		if err != nil {
 			return nil, fmt.Errorf("Project scanning error : %v ", err)
 		}

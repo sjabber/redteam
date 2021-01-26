@@ -280,6 +280,8 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 		}
 	}
 
+
+
 	defer conn.Close()
 
 	return nil
@@ -625,7 +627,14 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) error {
 }
 
 func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
+
 	_, err := conn.Exec("DELETE FROM tag_info WHERE tag_no = $1 AND user_no = $2", t.TagNo, num)
+	if err != nil {
+		return fmt.Errorf("Error deleting tag on tag_info ")
+	}
+
+	// 해당 태그를 사용하는 프로젝트가 아무런 태그를 가지지 않게 될 경우 삭제한다.
+	_, err = conn.Exec("DELETE FROM project_info WHERE tag1 = 0 AND tag2 = 0 AND tag3 = 0")
 	if err != nil {
 		return fmt.Errorf("Error deleting tag on tag_info ")
 	}
