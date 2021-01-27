@@ -19,12 +19,11 @@ func ProjectCreate(c *gin.Context) {
 	// 프로젝트 생성
 	p := model.Project{}
 	err := c.ShouldBindJSON(&p)
-	err = p.ProjectCreate(&conn, num)
+	err, code := p.ProjectCreate(&conn, num)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": http.StatusBadRequest,
+		c.JSON(code, gin.H{
+			"status": code,
 			"isOk":   0,
-			"error":  err,
 		})
 		return
 	} else {

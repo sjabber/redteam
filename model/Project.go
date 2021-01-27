@@ -76,58 +76,143 @@ const (
 
 //var Msg string
 
-func (p *Project) ProjectCreate(conn *sql.DB, num int) error {
+func (p *Project) ProjectCreate(conn *sql.DB, num int) (error, int) {
+
+	ErrorCode := 200
 
 	// 프로젝트 생성시 값이 제대로 들어오지 않은 경우 에러를 반환한다.
 	if p.PName == "" || p.TemplateNo == "" || p.StartDate == "" || p.EndDate == "" || len(p.TagArray) < 1 {
-		return fmt.Errorf("Please enter all necessary information. ")
+		ErrorCode = 400
+		return fmt.Errorf("Please enter all necessary information. "), ErrorCode
 	}
 
 	// 프로젝트 이름 형식검사
 	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,30}$", p.PName)
 	if validName != true {
-		return fmt.Errorf("Project Name format is incorrect. ")
+		ErrorCode = 400
+		return fmt.Errorf("Project Name format is incorrect. "), ErrorCode
 	}
 
+	// 태그 중복제거
+	keys := make(map[string]bool)
+	ue := []string{}
+
+	for _, value := range p.TagArray {
+		if _, saveValue := keys[value]; !saveValue { // 중복제거 핵심포인트
+
+			keys[value] = true
+			ue = append(ue, value)
+		}
+	}
+
+	p.TagArray = nil
+	p.TagArray = ue
+
+
+
+	// 태그 개수에 따른 입력
 	switch len(p.TagArray) {
 	case 1:
-		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+		var count int
+
+		// 해당 태그를 가진 훈련대상자가 존재하는지 검증
+		row := conn.QueryRow(`SELECT COUNT(target_no) as targets
+										FROM target_info
+										WHERE tag1 = $1 or tag2 = $1 or tag3 = $1`, p.TagArray[0])
+		err := row.Scan(&count)
+		if err != nil {
+			ErrorCode = 400
+			return fmt.Errorf("%v", err), ErrorCode // 에러 출력
+		}
+
+		if count < 1 {
+			// 해당 태그를 가진 대상자가 존재하지 않는 경우
+			ErrorCode = 500
+			return fmt.Errorf("No target with the corresponding tag exists. "), ErrorCode
+
+		} else {
+			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
  										tag1, tag2, tag3, user_no) 
  										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-			p.TagArray[0], 0, 0, num)
-		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Project Create error. ")
+			_, err = conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+				p.TagArray[0], 0, 0, num)
+			if err != nil {
+				ErrorCode = 500
+				return fmt.Errorf("Project Create error. "), ErrorCode
+			}
 		}
+
 	case 2:
-		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+		var count int
+
+		// 해당 태그를 가진 훈련대상자가 존재하는지 검증
+		row := conn.QueryRow(`SELECT COUNT(target_no) as targets
+										FROM target_info
+										WHERE tag1 = $1 or tag2 = $1 or tag3 = $1
+												or tag1 = $2 or tag2 = $2 or tag3 = $2`, p.TagArray[0], p.TagArray[1])
+		err := row.Scan(&count)
+		if err != nil {
+			ErrorCode = 400
+			return fmt.Errorf("%v", err), ErrorCode // 에러 출력
+		}
+
+		if count < 1 {
+			// 해당 태그를 가진 대상자가 존재하지 않는 경우
+			ErrorCode = 500
+			return fmt.Errorf("No target with the corresponding tag exists. "), ErrorCode
+
+		} else {
+			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
 										tag1, tag2, tag3, user_no) 
 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-			p.TagArray[0], p.TagArray[1], 0, num)
-		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Project Create error. ")
+			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+				p.TagArray[0], p.TagArray[1], 0, num)
+			if err != nil {
+				ErrorCode = 500
+				return fmt.Errorf("Project Create error. "), ErrorCode
+			}
 		}
 	case 3:
-		query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
+		var count int
+
+		// 해당 태그를 가진 훈련대상자가 존재하는지 검증
+		row := conn.QueryRow(`SELECT COUNT(target_no) as targets
+										FROM target_info
+										WHERE tag1 = $1 or tag2 = $1 or tag3 = $1
+												or tag1 = $2 or tag2 = $2 or tag3 = $2
+												or tag1 = $3 or tag2 = $3 or tag3 = $3`,
+												p.TagArray[0], p.TagArray[1], p.TagArray[2])
+		err := row.Scan(&count)
+		if err != nil {
+			ErrorCode = 400
+			return fmt.Errorf("%v", err), ErrorCode // 에러 출력
+		}
+
+		if count < 1 {
+			// 해당 태그를 가진 대상자가 존재하지 않는 경우
+			ErrorCode = 500
+			return fmt.Errorf("No target with the corresponding tag exists. "), ErrorCode
+
+		} else {
+			query := `INSERT INTO project_info (p_name, p_description, p_start_date, p_end_date, tml_no,
 										tag1, tag2, tag3, user_no) 
 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-		_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
-			p.TagArray[0], p.TagArray[1], p.TagArray[2], num)
-		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Project Create error. ")
+			_, err := conn.Exec(query, p.PName, p.PDescription, p.StartDate, p.EndDate, p.TemplateNo,
+				p.TagArray[0], p.TagArray[1], p.TagArray[2], num)
+			if err != nil {
+				ErrorCode = 500
+				return fmt.Errorf("Project Create error. "), ErrorCode
+			}
 		}
+
 	}
 
 	defer conn.Close()
 
-	return nil
+	return nil, ErrorCode
 }
 
 func ReadProject(conn *sql.DB, num int) ([]Project, error) {
