@@ -1006,9 +1006,14 @@
 
     }
 
+    // 비동기 순차처리
     Tg_total();
+    setTimeout(function () {
+        GetProject();
+    },170)
     GetDashBoard();
-    GetProject();
+
+    GetDashBoard();
 </script>
 </body>
 

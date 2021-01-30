@@ -352,7 +352,6 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-
                     console.log(r.responseText);
 
                     if (rObj.targets != null) {
@@ -862,7 +861,6 @@
             let rObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    getTagForTargetInfo();
                     rObj = JSON.parse(r.responseText);
 
                     if (rObj.targets != null) {
@@ -1072,11 +1070,6 @@
         obj.value = phone;
     }
 
-    // CheckLogin();
-    getTagForTargetInfo();
-    GetTarget(1);
-    GetDashBoard();
-
     $("#search_text").keypress(function (e) {
         if (e.keyCode === 13) {
             const division = $('#search_division').val();
@@ -1112,6 +1105,13 @@
             return false;
         }
     });
+
+    // 비동기 순차처리
+    getTagForTargetInfo();
+    setTimeout(function () {
+        GetTarget(1);
+    },170)
+    GetDashBoard();
 
 </script>
 </body>

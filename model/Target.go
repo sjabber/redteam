@@ -385,24 +385,33 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 		sub = ue
 
 		// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
-		for i := 1; i <= 3; i++ {
-			if len(sub) < i {
+		//for i := 1; i <= 3; i++ {
+		//	if len(sub) < i {
+		//		sub = append(sub, "0")
+		//	}
+		//}
+		for j := 0; j < 3; j++ {
+			if len(sub) < j + 1 {
 				sub = append(sub, "0")
+			}
+
+			if sub[j] == "" {
+				sub[j] = "0"
 			}
 		}
 
 	Loop1:
-		for i := 0; i < len(sub); i++ {
-			if isValueIn(sub[i], list) {
+		for k := 0; k < len(sub); k++ {
+			if isValueIn(sub[k], list) {
 			Loop2:
 				for key, val := range Hashmap {
-					if val == sub[i] {
-						sub[i] = strconv.Itoa(key)
+					if val == sub[k] {
+						sub[k] = strconv.Itoa(key)
 						break Loop2
 					}
 				}
 			} else {
-				sub[i] = "0"
+				sub[k] = "0"
 				continue Loop1
 			}
 		}
