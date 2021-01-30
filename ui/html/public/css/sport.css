@@ -2287,3 +2287,59 @@ table {
   ul.pagination {
     max-width: 60%;
     text-align: right; } }
+
+#label1 {
+  border: 1px solid #00a6a0;
+  line-height: 19px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin: 3px 4px 2px 0;
+  box-shadow: none!important;
+  font-weight:bold;
+  color:#00a6a0;
+}
+#label2 {
+  border: 1px solid #ff2f6c;
+  line-height: 19px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin: 3px 4px 2px 0;
+  box-shadow: none!important;
+  font-weight:bold;
+  color:#ff2f6c;
+}
+#label3 {
+  border: 1px solid #4fa4f3;
+  line-height: 19px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin: 3px 4px 2px 0;
+  box-shadow: none!important;
+  font-weight:bold;
+  color:#4fa4f3;
+}
+#label4 {
+  border: 1px solid #3ab02c;
+  line-height: 19px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin: 3px 4px 2px 0;
+  box-shadow: none!important;
+  font-weight:bold;
+  color:#3ab02c;
+}
+#label5 {
+  border: 1px solid #b13deb;
+  line-height: 19px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  margin: 3px 4px 2px 0;
+  box-shadow: none!important;
+  font-weight:bold;
+  color:#b13deb;
+}

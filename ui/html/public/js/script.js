@@ -63,6 +63,34 @@ function CheckLoginInLoginPage() {
     r.send();
 }
 
+function Tg_total() {
+    const r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:5000/setting/getTag', true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    r.withCredentials = true;
+    r.onreadystatechange = function () {
+        let rObj;
+        if (r.readyState === 4) {
+            if (r.status === 200) {
+                rObj = JSON.parse(r.responseText);
+                if (rObj.tags.length > 0) {
+                    for (let j = 0; j < rObj.tags.length; j++) {
+                        tg_total[j] = rObj.tags[j].tag_name;
+                    }
+                }
+            } else if (r.status === 403) {
+                const tokenResult = Refresh();
+                if (tokenResult) {
+                    Tg_total();
+                    console.log("true")
+                }
+            } else {
+                document.location.href = '/';
+            }
+        }
+    };
+    r.send();
+}
 
 function Login() {
     const r = new XMLHttpRequest();

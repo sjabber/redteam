@@ -287,6 +287,8 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
+    var tg_total = [5];
+
     function GetDashBoard_Info1() {
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/getDashBoard_Info1', true);
@@ -497,12 +499,17 @@
 
                         for (let i = 0; i < rObj.project_detail.tag_no.length; i++) {
                             if (rObj.project_detail.tag_no[i] !== "") {
-                                if (i === 0) {
-                                    full_tag += '<label class="badge badge-green">' + rObj.project_detail.tag_no[i] + '</label>'
-                                } else if (i === 1) {
-                                    full_tag += '<label class="badge badge-red">' + rObj.project_detail.tag_no[i] + '</label>'
-                                } else if (i === 2) {
-                                    full_tag += '<label class="badge badge-blue">' + rObj.project_detail.tag_no[i] + '</label>'
+
+                                if (tg_total[0] === rObj.project_detail.tag_no[i]) {
+                                    full_tag += '<label id="label1">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (tg_total[1] === rObj.project_detail.tag_no[i]) {
+                                    full_tag += '<label id="label2">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (tg_total[2] === rObj.project_detail.tag_no[i]) {
+                                    full_tag += '<label id="label3">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (tg_total[3] === rObj.project_detail.tag_no[i]) {
+                                    full_tag += '<label id="label4">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (tg_total[4] === rObj.project_detail.tag_no[i]) {
+                                    full_tag += '<label id="label5">' + rObj.project_detail.tag_no[i] + '</label>'
                                 }
                             }
                         }
@@ -641,7 +648,9 @@
                             if (status_tag === '') {
                                 return
                             } else {
-                                GetDashBoard_Info2(rObj.project_list[0].p_no);
+                                if (i === 1) {
+                                    GetDashBoard_Info2(rObj.project_list[0].p_no);
+                                }
 
                                 $('#project_list > tbody:last').append('<tr onclick="GetDashBoard_Info2('+ rObj.project_list[i].p_no+')">'
                                     + '<td id=' + rObj.project_list[i].p_no
@@ -650,7 +659,7 @@
                                     + '<td>' + '&nbsp;&nbsp;&nbsp;' + rObj.project_list[i].fake_no + '</td>'
                                     + '<td>' + rObj.project_list[i].p_name + '</td><td>' + status_tag + '</td>'
                                     + '<td>' + rObj.project_list[i].end_date + '</td>'
-                                    + '<td><button class="btn btn-secondary">결과보기</button></td></tr>');
+                                    + '<td><button class="btn btn-secondary" onclick="result()">결과보기</button></td></tr>');
                             }
                         }
                     } else if (rObj.project_list === null) {
@@ -673,7 +682,12 @@
         r.send();
     }
 
+    function result() {
+        alert('결과보기 미 개발상태.');
+    }
+
     GetDashBoard();
+    Tg_total();
     GetDashBoard_Info1();
     GetDashBoard_Info3();
 
