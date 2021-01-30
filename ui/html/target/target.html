@@ -618,13 +618,17 @@
                             "                        </tr>");
 
                     }else if(r.status === 400) {
-                        alert('태그명을 입력해 주세요.');
+                        alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다.');
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
                             // GetTarget(page)
                             console.log("true")
                         }
+                    } else if (r.status === 402) {
+                        alert('태그는 최대 5개까지만 등록이 가능합니다.');
+                    } else if (r.status === 500) {
+                        alert('서버에러');
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);

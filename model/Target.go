@@ -646,21 +646,54 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 	return nil
 }
 
-func (t *Tag) CreateTag(conn *sql.DB, num int) error {
+func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
+
+	// 태그 이름 검사 (400 에러)
 	t.TagName = strings.Trim(t.TagName, " ")
 	if len(t.TagName) < 1 {
-		return fmt.Errorf(" Tag Name is empty. ")
+		return fmt.Errorf(" Tag Name is empty. "), 400
 	}
 
-	_, err := conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
+	// 중복여부와 개수제한을 검사한다.
+	rows, err := conn.Query(`SELECT COUNT(tag_no), tag_name
+									FROM tag_info
+									WHERE user_no = $1
+									GROUP BY tag_name;`, num)
 	if err != nil {
-		fmt.Println(err)
-		return fmt.Errorf("Tag create error. ")
+		return fmt.Errorf("%v", err), 500
+	}
+
+	var tag_name1 []string
+	var tag_name2 string
+	var count int
+
+	for rows.Next() {
+		err = rows.Scan(&t.TagNo, &tag_name2)
+		count += t.TagNo
+		tag_name1 = append(tag_name1, tag_name2)
+	}
+
+	// 태그 이름 중복검사 (400 에러)
+	for i := 0; i < len(tag_name1); i++  {
+		if t.TagName == tag_name1[i] {
+			return fmt.Errorf(" That tag name already exists. "), 400
+		}
+	}
+
+	// 태그 개수 검사 (402 에러)
+	if count >= 5{
+		return fmt.Errorf(" The tag is already full. "), 402
+	}
+
+	// 위 조건들 전부 충족할 경우 태그 등록
+	_, err = conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
+	if err != nil {
+		return fmt.Errorf("Tag create error. "), 500
 	}
 
 	defer conn.Close()
 
-	return nil
+	return nil, 200
 }
 
 func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
