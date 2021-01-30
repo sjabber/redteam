@@ -649,13 +649,13 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 
 	// 태그 이름 검사 (400 에러)
-	t.TagName = strings.Trim(t.TagName, " ")
-	if len(t.TagName) < 1 {
-		return fmt.Errorf(" Tag Name is empty. "), 400
+	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TagName)
+	if validName != true {
+		return fmt.Errorf(" Tag Name is not correct. "), 400
 	}
 
-	// 중복여부와 개수제한을 검사한다.
-	rows, err := conn.Query(`SELECT COUNT(tag_no), tag_name
+	// 태그 중복여부와 개수를 검사한다.
+	rows, err := conn.Query(`SELECT tag_name
 									FROM tag_info
 									WHERE user_no = $1
 									GROUP BY tag_name;`, num)
@@ -668,8 +668,8 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 	var count int
 
 	for rows.Next() {
-		err = rows.Scan(&t.TagNo, &tag_name2)
-		count += t.TagNo
+		err = rows.Scan(&tag_name2)
+		count += 1
 		tag_name1 = append(tag_name1, tag_name2)
 	}
 
@@ -681,7 +681,7 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 	}
 
 	// 태그 개수 검사 (402 에러)
-	if count >= 5{
+	if count >= 5 {
 		return fmt.Errorf(" The tag is already full. "), 402
 	}
 

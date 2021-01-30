@@ -618,7 +618,7 @@
                             "                        </tr>");
 
                     }else if(r.status === 400) {
-                        alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다.');
+                        alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)');
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
