@@ -78,6 +78,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 		return fmt.Errorf("The password is incorrect. "), num
 	}
 
+	defer conn.Close()
 	return nil, num
 }
 

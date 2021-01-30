@@ -112,158 +112,158 @@ ctxLineVisit && new Chart(
 );
 
 // Ecommerce Pie Chart
-let ctxPieCategory = document.getElementById("pie-chart-category");
-
-if (ctxPieCategory) {
-  ctxPieCategory.width = 229;
-  ctxPieCategory.height = 229;
-
-  var pieData = {
-    type: "doughnut",
-    data: {
-      datasets: [
-        {
-          data: [10, 20],
-          backgroundColor: ["#046abd", "#9fbee0" ]//, "#FFCC54", "#F6554D"]
-        }
-      ],
-      // labels: ["Sports", "Fashion", "Electronics", "Home & Garden"]
-      // labels: ["Home & Garden"]
-    },
-    options: {
-      title: {
-        display: true,
-        text: '전체 진행현황'
-      },
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 10,
-          bottom: 10
-        }
-      }
-    }
-  };
-
-  new Chart(ctxPieCategory.getContext("2d"), pieData);
-}
-
-//todo 테스트 용
-// Ecommerce Pie Chart
-let ctxPieCategory1 = document.getElementById("pie-chart-category1");
-
-if (ctxPieCategory1) {
-  ctxPieCategory1.width = 229;
-  ctxPieCategory1.height = 229;
-
-  var pieData = {
-    type: "doughnut",
-    data: {
-      datasets: [
-        {
-          data: [30, 23],
-          backgroundColor: ["#e7c502", "#f1deb0"]
-        }
-      ],
-      // labels: ["진행률"]
-    },
-    options: {
-      title: {
-        display: true,
-        text: '메일 열람 수'
-      },
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 10,
-          bottom: 10
-        }
-      }
-    }
-  };
-
-  new Chart(ctxPieCategory1.getContext("2d"), pieData);
-}
-
-// Ecommerce Pie Chart
-let ctxPieCategory2 = document.getElementById("pie-chart-category2");
-
-if (ctxPieCategory2) {
-  ctxPieCategory2.width = 229;
-  ctxPieCategory2.height = 229;
-
-  var pieData = {
-    type: "doughnut",
-    data: {
-      datasets: [
-        {
-          data: [10, 23],
-          backgroundColor: ["#e87107", "#eeb68b"]
-        }
-      ],
-      // labels: ["진행률"]
-    },
-    options: {
-      title: {
-        display: true,
-        text: '악성 파일 실행 수'
-      },
-
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 10,
-          bottom: 10
-        }
-      }
-    }
-  };
-
-  new Chart(ctxPieCategory2.getContext("2d"), pieData);
-}
-// Ecommerce Pie Chart
-let ctxPieCategory3 = document.getElementById("pie-chart-category3");
-
-if (ctxPieCategory3) {
-  ctxPieCategory3.width = 229;
-  ctxPieCategory3.height = 229;
-
-  var pieData = {
-    type: "doughnut",
-    data: {
-      datasets: [
-        {
-          data: [30, 23],
-          backgroundColor: ["#ef1334","#f87a74"]
-        }
-      ],
-      labels: ["진행"]
-    },
-    options: {
-      title: {
-        display: true,
-        text: '개선률'
-      },
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 10,
-          bottom: 10
-        }
-      }
-    }
-  };
-
-  new Chart(ctxPieCategory3.getContext("2d"), pieData);
-}
+// let ctxPieCategory = document.getElementById("pie-chart-category");
+//
+// if (ctxPieCategory) {
+//   ctxPieCategory.width = 229;
+//   ctxPieCategory.height = 229;
+//
+//   var pieData = {
+//     type: "doughnut",
+//     data: {
+//       datasets: [
+//         {
+//           data: [0, 0],
+//           backgroundColor: ["#9fbee0", "#046abd"]//, "#FFCC54", "#F6554D"]
+//         }
+//       ],
+//       //labels: ["Sports", "Fashion", "Electronics", "Home & Garden"],
+//       labels: ["미 전송", "전송"]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: '메일 전송 현황'
+//       },
+//       maintainAspectRatio: false,
+//       layout: {
+//         padding: {
+//           left: 0,
+//           right: 0,
+//           top: 10,
+//           bottom: 10
+//         }
+//       }
+//     }
+//   };
+//
+//   new Chart(ctxPieCategory.getContext("2d"), pieData);
+// }
+//
+// //todo 테스트 용
+// // Ecommerce Pie Chart
+// let ctxPieCategory1 = document.getElementById("pie-chart-category1");
+//
+// if (ctxPieCategory1) {
+//   ctxPieCategory1.width = 229;
+//   ctxPieCategory1.height = 229;
+//
+//   var pieData = {
+//     type: "doughnut",
+//     data: {
+//       datasets: [
+//         {
+//           data: [0, 0],
+//           backgroundColor: ["#f1deb0", "#e7c502"]
+//         }
+//       ],
+//       labels: ["미 열람", "열람"]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: '열람 현황'
+//       },
+//       maintainAspectRatio: false,
+//       layout: {
+//         padding: {
+//           left: 0,
+//           right: 0,
+//           top: 10,
+//           bottom: 10
+//         }
+//       }
+//     }
+//   };
+//
+//   new Chart(ctxPieCategory1.getContext("2d"), pieData);
+// }
+//
+// // Ecommerce Pie Chart
+// let ctxPieCategory2 = document.getElementById("pie-chart-category2");
+//
+// if (ctxPieCategory2) {
+//   ctxPieCategory2.width = 229;
+//   ctxPieCategory2.height = 229;
+//
+//   var pieData = {
+//     type: "doughnut",
+//     data: {
+//       datasets: [
+//         {
+//           data: [0, 0],
+//           backgroundColor: ["#eeb68b", "#e87107"]
+//         }
+//       ],
+//       labels: ["미 접속", "접속"]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: '접속 현황'
+//       },
+//
+//       maintainAspectRatio: false,
+//       layout: {
+//         padding: {
+//           left: 0,
+//           right: 0,
+//           top: 10,
+//           bottom: 10
+//         }
+//       }
+//     }
+//   };
+//
+//   new Chart(ctxPieCategory2.getContext("2d"), pieData);
+// }
+// // Ecommerce Pie Chart
+// let ctxPieCategory3 = document.getElementById("pie-chart-category3");
+//
+// if (ctxPieCategory3) {
+//   ctxPieCategory3.width = 229;
+//   ctxPieCategory3.height = 229;
+//
+//   var pieData = {
+//     type: "doughnut",
+//     data: {
+//       datasets: [
+//         {
+//           data: [0, 0],
+//           backgroundColor: ["#f87a74", "#ef1334"]
+//         }
+//       ],
+//       labels: ["미 감염", "감염"]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: '감염 현황'
+//       },
+//       maintainAspectRatio: false,
+//       layout: {
+//         padding: {
+//           left: 0,
+//           right: 0,
+//           top: 10,
+//           bottom: 10
+//         }
+//       }
+//     }
+//   };
+//
+//   new Chart(ctxPieCategory3.getContext("2d"), pieData);
+// }
 
 
 // Iot Line Chart

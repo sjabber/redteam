@@ -108,6 +108,21 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 		return errcode, fmt.Errorf("Phone number format is incorrect. ")
 	}
 
+	// 태그 중복제거
+	keys := make(map[string]bool)
+	ue := []string{}
+
+	for _, value := range t.TagArray {
+		if _, saveValue := keys[value]; !saveValue { // 중복제거 핵심포인트
+
+			keys[value] = true
+			ue = append(ue, value)
+		}
+	}
+
+	t.TagArray = nil
+	t.TagArray = ue
+
 	// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
 	for i := 1; i <= 3; i++ {
 		if len(t.TagArray) < i {
@@ -179,6 +194,8 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 		fmt.Println(err)
 		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
 	}
+
+	defer conn.Close()
 
 	var targets []Target
 	tg := Target{}
@@ -278,6 +295,10 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 		}
 	}
 
+
+
+	defer conn.Close()
+
 	return nil
 }
 
@@ -339,14 +360,36 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 			t.TargetPhone = ""
 		}
 
-		var sub [3]string
+		var sub []string
 
 		// 여기부터는 선택정보.
 		t.TargetOrganize = f.GetCellValue("Sheet1", "D"+str)
 		t.TargetPosition = f.GetCellValue("Sheet1", "E"+str)
-		sub[0] = f.GetCellValue("Sheet1", "F"+str)
-		sub[1] = f.GetCellValue("sheet1", "G"+str)
-		sub[2] = f.GetCellValue("sheet1", "H"+str)
+		sub = append(sub, f.GetCellValue("Sheet1", "F"+str))
+		sub = append(sub, f.GetCellValue("Sheet1", "G"+str))
+		sub = append(sub, f.GetCellValue("Sheet1", "H"+str))
+
+		// 태그 중복제거
+		keys := make(map[string]bool)
+		var ue []string
+
+		for _, value := range sub {
+			if _, saveValue := keys[value]; !saveValue { // 중복제거 핵심포인트
+
+				keys[value] = true
+				ue = append(ue, value)
+			}
+		}
+
+		sub = nil
+		sub = ue
+
+		// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
+		for i := 1; i <= 3; i++ {
+			if len(sub) < i {
+				sub = append(sub, "0")
+			}
+		}
 
 	Loop1:
 		for i := 0; i < len(sub); i++ {
@@ -383,6 +426,8 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	defer conn.Close()
 
 	//bulkFile.Close()
 
@@ -596,6 +641,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		}
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
@@ -611,14 +658,25 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) error {
 		return fmt.Errorf("Tag create error. ")
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
 func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
+
 	_, err := conn.Exec("DELETE FROM tag_info WHERE tag_no = $1 AND user_no = $2", t.TagNo, num)
 	if err != nil {
 		return fmt.Errorf("Error deleting tag on tag_info ")
 	}
+
+	// 해당 태그를 사용하는 프로젝트가 아무런 태그를 가지지 않게 될 경우 삭제한다.
+	_, err = conn.Exec("DELETE FROM project_info WHERE tag1 = 0 AND tag2 = 0 AND tag3 = 0")
+	if err != nil {
+		return fmt.Errorf("Error deleting tag on tag_info ")
+	}
+
+	defer conn.Close()
 
 	return nil
 }
@@ -657,6 +715,8 @@ func GetTag(conn *sql.DB, num int) []Tag {
 	//for key, val := range Hashmap {
 	//	fmt.Println(key, val)
 	//}
+
+	defer conn.Close()
 
 	return tag
 }
@@ -780,6 +840,8 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 	_ = pageCount.Scan(&total) // 훈련 대상자들의 전체 수를 pages 에 바인딩.
 
 	pages = (total / 20) + 1 // 전체훈련 대상자들을 토대로 전체 페이지수를 계산한다.
+
+	defer conn.Close()
 
 	// 각각 표시할 대상 20개, 대상의 총 갯수, 총 페이지 수, 에러를 반환한다.
 	return targets, total, pages, nil

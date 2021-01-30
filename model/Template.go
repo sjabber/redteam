@@ -77,7 +77,7 @@ FROM (SELECT ROW_NUMBER() over (ORDER BY tmp_no) AS row_num,
              download_type,
              created_time
       FROM template_info
-      WHERE user_no = 0 OR user_no = $1
+      WHERE tmp_no > 0 and (user_no = 0 OR user_no = $1)
      ) AS T
 ORDER BY row_num;`
 
@@ -139,6 +139,8 @@ ORDER BY row_num;`
 		// 읽어들인 값들을 전부 template 배열에 넣은 후에 반환하여 보여준다.
 	}
 
+	defer conn.Close()
+
 	return templates, nil
 }
 
@@ -182,6 +184,8 @@ func (t *Template) Update(conn *sql.DB, num int) error {
 		return nil
 	}
 
+	defer conn.Close()
+
 	return nil
 }
 
@@ -208,6 +212,7 @@ func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {
 	}
 
 	//Detail = append(Detail, tmp)
+	defer conn.Close()
 
 	return tmp, nil
 }
@@ -225,6 +230,8 @@ func (t *Template) Delete(conn *sql.DB, userNo int) error {
 		fmt.Printf("Error deleting template: (%v)", err)
 		return fmt.Errorf("Error deleting template ")
 	}
+
+	defer conn.Close()
 
 	return nil
 }
