@@ -13,7 +13,8 @@ type PInfo1 struct {
 }
 
 type PInfo2 struct {
-	TmpNo       int      `json:"tmp_no"`
+	PName		string	 `json:"p_name"`
+	TmpName     string   `json:"tmp_name"`
 	MailTitle   string   `json:"mail_title"`
 	SenderEmail string   `json:"sender_email"`
 	StartDate   string   `json:"start_date"`
@@ -22,6 +23,7 @@ type PInfo2 struct {
 	Targets     string   `json:"targets"`
 	SendNo      string   `json:"send_no"`
 	Reading     string   `json:"reading"`
+	Connect     string   `json:"connect"`
 	Infection   string   `json:"infection"`
 }
 
@@ -41,20 +43,17 @@ func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
 
 	pi1 := PInfo1{}
 
-	query = `SELECT count(DISTINCT target_no), ready, ing, closed
-			 FROM target_info as ti
-         				LEFT JOIN project_info pi on pi.user_no = ti.user_no
-         				LEFT JOIN (SELECT ready, ing, closed, user_no
-                    				FROM (SELECT COUNT(case when p_status = 0 then 1 end) as ready,
-                                 				COUNT(case when p_status = 1 then 1 end) as ing,
-                                 				COUNT(case when p_status = 2 then 1 end) as closed,
-                                 				user_no
-                          				  FROM project_info
-                    					  WHERE user_no = $1
-                          				  GROUP BY user_no) as pi1) pi2 on pi2.user_no = ti.user_no
-			 WHERE ti.user_no = $1 and ti.tag1 > 0 and (ti.tag1 = pi.tag1 or ti.tag1 = pi.tag2 or ti.tag1 = pi.tag3)
-   				or ti.tag2 > 0 and (ti.tag2 = pi.tag1 or ti.tag2 = pi.tag2 or ti.tag2 = pi.tag3)
-   				or ti.tag3 > 0 and (ti.tag3 = pi.tag1 or ti.tag3 = pi.tag2 or ti.tag3 = pi.tag3)
+	query = `SELECT count(distinct pti.target_no), ready, ing, closed
+			 FROM project_target_info as pti
+					  LEFT JOIN (SELECT ready, ing, closed, user_no
+								 FROM (SELECT COUNT(case when p_status = 0 then 1 end) as ready,
+											 COUNT(case when p_status = 1 then 1 end) as ing,
+											 COUNT(case when p_status = 2 then 1 end) as closed,
+											 user_no
+							 		   FROM project_info
+									   WHERE user_no = $1
+									   GROUP BY user_no) as pi1) pi2 on pi2.user_no = pti.user_no
+			 WHERE pti.user_no = $1
 			 GROUP BY ready, ing, closed;`
 	rows := conn.QueryRow(query, num)
 	err := rows.Scan(&pi1.Targets, &pi1.Scheduled, &pi1.Ongoing, &pi1.Closed)
@@ -99,45 +98,45 @@ func GetDashboardInfo2(conn *sql.DB, num int, pnum int) (PInfo2, error) {
 
 	var tags [3]int
 
-	query = `SELECT tml_no,
-					 mail_title,
-       			 	sender_name,
-       			 	to_char(p_start_date, 'YYYY-MM-DD'),
-       			 	to_char(p_end_date, 'YYYY-MM-DD'),
-       			 	T.tag1,
-       			 	T.tag2,
-       			 	T.tag3,
-       			 	COUNT(ta.target_no) as Targets,
-       			 	T.send_no,
-       			 	count(ci.target_no) as Read,
-       			 	COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Infection
-			 	FROM (SELECT p_no,
-             			 	 tml_no,
-             			 	 mail_title,
-             			 	 sender_name,
-             			 	 p_start_date,
-            			 	 p_end_date,
-             			 	 tag1,
-             			 	 tag2,
-            			 	 tag3,
-             			 	 send_no,
-             			 	 p.user_no
-      			 	FROM project_info as p
-               			 	LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
-      			 	WHERE p.user_no = $1 AND p.p_no = $2) AS T
-         			 	LEFT JOIN target_info ta on T.user_no = ta.user_no
-         			 	LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
-			 	WHERE T.tag1 > 0 and (T.tag1 = ta.tag1 or T.tag1 = ta.tag2 or T.tag1 = ta.tag3)
-						 	or T.tag2 > 0 and (T.tag2 = ta.tag1 or T.tag2 = ta.tag2 or T.tag2 = ta.tag3)
-						 	or T.tag3 > 0 and (T.tag3 = ta.tag1 or T.tag3 = ta.tag2 or T.tag3 = ta.tag3)
-      			 	GROUP BY tml_no, mail_title, sender_name, p_start_date, p_end_date, T.tag1, T.tag2, T.tag3, T.send_no
-      			 	ORDER BY tml_no;`
+	query = `SELECT T.tmp_name,
+				    mail_title,
+				    sender_name,
+       			    p_name,
+				    to_char(p_start_date, 'YYYY-MM-DD'),
+				    to_char(p_end_date, 'YYYY-MM-DD'),
+				    T.tag1,
+				    T.tag2,
+				    T.tag3,
+				    COUNT(distinct pti.target_no) as Targets,
+				    T.send_no,
+				    COUNT(distinct ci.target_no) as Read,
+				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as connect,
+				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Infection
+			FROM (SELECT p_no,
+			  			 p_name,
+						 tmp_name,
+						 mail_title,
+						 sender_name,
+						 p_start_date,
+						 p_end_date,
+						 tag1,
+						 tag2,
+						 tag3,
+						 send_no,
+						 p.user_no
+				  FROM project_info as p
+						   LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
+		  WHERE p.user_no = $1  AND p.p_no = $2) AS T
+			 LEFT JOIN project_target_info pti on T.user_no = pti.user_no AND T.p_no = pti.p_no
+			 LEFT JOIN target_info ta on T.user_no = ta.user_no
+			 LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
+		  GROUP BY T.tmp_name, mail_title, sender_name, p_name, p_start_date, p_end_date, T.tag1, T.tag2, T.tag3, T.send_no;`
 
 	row := conn.QueryRow(query, num, pnum)
 
 	// 프로젝트 상세에 필요한 정보들을 바인딩
-	err = row.Scan(&pi2.TmpNo, &pi2.MailTitle, &pi2.SenderEmail, &pi2.StartDate, &pi2.EndDate,
-		&tags[0], &tags[1], &tags[2], &pi2.Targets, &pi2.SendNo, &pi2.Reading, &pi2.Infection)
+	err = row.Scan(&pi2.TmpName, &pi2.MailTitle, &pi2.SenderEmail, &pi2.PName, &pi2.StartDate, &pi2.EndDate,
+		&tags[0], &tags[1], &tags[2], &pi2.Targets, &pi2.SendNo, &pi2.Reading, &pi2.Connect, &pi2.Infection)
 	if err != nil {
 		return PInfo2{}, fmt.Errorf("%v", err)
 	}

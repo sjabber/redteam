@@ -151,15 +151,16 @@
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <div class="box">
+                    <div class="box" style="height: 460px">
                         <div class="box-header">
                             <h3 class="chip--floating">진행중인 프로젝트 현황</h3>
                         </div>
                         <div class="m-3">
-                            <div class="form-select pgn-select"><select name="">
-                                <option value="1" selected>첫번째테스트</option>
-                                <option value="2">두번째테스트</option>
-                            </select>
+                            <div class="form-select pgn-select">
+                                <select name="selector">
+                                    <option value="1" selected>원 그래프 차트보기</option>
+<!--                                    <option value="2">막대그래프 차트보기</option>-->
+                                </select>
                             </div>
                         </div>
                         <div class="box-body">
@@ -221,11 +222,15 @@
                                     <td class="font-weight-bold"></td>
                                 </tr>
                                 <tr>
-                                    <td width="200">발송</td>
+                                    <td width="200">전송</td>
                                     <td class="font-weight-bold"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">열람</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">접속</td>
                                     <td class="font-weight-bold"></td>
                                 </tr>
                                 <tr>
@@ -237,7 +242,7 @@
                                 </tbody>
                             </table>
 <!--                            <div class="canvas-wrapper">-->
-<!--                                <canvas class="pie-chart" id="under2"></canvas>-->
+<!--                                <canvas class="pie-chart" id="under"></canvas>-->
 <!--                            </div>-->
                         </div>
                     </div>
@@ -266,10 +271,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="pagination-wrapper clearfix" id="under">
-                        <ul class="pagination float--right" id="pages">
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -331,6 +332,7 @@
                     if (rObj.project_detail != null) {
                         // table 비워주기
                         $('#project_detail > tbody').empty();
+                        $('#title').empty();
                         $('#NoProject').empty();
 
                         // Note json 형식
@@ -468,7 +470,7 @@
                                     datasets: [
                                         {
                                             data: [t_per - i_per, i_per],
-                                            backgroundColor: ["#f5a39f", "#ef1334"]
+                                            backgroundColor: ["#f5c4c1", "#ef1334"]
                                         }
                                     ],
                                     labels: ["미 감염", "감염"]
@@ -508,10 +510,33 @@
                         if (full_tag === '') {
                             return
                         } else {
+
+                            $('#title').append(
+                                '<td style="text-align: center; font-size: x-large; font-weight: normal;' +
+                                ' width: 100%; font-style: italic">'+ rObj.project_detail.p_name +'</td>'
+                            )
+
+                            // 전송비율
+                            let send_percentage = (rObj.project_detail.send_no / rObj.project_detail.targets) * 100;
+                            send_percentage = parseInt(send_percentage);
+
+                            // 열람비율
+                            let reading_percentage = (rObj.project_detail.reading / rObj.project_detail.targets) * 100;
+                            reading_percentage = parseInt(reading_percentage);
+
+                            // 접속비율
+                            let connect_percentage = (rObj.project_detail.connect / rObj.project_detail.targets) * 100;
+                            connect_percentage = parseInt(connect_percentage);
+
+                            // 감염비율
+                            let infection_percentage = (rObj.project_detail.infection / rObj.project_detail.targets) * 100;
+                            infection_percentage = parseInt(infection_percentage);
+
+
                             $('#project_detail > tbody:last').append(
                                 '<tr>' +
                                 '<td width="200">사용 템플릿</td>' +
-                                '<td class="font-weight-bold">' + rObj.project_detail.tmp_no + '</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.tmp_name + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                 '<td width="200">메일 제목</td>' +
@@ -536,23 +561,30 @@
                                 '<td class="font-weight-bold">' + rObj.project_detail.targets + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
-                                '<td width="200">발송</td>' +
-                                '<td class="font-weight-bold">'  + rObj.project_detail.send_no + '</td>' +
+                                '<td width="200">전송</td>' +
+                                '<td class="font-weight-bold">'  + rObj.project_detail.send_no +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + send_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                 '<td width="200">열람</td>' +
-                                '<td class="font-weight-bold">' + rObj.project_detail.reading + '</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.reading +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + reading_percentage + "%)" + '</td>' +
+                                '</tr>' +
+                                '<td width="200">접속</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.connect +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" +'</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                 '<td width="200">감염</td>' +
-                                '<td class="font-weight-bold">' + rObj.project_detail.infection + '</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.infection +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + infection_percentage + "%)" +'</td>' +
                                 '</tr>'
                             );
                         }
 
                     } else if (rObj.project_detail === null) {
 
-                        document.getElementById('under2').style.background = "#f2eff1";
+                        //document.getElementById('under').style.background = "#f2eff1";
                         $('#project_list').append('<tr style="background-color:white"><td colspan="6" align="center">' +
                             '<div class="alert alert" style="background-color:white">' +
                             '<p align="center"><span style="border: 1px; font-size:15px;' +
@@ -601,6 +633,8 @@
                                     status_tag += '<label class="badge badge-red">' + '진행중' + '</label>'
                                 } else if (rObj.project_list[i].p_status === "2") {
                                     status_tag += '<label class="badge badge-blue">' + '종료' + '</label>'
+                                } else if (rObj.project_list[i].p_status === "3") {
+                                    status_tag += '<label class="badge badge-info">' + '오류' + '</label>'
                                 }
                             }
 
@@ -620,7 +654,6 @@
                             }
                         }
                     } else if (rObj.project_list === null) {
-                        document.getElementById('under').style.background = "#f2eff1";
                         $('#project_list').append('<tr style="background-color:white"><td colspan="6" align="center">' +
                             '<div class="alert alert" style="background-color:white">' +
                             '<p align="center"><span style="border: 1px; font-size:15px;' +

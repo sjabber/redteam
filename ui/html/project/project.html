@@ -10,9 +10,13 @@
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
     <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
     <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <link rel="stylesheet" href="/css/datepicker.min.css">
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/datepicker.js"></script>
+    <script src="/js/datepicker.ko.js"></script>
 </head>
 <body>
 <!--네이게이터-->
@@ -216,6 +220,116 @@
                         </div>
                     </div>
 
+<!--                    <div class="pgn-modal" id="project_regist">-->
+<!--                        <div class="pgn-modal-wrapper">-->
+<!--                            <div class="modal__header">-->
+<!--                                <h5>프로젝트 등록</h5>-->
+<!--                                <div class="toolbox">-->
+<!--                                    <button class="btn-modal-close" onclick="CloseProjectCreateModal()"><i-->
+<!--                                            class="la la-times"></i></button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="modal__body">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>프로젝트 이름</label>-->
+<!--                                    <input type="text" id="p_name2">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <textarea type="text" id="p_description2" placeholder="프로젝트 설명" cols="50"></textarea>-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="start_date">프로젝트 시작일</label>-->
+<!--                                    <input id="start_date2" type="date" value="xxx" min="yyy" max="zzz">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="end_date">프로젝트 종료일</label>-->
+<!--                                    <input id="end_date2" type="date" value="xxx" min="yyy" max="zzz">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="template">템플릿 선택</label>-->
+<!--                                    <select id="template2"></select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="modal__footer">-->
+<!--                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP-->
+<!--                                    연결 테스트-->
+<!--                                </button>-->
+<!--                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>-->
+<!--                                <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">-->
+<!--                                    등록-->
+<!--                                </button>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="pgn-modal" id="project_modify">-->
+<!--                        <div class="pgn-modal-wrapper">-->
+<!--                            <div class="modal__header">-->
+<!--                                <h5>프로젝트 수정</h5>-->
+<!--                                <div class="toolbox">-->
+<!--                                    <button class="btn-modal-close" onclick="CloseProjectModifyModal()"><i-->
+<!--                                            class="la la-times"></i></button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="modal__body">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>프로젝트 이름</label>-->
+<!--                                    <input type="text" id="p_name1">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <textarea type="text" id="p_description1" placeholder="프로젝트 설명"-->
+<!--                                              cols="50"></textarea>-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="start_date">프로젝트 시작일</label>-->
+<!--                                    <input id="start_date1" type="date" value="xxx" min="yyy" max="zzz">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="end_date">프로젝트 종료일</label>-->
+<!--                                    <input id="end_date1" type="date" value="xxx" min="yyy" max="zzz">-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="template">템플릿 선택</label>-->
+<!--                                    <select id="template1"></select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag1_1">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag1_2">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                                <div class="form-group w-50">-->
+<!--                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag1_3">-->
+<!--                                </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="modal__footer">-->
+<!--                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP-->
+<!--                                    연결 테스트-->
+<!--                                </button>-->
+<!--                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>-->
+<!--                                <button class="btn btn-primary pull-right" id="project_reg1" onclick="CreateProject()">-->
+<!--                                    등록-->
+<!--                                </button>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <div class="pgn-modal" id="project_regist">
                         <div class="pgn-modal-wrapper">
@@ -235,13 +349,115 @@
                                     <textarea type="text" id="p_description" placeholder="프로젝트 설명" cols="50"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="start_date">프로젝트 시작일</label>
-                                    <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">
+                                    <label for="start_dates">프로젝트 시작일</label>
+                                    <input type="text" id="start_dates" name="start_dates" readonly size="12">
+<!--                                    <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">-->
                                 </div>
                                 <div class="form-group">
-                                    <label for="end_date">프로젝트 종료일</label>
-                                    <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">
+                                    <label for="end_dates">프로젝트 종료일</label>
+                                    <input type="text" id="end_dates" name="end_dates" readonly size="12">
+<!--                                    <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">-->
                                 </div>
+                                <script>
+                                    $('#end_dates').datepicker({
+                                        minDate: new Date(),
+                                    })
+
+                                    datePickerSet($("#start_dates"), $("#end_dates"), true);
+
+                                    function datePickerSet(sDate, eDate, flag) {
+
+                                        //시작 ~ 종료 2개 짜리 달력 datepicker
+                                        if (!isValidStr(sDate) && !isValidStr(eDate) && sDate.length > 0 && eDate.length > 0) {
+                                            var sDay = sDate.val();
+                                            var eDay = eDate.val();
+
+                                            if (flag && !isValidStr(sDay) && !isValidStr(eDay)) { //처음 입력 날짜 설정, update...
+                                                var sdp = sDate.datepicker().data("datepicker");
+                                                sdp.selectDate(new Date(sDay.replace(/-/g, "/")));  //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+
+                                                var edp = eDate.datepicker().data("datepicker");
+                                                edp.selectDate(new Date(eDay.replace(/-/g, "/")));  //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+                                            }
+
+                                            if (!isValidStr(eDay)) {
+                                                //isValidStr -> true, 값이 없는것 -> false 처리됨
+                                                //isValidStr -> false, 값이 있음 -> true 처리됨
+
+                                                eDay = new Date(eDay);
+
+                                                // 종료일을 먼저 고른경우 시작일은 종료일 하루 전까지만 가능하도록
+                                                eDay.setDate(eDay.getDate() - 1);
+                                                let dd = eDay.getDate();
+
+                                                let mm = eDay.getMonth();
+                                                mm += 1;
+
+                                                let yy = eDay.getFullYear();
+
+
+                                                const FormattedDate = yy + '-' + mm + '-' + dd;
+                                                console.log(FormattedDate);
+
+                                                sDate.datepicker({
+                                                    maxDate: new Date(FormattedDate)
+                                                    //maxDate: new Date(eDay.replace(/-/g, "/")),
+                                                });
+                                            }
+                                            //시작일자 세팅하기 날짜가 없는경우엔 제한을 걸지 않음
+                                            sDate.datepicker({
+                                                language: 'ko',
+                                                autoClose: true,
+                                                minDate: new Date(),
+                                                onSelect: function () {
+                                                    datePickerSet(sDate, eDate);
+                                                }
+                                            });
+
+
+                                            if (!isValidStr(sDay)) {
+                                                //isValidStr -> true, 값이 없는것 -> false 처리됨
+                                                //isValidStr -> false, 값이 있음 -> true 처리됨
+
+                                                sDay = new Date(sDay);
+
+                                                // 시작일을 먼저 고른경우 종료일은 시작일 하루 뒤뒤부터 가능하도록
+                                                sDay.setDate(sDay.getDate() + 1);
+                                                let dd = sDay.getDate();
+
+                                                let mm = sDay.getMonth();
+                                                mm += 1;
+
+                                                let yy = sDay.getFullYear();
+
+
+                                                const FormattedDate2 = yy + '-' + mm + '-' + dd;
+                                                console.log(FormattedDate2);
+
+                                                eDate.datepicker({
+                                                    minDate: new Date(FormattedDate2)
+                                                    // minDate: new Date(sDay.replace(/-/g, "/"))
+                                                });
+                                            }
+                                            //종료일자 세팅하기 날짜가 없는경우엔 제한을 걸지 않음
+                                            eDate.datepicker({
+                                                language: 'ko',
+                                                autoClose: true,
+                                                onSelect: function () {
+                                                    datePickerSet(sDate, eDate);
+                                                }
+                                            });
+                                        }
+
+                                        function isValidStr(str) {
+                                            if (str === null || str === undefined || str === "")
+                                                return true;
+                                            else
+                                                return false;
+                                        }
+
+                                    }
+                                </script>
                                 <div class="form-group">
                                     <label for="template">템플릿 선택</label>
                                     <select id="template"></select>
@@ -263,122 +479,12 @@
                                 <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP
                                     연결 테스트
                                 </button>
+                                <div class="modal__footer">
                                 <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
                                 <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">
                                     등록
                                 </button>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pgn-modal" id="project_modify">
-                        <div class="pgn-modal-wrapper">
-                            <div class="modal__header">
-                                <h5>프로젝트 수정</h5>
-                                <div class="toolbox">
-                                    <button class="btn-modal-close" onclick="CloseProjectModifyModal()"><i
-                                            class="la la-times"></i></button>
                                 </div>
-                            </div>
-                            <div class="modal__body">
-                                <div class="form-group">
-                                    <label>프로젝트 이름</label>
-                                    <input type="text" id="p_name1">
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" id="p_description1" placeholder="프로젝트 설명"
-                                              cols="50"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="start_date">프로젝트 시작일</label>
-                                    <input id="start_date1" type="date" value="xxx" min="yyy" max="zzz">
-                                </div>
-                                <div class="form-group">
-                                    <label for="end_date">프로젝트 종료일</label>
-                                    <input id="end_date1" type="date" value="xxx" min="yyy" max="zzz">
-                                </div>
-                                <div class="form-group">
-                                    <label for="template">템플릿 선택</label>
-                                    <select id="template1"></select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag1_1">
-                                </select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag1_2">
-                                </select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag1_3">
-                                </select>
-                                </div>
-                            </div>
-                            <div class="modal__footer">
-                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP
-                                    연결 테스트
-                                </button>
-                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
-                                <button class="btn btn-primary pull-right" id="project_reg1" onclick="CreateProject()">
-                                    등록
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pgn-modal" id="project_regist">
-                        <div class="pgn-modal-wrapper">
-                            <div class="modal__header">
-                                <h5>프로젝트 등록</h5>
-                                <div class="toolbox">
-                                    <button class="btn-modal-close" onclick="CloseProjectCreateModal()"><i
-                                            class="la la-times"></i></button>
-                                </div>
-                            </div>
-                            <div class="modal__body">
-                                <div class="form-group">
-                                    <label>프로젝트 이름</label>
-                                    <input type="text" id="p_name">
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" id="p_description" placeholder="프로젝트 설명" cols="50"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="start_date">프로젝트 시작일</label>
-                                    <input id="start_date" type="date" value="xxx" min="yyy" max="zzz">
-                                </div>
-                                <div class="form-group">
-                                    <label for="end_date">프로젝트 종료일</label>
-                                    <input id="end_date" type="date" value="xxx" min="yyy" max="zzz">
-                                </div>
-                                <div class="form-group">
-                                    <label for="template">템플릿 선택</label>
-                                    <select id="template"></select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_1">훈련 대상자 선택(태그) 1(최대 3)</label><select id="tag_1">
-                                </select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_2">훈련 대상자 선택(태그) 2(최대 3)</label><select id="tag_2">
-                                </select>
-                                </div>
-                                <div class="form-group w-50">
-                                    <label for="tag_3">훈련 대상자 선택(태그) 3(최대 3)</label><select id="tag_3">
-                                </select>
-                                </div>
-                            </div>
-                            <div class="modal__footer">
-                                <button class="btn btn-secondary btn-lg btn-block w-50" onclick="SmtpSimpleTest()">SMTP
-                                    연결 테스트
-                                </button>
-                                <button class="btn btn-ghost" onclick="CloseProjectCreateModal()">취소</button>
-                                <button class="btn btn-primary pull-right" id="project_reg" onclick="CreateProject()">
-                                    등록
-                                </button>
-
                             </div>
                         </div>
                     </div>
@@ -399,9 +505,10 @@
                                     <th>진행상태</th>
                                     <th>템플릿명</th>
                                     <th>대상자 수</th>
-                                    <th>열람 현황(%)</th>
-                                    <th>감염 현황(%)</th>
                                     <th>전송 현황(%)</th>
+                                    <th>열람 현황(%)</th>
+                                    <th>접속 현황(%)</th>
+                                    <th>감염 현황(%)</th>
                                     <th>시작일</th>
                                     <th>종료일</th>
                                     <!--                  <th><i class="la la-pencil-square"></i></th>-->
@@ -428,6 +535,7 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
+
 
     function GetTag() {
         const r = new XMLHttpRequest();
@@ -529,9 +637,12 @@
                             // 태그 분리작업
                             let full_tag = ''
                             let status = ''
-                            let reading_percentage;
-                            let infection_percentage;
+
                             let send_percentage;
+                            let reading_percentage;
+                            let connect_percentage;
+                            let infection_percentage;
+
                             for (let j = 0; j < rObj.project_list[i].tag_no.length; j++) {
                                 // console.log(rObj.project_list
                                 if (rObj.project_list[i].tag_no[j] !== "") {
@@ -567,34 +678,49 @@
                             //           'onclick="ProjectEnd(' + rObj.project_list[i].p_no + ')">프로젝트 종료하기</button>'
                             // }
 
-                            if (today < rObj.project_list[i].start_date) {
+                            // 날짜와 프로젝트 상태를 같이 비교해 현재 프로젝트의 상태를 보여준다.
+                            //today < rObj.project_list[i].start_date &&
+                            if (rObj.project_list[i].p_status === "0") {
                                 rObj.project_list[i].p_status = "예약";
                                 status += '<button class="btn" style="color: white; padding: 4px 7px; background: #FFD764;' +
                                     ' border: 2px solid transparent; border-radius: 3px;" ' +
                                     'onclick="ProjectStart(' + rObj.project_list[i].p_no + ')">'
                                     + rObj.project_list[i].p_status + '</button>'
-                            } else if (rObj.project_list[i].start_date <= today && today <= rObj.project_list[i].end_date) {
+
+                                //rObj.project_list[i].start_date <= today && today < rObj.project_list[i].end_date &&
+                            } else if (rObj.project_list[i].p_status === "1") {
                                 rObj.project_list[i].p_status = "진행";
                                 status += '<button class="btn" style="color: white; padding: 4px 7px; background: #00A6A0;' +
                                     ' border: 2px solid transparent; border-radius: 3px;">'
                                     + rObj.project_list[i].p_status + '</button>'
-                            } else if (rObj.project_list[i].end_date < today) {
+
+                                //rObj.project_list[i].end_date <= today &&
+                            } else if (rObj.project_list[i].p_status === "2") {
                                 rObj.project_list[i].p_status = "종료";
                                 status += '<button class="btn btn-primary">' + rObj.project_list[i].p_status + '</button>'
+                            } else if (rObj.project_list[i].p_status === "3") {
+                                rObj.project_list[i].p_status = "오류";
+                                status += '<button class="btn" style="color: white; padding: 4px 7px; background: #c65de3;' +
+                                    ' border: 2px solid transparent; border-radius: 3px;">'
+                                    + rObj.project_list[i].p_status + '</button>'
                             }
 
                             // 소수점은 화면에 안보여주기 위해 int 형으로 형변환한다.
+                            // 전송비율
+                            send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
+                            send_percentage = parseInt(send_percentage);
+
                             // 열람비율
                             reading_percentage = (rObj.project_list[i].reading / rObj.project_list[i].targets) * 100;
                             reading_percentage = parseInt(reading_percentage);
 
+                            // 열람비율
+                            connect_percentage = (rObj.project_list[i].connect / rObj.project_list[i].targets) * 100;
+                            connect_percentage = parseInt(connect_percentage);
+
                             // 감염비율
                             infection_percentage = (rObj.project_list[i].infection / rObj.project_list[i].targets) * 100;
                             infection_percentage = parseInt(infection_percentage);
-
-                            // 전송비율
-                           send_percentage = (rObj.project_list[i].send_no / rObj.project_list[i].targets) * 100;
-                            send_percentage = parseInt(send_percentage);
 
 
                             if (full_tag === '') {// 태그가 없는경우 (존재해서는 안되는 case)
@@ -607,15 +733,18 @@
                                     + '<td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
                                     + '<td>' + status + '</td><td><button onclick="OpenModal(' + rObj.project_list[i].tml_no + ')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
                                     + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
-                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
-                                    + rObj.project_list[i].targets + '"></progress>' + reading_percentage
-                                    + "%(" + rObj.project_list[i].reading + "명)" + '</td>' // 메일 읽은 사람 수
-                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
-                                    + rObj.project_list[i].targets + '"></progress>' + infection_percentage
-                                    + "%(" + rObj.project_list[i].infection + "명)" + '</td>' // 메일 읽은 사람 수
                                     + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
                                     + rObj.project_list[i].targets + '"></progress>' + send_percentage
-                                    + "%(" + rObj.project_list[i].send_no + "명)" + '</td>' // 전송현황
+                                    + "%(" + rObj.project_list[i].send_no + "명)" + '</td>' // 전송 현황
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].reading + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + reading_percentage
+                                    + "%(" + rObj.project_list[i].reading + "명)" + '</td>' // 열람 현황 (메일 읽은 사람 수)
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].connect + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + connect_percentage
+                                    + "%(" + rObj.project_list[i].connect + "명)" + '</td>' // 접속 현황 (위험 사이트 접속한 사람 수)
+                                    + '<td><progress class="valign-middle" value="' + rObj.project_list[i].infection + '" max="'
+                                    + rObj.project_list[i].targets + '"></progress>' + infection_percentage
+                                    + "%(" + rObj.project_list[i].infection + "명)" + '</td>' // 감염 현황 (파일 실행, 정보 입력 한 사람 수)
                                     + '<td><input disabled id="start_date" type="date" value="' + rObj.project_list[i].start_date + '">'
                                     + '</td><td><input disabled id="end_date_' + rObj.project_list[i].p_no + '" type="date" value="' + rObj.project_list[i].end_date + '">'
                                     + '<button class="btn btn-primary" onclick="modifyEndDate(' + rObj.project_list[i].p_no + ')"><i class="la la-pencil"></i></button></td></tr>');
@@ -645,8 +774,8 @@
     function CreateProject() {
         const p_name = $('#p_name').val();
         const p_description = $('#p_description').val();
-        const start_date = $('#start_date').val();
-        const end_date = $('#end_date').val();
+        const start_date = $('#start_dates').val();
+        const end_date = $('#end_dates').val();
         const tmp_no = $('#template').val();
         const tag_1 = $('#tag_1').val();
         const tag_2 = $('#tag_2').val();
@@ -686,9 +815,11 @@
                         console.log("true")
                     }
                 } else if (r.status === 400) {
-                    alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았습니다.");
-                } else if (r.status === 500) {
+                    alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
+                } else if (r.status === 402) {
                     alert("선택한 태그 중에는 훈련대상자가 존재하지 않습니다.");
+                } else if (r.status === 500) {
+                    alert("서버에러");
                 }
             }
         };
@@ -882,15 +1013,37 @@
         GetTag();
         GetTmpl();
         $("#project_regist").show().center();
+
+        // var today = new Date();
+        // var dd = today.getDate();
+        // var mm = today.getMonth() + 1; //January is 0!
+        // var yyyy = today.getFullYear();
+        // if (dd < 10) {
+        //     dd = '0' + dd
+        // }
+        // if (mm < 10) {
+        //     mm = '0' + mm
+        // }
+        //
+        // today = yyyy + '-' + mm + '-' + dd;
+        //
+        // var start = document.getElementById("start_date");
+        // start.setAttribute("min", today);
+        //
+        // //document.getElementById("end_date").setAttribute("min", getDate)
+
     }
+
+
+
 
     function CloseProjectCreateModal() {
         $("#project_regist").hide();
     }
 
-    function CloseProjectModifyModal() {
-        $("#project_regist").hide();
-    }
+    // function CloseProjectModifyModal() {
+    //     $("#project_regist").hide();
+    // }
 
     function closeModal() {
         $('#tml_viewer').hide();

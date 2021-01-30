@@ -108,6 +108,21 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 		return errcode, fmt.Errorf("Phone number format is incorrect. ")
 	}
 
+	// 태그 중복제거
+	keys := make(map[string]bool)
+	ue := []string{}
+
+	for _, value := range t.TagArray {
+		if _, saveValue := keys[value]; !saveValue { // 중복제거 핵심포인트
+
+			keys[value] = true
+			ue = append(ue, value)
+		}
+	}
+
+	t.TagArray = nil
+	t.TagArray = ue
+
 	// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
 	for i := 1; i <= 3; i++ {
 		if len(t.TagArray) < i {
@@ -345,14 +360,36 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 			t.TargetPhone = ""
 		}
 
-		var sub [3]string
+		var sub []string
 
 		// 여기부터는 선택정보.
 		t.TargetOrganize = f.GetCellValue("Sheet1", "D"+str)
 		t.TargetPosition = f.GetCellValue("Sheet1", "E"+str)
-		sub[0] = f.GetCellValue("Sheet1", "F"+str)
-		sub[1] = f.GetCellValue("sheet1", "G"+str)
-		sub[2] = f.GetCellValue("sheet1", "H"+str)
+		sub = append(sub, f.GetCellValue("Sheet1", "F"+str))
+		sub = append(sub, f.GetCellValue("Sheet1", "G"+str))
+		sub = append(sub, f.GetCellValue("Sheet1", "H"+str))
+
+		// 태그 중복제거
+		keys := make(map[string]bool)
+		var ue []string
+
+		for _, value := range sub {
+			if _, saveValue := keys[value]; !saveValue { // 중복제거 핵심포인트
+
+				keys[value] = true
+				ue = append(ue, value)
+			}
+		}
+
+		sub = nil
+		sub = ue
+
+		// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
+		for i := 1; i <= 3; i++ {
+			if len(sub) < i {
+				sub = append(sub, "0")
+			}
+		}
 
 	Loop1:
 		for i := 0; i < len(sub); i++ {
