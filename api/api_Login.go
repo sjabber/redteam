@@ -24,10 +24,10 @@ func Login(c *gin.Context) {
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
-	err, num = user.IsAuthenticated(&conn) // 비밀번호 확인
+	err, num, loginCount := user.IsAuthenticated(&conn) // 비밀번호 확인
 	if err != nil {
 		log.Println(err.Error())
-		c.JSON(num, gin.H{"error": err.Error()})
+		c.JSON(num, gin.H{"error": err.Error(), "loginCount": loginCount})
 		return
 	}
 

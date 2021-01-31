@@ -70,6 +70,7 @@ function Login() {
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
+        let rObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
                 document.location.href = './dashboard/total'
@@ -80,9 +81,11 @@ function Login() {
             } else if (r.status === 402) {
                 alert("이메일, 비밀번호 형식이 잘못됐습니다. ");
             } else if (r.status === 403) {
-                alert("존재하지 않는 계정입니다. ");
+                alert("존재하지 않는 계정입니다.");
             } else if (r.status === 500) {
                 alert("서버에러");
+            } else if (r.status === 408) {
+                alert("로그인 실패 횟수를 초과했습니다(5회)\n관리자에게 연락해주세요.")
             }
         }
     };
@@ -109,7 +112,7 @@ function GetDashBoard() {
                 // user_name.text(responseObj.name);
             } else if (r.status === 403) {
                 const tokenResult = Refresh();
-                if (tokenResult){
+                if (tokenResult) {
                     GetDashBoard()
                     console.log("true")
                 }
