@@ -45,4 +45,8 @@ public class UserVo {
     @Column(name="user_pw_hash")
     @JsonProperty(value="user_pw_hash")
     private String userPwHash;
+
+    @Column(name="login_count")
+    @JsonProperty(value="login_count")
+    private int loginCount;
 }

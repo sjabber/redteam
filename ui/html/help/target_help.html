@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>REDTEAM | 프로젝트 관리</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+</head>
+<body>
+<!--네이게이터-->
+<div class="sidebar">
+    <div class="sidebar-header"><a href="#">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+    </a>
+        <div class="sidebar-control"><i class="la la-navicon"></i></div>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="list-menu">
+            <li class="header">Total Info</li>
+
+            <li class="tree-item"><a href="/dashboard/total"><i class="la la-group"></i><span>대시보드</span>
+                <div class="right-container"></div>
+            </a>
+
+            <li class="header">Project Info</li>
+            <li class="tree-item"><a href="/project/progress"><i class="la la-group"></i><span>프로젝트 관리</span>
+                <div class="right-container"></div>
+            </a>
+
+                <!--      <li class="tree-item active"><a href="/project/example"><i class="la la-group"></i><span>테스트</span>-->
+                <!--        <div class="right-container"></div>-->
+                <!--      </a>-->
+
+            </li>
+            <li class="tree-item"><a href="/manager/target"><i class="la la-group"></i><span>대상관리</span>
+                <div class="right-container"></div>
+            </a>
+
+            </li>
+            <li class="tree-item"><a href="/manager/template"><i class="la la-file-text"></i><span>템플릿관리</span>
+                <div class="right-container"></div>
+            </a>
+            </li>
+            <!--      <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>-->
+            <!--        <div class="right-container"></div>-->
+            <!--      </a>-->
+            <!--      </li>-->
+            <li class="header">Setting</li>
+            <li class="has-children"><a href="javascript:"><i class="la la-cog"></i><span>설정</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/setting/user"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
+                    <li class="tree-item"><a href="/setting/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+
+            </li>
+            <li class="header">Help</li>
+            <li class="has-children active"><a href="javascript:"><i class="la la-question"></i><span>도움말</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/help/project"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">프로젝트 관리</span></a></li>
+                    <li class="tree-item"><a class="active" href="/help/target"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">대상 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/template"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">템플릿 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--네이게이터-->
+
+
+<div class="main-content">
+    <div class="header">
+        <div class="left">
+            <p></p>
+            <div class="breadcrumb"><span>도움말</span><span>대상 관리</span></div>
+        </div>
+        <ul class="right">
+            <li class="header-user dropdown ml-4 mr-3"><a class="user-photo trigger-dropdown"><img class="user-img"
+                                                                                                   src="/image/user.png"/></a>
+                <div class="dropdown-box with-header">
+                    <div class="dropdown-header"><img class="user-img user-img--lg"
+                                                      src="/image/user.png"/>
+                        <div class="user-info">
+                            <h3 id="dropdown_name">name</h3><span class="helper-text" id="dropdown_id">email</span>
+                        </div>
+                    </div>
+                    <ul class="dropdown-body">
+                        <li><a href="/setting/user" target="_blank"><i
+                                class="la la-user"></i><span>사용자 정보</span></a></li>
+                        <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
+                        <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div class="right--mobile"><a class="header-item--mobile sidebar-control"><i class="la la-navicon"></i></a><a
+                class="header-item--mobile"><i class="la la-comments"></i></a><a class="header-item--mobile"><i
+                class="la la-ellipsis-v"></i></a></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+
+                    <div class="pagination-wrapper clearfix" id="under">
+                        <blockquote>
+                            <h3>대상 관리</h3>
+                            <p>대상 관리 메뉴에서는 악성 메일 훈련 대상자를 태그를 이용해 그룹화해서 등록할 수 있습니다. 태그 관리는 그룹에 사용할 태그를 생성할 수 있으며, 최대 5개의 태그를 생성할 수 있습니다. 또한, 대상자 일괄등록을 이용해 EXCEL 파일을 이용해 많은 대상자를 한 번에 등록할 수 있습니다.
+                            </p>
+                            <img src="/image/help_2_1.png" width="60%">
+
+                            <p>1. 태그 관리</p>
+                            <blockquote>
+                                <p>태그 관리 메뉴에서는 태그를 생성하고 삭제할 수 있으며, 최대 5개의 태그를 생성할 수 있습니다.</p>
+                                <p>
+                                    a. 태그 관리(①)를 누른 후 태그명을 입력하고 등록 버튼을 누르면, 태그가 생성됩니다.
+                                </p>
+                                <p>
+                                    b. 삭제하고자 하는 태그의 휴지통 아이콘을 누르게 되면 태그가 삭제됩니다.
+                                </p>
+                                <img src="/image/help_2_2.png" width="15%">
+                            </blockquote>
+                            <br>
+                            <p>
+                                2. 대상자 관리
+                            </p>
+                            <blockquote>
+                                <P>
+                                    대상자 등록 방법은 대상자 등록 버튼(②)을 눌러 한 명씩 등록하는 방법과 대상자 일괄등록 버튼(④)을 눌러 다수의 사용자를 한 번에 등록할 수 있는 방법이 있습니다. 삭제가 필요할 경우 삭제 대상을 체크한 후 대상자 삭제 버튼(③)을 눌러 삭제할 수 있습니다.
+                                </P>
+                                <p>a. 대상자 등록(②)
+                                </p>
+                                <p>
+                                    대상자 정보를 입력 후 등록 버튼을 눌러 대상자를 등록합니다.
+                                </p>
+                                <img src="/image/help_2_3.png">
+
+                                <p>b. 대상자 일괄등록(④)</p>
+                                <p>대상자 일괄등록은 엑셀 양식을 다운로드한 후 대상자 정보를 입력하고, 이 양식으로 파일 업로드를 통해 등록할 수 있습니다.
+                                </p>
+                                <div>
+                                    <img src="/image/help_2_4.png" width="15%">
+                                    <img src="/image/help_2_5.png" width="40%">
+                                </div>
+                                <p>c. 대상자 내보내기</p>
+                                <p>대상자 내보내기(⑤)를 이용해 특정 태그를 가진 사용자를 EXCEL 파일로 다운로드할 수 있습니다. 검색이 필요한 경우에는 ⑥ 검색 기능을 이용해 이름, 소속 등의 정보로 특정 사용자 검색이 가능합니다.</p>
+                                <img src="/image/help_2_6.png" width="15%">
+                            </blockquote>
+                        </blockquote>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/lib/Sortable.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="/js/jquery.serialize-object.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/demo.js"></script>
+<script src="/js/script.js"></script>
+<script>
+
+    GetDashBoard();
+</script>

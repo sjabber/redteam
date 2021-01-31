@@ -42,6 +42,8 @@ func RegisterRoute(r *gin.Engine) {
 		setting.POST("/delTmp", api.DelTml)
 		setting.GET("/getTag", api.GetTag)
 
+		setting.POST("/delUser", api.DelUser)
+
 		//setting.GET("/userSetting", api.GetUserSetting) //Note - spring boot
 		//setting.POST("/userSetting", api.SetUserSetting) //Note - spring boot
 		//setting.GET("/smtpSetting", api.GetSmtpSetting) //Note - spring boot
@@ -55,8 +57,8 @@ func RegisterRoute(r *gin.Engine) {
 	{
 		apiV2.GET("/dashboard", api.Dashboard)
 		apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo1) // 맨위, 전체 현황
-		//apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo2) // 가운데, 진행중인 현황
-		//apiV2.GET("/getDashBoard_Info1", api.GetDashboardInfo3) // 맨아래, 전체 프로젝트 리스트
+		apiV2.GET("/getDashBoard_Info2", api.GetDashboardInfo2) // 가운데, 진행중인 현황
+		apiV2.GET("/getDashBoard_Info3", api.GetDashboardInfo3) // 맨아래, 전체 프로젝트 리스트
 		apiV2.POST("/projectCreate", api.ProjectCreate)               //Note - spring boot
 		apiV2.GET("/smtpConnectSimpleCheck", api.SmtpConnectionCheck) //Note - spring boot
 		apiV2.GET("/getProject", api.GetProject)

@@ -48,7 +48,7 @@ create unique index smtp_info_smtp_no_uindex
 
 create table template_info
 (
-    tmp_no        serial  not null
+    tmp_no        serial not null
         constraint template_info_pk
             primary key,
     tmp_division  smallint,
@@ -61,9 +61,7 @@ create table template_info
     created_time  timestamp default now(),
     modified_time timestamp default now(),
     mail_content  text,
-    user_no       integer not null
-        constraint template_info_user_info_user_no_fk
-            references user_info
+    user_no       integer
 );
 
 comment on column template_info.sender_name is 'email format';
@@ -94,46 +92,10 @@ alter table tag_info
 create unique index tag_info_tag_no_uindex
     on tag_info (tag_no);
 
-create table project_info
-(
-    p_no          serial              not null
-        constraint project_info_pk
-            primary key,
-    tml_no        integer             not null
-        constraint project_info_template_info_tmp_no_fk
-            references template_info,
-    tag1          smallint
-        constraint project_info_tag_info_tag_no_fk
-            references tag_info,
-    p_name        text,
-    p_description text,
-    p_start_date  date                not null,
-    p_end_date    date                not null,
-    created_time  timestamp default now(),
-    modified_time timestamp default now(),
-    tag2          smallint
-        constraint project_info_tag_info_tag_no_fk_2
-            references tag_info,
-    tag3          smallint
-        constraint project_info_tag_info_tag_no_fk_3
-            references tag_info,
-    user_no       integer             not null
-        constraint project_info_user_info_user_no_fk
-            references user_info,
-    p_status      text                not null,
-    infection     integer   default 0 not null
-);
-
-alter table project_info
-    owner to postgres;
-
-create unique index project_info_p_no_uindex
-    on project_info (p_no);
-
 create table target_info
 (
     target_no       serial  not null
-        constraint target_info_target_no_pk
+        constraint target_info_target_no_pk2
             primary key,
     target_name     text    not null,
     target_email    text    not null,
@@ -157,16 +119,50 @@ create table target_info
 );
 
 alter table target_info
+    owner to redteam;
+
+create table project_info
+(
+    p_no          serial                  not null
+        constraint project_info_pk
+            primary key,
+    tml_no        integer   default 1     not null
+        constraint project_info_template_info_tmp_no_fk
+            references template_info,
+    tag1          smallint  default '0'::smallint
+        constraint project_info_tag_info_tag_no_fk
+            references tag_info,
+    p_name        text,
+    p_description text,
+    p_start_date  date      default now() not null,
+    p_end_date    date      default now() not null,
+    created_time  timestamp default now(),
+    modified_time timestamp default now(),
+    tag2          smallint  default '0'::smallint
+        constraint project_info_tag_info_tag_no_fk_2
+            references tag_info,
+    tag3          smallint  default '0'::smallint
+        constraint project_info_tag_info_tag_no_fk_3
+            references tag_info,
+    user_no       integer                 not null
+        constraint project_info_user_info_user_no_fk
+            references user_info,
+    send_no       integer   default 0     not null
+);
+
+alter table project_info
     owner to postgres;
+
+create unique index project_info_p_no_uindex
+    on project_info (p_no);
 
 create table count_info
 (
-    target_no         integer not null
-        constraint count_info_target_info2_target_no_fk
-            references target_info,
+    target_no         integer not null,
     project_no        integer not null
         constraint count_info_project_info_p_no_fk
-            references project_info,
+            references project_info
+            on delete cascade,
     email_read_status boolean   default false,
     link_click_status boolean   default false,
     download_status   boolean   default false,
@@ -177,6 +173,6 @@ create table count_info
 );
 
 alter table count_info
-    owner to postgres;
+    owner to redteam;
 
 

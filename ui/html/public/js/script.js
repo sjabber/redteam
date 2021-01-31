@@ -18,6 +18,7 @@ function Logout() {
     r.send();
 }
 
+
 // function CheckLogin() {
 //     const r = new XMLHttpRequest();
 //     r.open('GET', 'http://localhost:5000/api/CheckLogin', true);

@@ -59,6 +59,21 @@
                             class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
                 </ul>
             </li>
+            <li class="header">Help</li>
+            <li class="has-children"><a href="javascript:"><i class="la la-question"></i><span>도움말</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/help/project"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">프로젝트 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/target"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">대상 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/template"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">템플릿 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
@@ -307,7 +322,7 @@
                         </table>
                     </div>
                     </div>
-                    <div class="pagination-wrapper clearfix">
+                    <div class="pagination-wrapper clearfix" id="under">
                         <ul class="pagination float--right" id="pages">
                         </ul>
                     </div>
@@ -339,7 +354,7 @@
 
                     console.log(r.responseText);
 
-                    if (rObj.targets.length > 0) {
+                    if (rObj.targets != null) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj.targets.length; i++) {
@@ -375,9 +390,11 @@
                             }
                         }
                     } else {
-                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
-                            '                </div></tr></td>');
+                        $('#targets > tbody:last').append('<tr style="background-color:white"><td colspan="10" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center">Info<span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">등록된 대상자가 없습니다.</span></p>' +
+                            '</div></td></tr>');
                     }
 
                     // console.log(rObj.total);
@@ -823,7 +840,7 @@
                 if (r.status === 200) {
                     rObj2 = JSON.parse(r.responseText);
 
-                    if (rObj2.targets.length > 0) {
+                    if (rObj2.targets != null) {
                         // table 비워주기
                         $('#targets > tbody').empty();
                         for (let i = 0; i < rObj2.targets.length; i++) {
@@ -845,9 +862,11 @@
 
                         }
                     } else {
-                        $('#targets > tbody:last').append('<tr><td colspan="7"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 대상자가 존재하지 않습니다.</span></p>\n' +
-                            '                </div></tr></td>');
+                        $('#targets > tbody:last').append('<tr style="background-color:white"><td colspan="10" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center">Info<span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">해당하는 대상자가 없습니다.</span></p>' +
+                            '</div></td></tr>');
                     }
 
                     search_paging(rObj2.total, page);
@@ -856,7 +875,7 @@
                         $('#tag_menage > tbody').empty();
                         $('#tag_select').empty();
                         for (let j = 0; j < rObj2.tags.length; j++) {
-                            $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
+                            $('#tag_menage > tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
                                 "                        <td>" + rObj2.tags[j].tag_name + "</td>\n" +
                                 "                        <td>" + rObj2.tags[j].created_t + "</td>\n" +
                                 "                        <td>\n" +

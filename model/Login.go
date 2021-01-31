@@ -11,14 +11,13 @@ import (
 )
 
 type User struct {
-	UserNo          int    `json:"user_no"`
-	Email           string `json:"email"`
-	PasswordHash    string `json:"-"`
-	Password        string `json:"password"`
-	PasswordCheck 	string `json:"password_check"` //회원가입에서 사용된다.
-	Name            string `json:"name"`
+	UserNo        int    `json:"user_no"`
+	Email         string `json:"email"`
+	PasswordHash  string `json:"-"`
+	Password      string `json:"password"`
+	PasswordCheck string `json:"password_check"` //회원가입에서 사용된다.
+	Name          string `json:"name"`
 }
-
 
 // Go는 메서드, 변수 이름이 대문자로 시작 -> public, 소문자로 시작 -> private
 // User를 클래스로 보면 login()이 User의 메서드로 작용하는 느낌이다.
@@ -31,7 +30,6 @@ type User struct {
 //
 //	query := "select user_no, user_name from user_info where user_email=$1"
 //	err = db.QueryRow(query, u.Email).Scan(&u.UserNo, &u.Name) //쿼리의 내용을 err 에 저장
-
 
 // JWT 토큰을 반환해 주는 메서드
 func (u *User) GetAuthToken() (string, string, error) {
@@ -80,6 +78,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
 		return fmt.Errorf("The password is incorrect. "), num
 	}
 
+	defer conn.Close()
 	return nil, num
 }
 
@@ -109,8 +108,8 @@ func IsTokenValid(tokenString string) (bool, User) {
 		// 디폴트 claims 타입임. map 은 java 의 해시같은 개념.
 		// fmt.Println(claims)
 		user := User{
-			Email: claims["user_email"].(string),
-			Name: claims["user_name"].(string),
+			Email:  claims["user_email"].(string),
+			Name:   claims["user_name"].(string),
 			UserNo: int(claims["user_no"].(float64)),
 		}
 		//user := claims["user_id"]
@@ -129,4 +128,67 @@ func (u *User) GetName() string {
 
 func (u *User) GetID() string {
 	return u.Email
+}
+
+func (u *User) DelUser(conn *sql.DB) error {
+	tx, err := conn.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = conn.Exec(`
+delete
+from count_info
+where target_no in (select target_no from target_info where user_no = $1)`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(`
+delete
+from target_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(`
+delete
+from project_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(`
+delete
+from smtp_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(`
+delete
+from template_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(`
+delete
+from tag_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(`
+delete
+from user_info
+where user_no = $1`, u.UserNo)
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+	return nil
 }

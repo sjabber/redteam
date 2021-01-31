@@ -1,22 +1,24 @@
 package com.hanium.mer;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
 
-
+@Service
 public class TokenUtils {
 
-    private static final String KEY = "qlwkndlqiwndliansdlnqwd";
+    @Value("${Key}")
+    private String KEY;
     private static final int SUCCESS = 0;
     private static final int EXPIRE = 1;
     private static final int TAMPER = 2;
     private static final int NULL = 3;
 
-    public static int isValidToken(String token) throws UnsupportedEncodingException, ExpiredJwtException, JwtException, NullPointerException  {
-
-        //System.out.println("jwt token java :" + create());
+    public int isValidToken(String token) throws UnsupportedEncodingException, ExpiredJwtException, JwtException, NullPointerException  {
+        System.out.println("jwt token java :" + KEY);
         Claims claims = Jwts.parser().setSigningKey(KEY.getBytes("UTF-8")).parseClaimsJws(token).getBody();
 
         //System.out.println("expireTime :" + claims.getExpiration());
@@ -27,7 +29,7 @@ public class TokenUtils {
         return SUCCESS;
     }
 
-    public static Claims getClaimsFormToken(Cookie[] cookies) throws UnsupportedEncodingException {
+    public Claims getClaimsFormToken(Cookie[] cookies) throws UnsupportedEncodingException {
 
         Claims claims = null;
 
@@ -40,7 +42,7 @@ public class TokenUtils {
     }
 
 
-    public static <T> String create() throws UnsupportedEncodingException{
+    public <T> String create() throws UnsupportedEncodingException{
         String jwt = Jwts.builder()
                 .setHeaderParam("alg","HS256")
                 .setHeaderParam("typ", "JWT")

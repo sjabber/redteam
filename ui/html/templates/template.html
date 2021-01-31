@@ -60,6 +60,21 @@
                             class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
                 </ul>
             </li>
+            <li class="header">Help</li>
+            <li class="has-children"><a href="javascript:"><i class="la la-question"></i><span>도움말</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/help/project"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">프로젝트 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/target"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">대상 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/template"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">템플릿 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
@@ -110,7 +125,7 @@
                     <div class="pgn-modal" id="my_modal">
                         <div class="pgn-modal-wrapper ">
                             <div class="modal__header">
-                                <h5>템플릿 수정</h5>
+                                <h5>템플릿 관리</h5>
                                 <div class="toolbox">
                                     <button class="btn-modal-close modal-dismiss" onclick="closeModal()"><i
                                             class="la la-times"></i></button>
@@ -118,9 +133,10 @@
                             </div>
                             <div class="modal__body">
                                 <div class="form-group w-50">
-                                    <label for="tmp_division">구분</label><select id="tmp_division">
-                                    <option value="1" selected>기본</option>
-                                    <option value="2">사용자</option>
+                                    <label for="tmp_division">구분</label>
+                                    <select id="tmp_division">
+                                        <option value="1" disabled>기본</option>
+                                        <option value="2" selected>사용자</option>
                                 </select>
                                 </div>
 

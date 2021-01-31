@@ -42,10 +42,10 @@
                 <div class="right-container"></div>
             </a>
             </li>
-<!--            <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>-->
-<!--                <div class="right-container"></div>-->
-<!--            </a>-->
-<!--            </li>-->
+            <!--            <li class="tree-item"><a href="/project/create"><i class="la la-pencil-square"></i><span>프로젝트 생성</span>-->
+            <!--                <div class="right-container"></div>-->
+            <!--            </a>-->
+            <!--            </li>-->
             <li class="header">Setting</li>
             <li class="has-children"><a href="javascript:;"><i class="la la-cog"></i><span>설정</span>
                 <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
@@ -54,6 +54,21 @@
                     <li class="tree-item"><a href="/setting/user"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">사용자 정보</span></a></li>
                     <li class="tree-item"><a href="/setting/smtp"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
+                </ul>
+            </li>
+            <li class="header">Help</li>
+            <li class="has-children"><a href="javascript:"><i class="la la-question"></i><span>도움말</span>
+                <div class="right-container"><i class="la la-chevron-right tree-icon"></i></div>
+            </a>
+                <ul class="tree">
+                    <li class="tree-item"><a href="/help/project"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">프로젝트 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/target"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">대상 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/template"><i
+                            class="la la-circle"></i><span style="font-size:0.8em;">템플릿 관리</span></a></li>
+                    <li class="tree-item"><a href="/help/smtp"><i
                             class="la la-circle"></i><span style="font-size:0.8em;">SMTP 설정</span></a></li>
                 </ul>
             </li>
@@ -80,7 +95,7 @@
                     <ul class="dropdown-body">
                         <li><a href="/setting/user" target="_blank"><i
                                 class="la la-user"></i><span>사용자 정보</span></a></li>
-                        <li><a  href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
+                        <li><a href="/setting/smtp"><i class="la la-cogs"></i><span>SMTP 설정</span></a></li>
                         <li><a href="javascript:Logout();"><i class="la la-power-off"></i><span>로그아웃</span></a></li>
                     </ul>
                 </div>
@@ -96,8 +111,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-users"></i>
-                            <div class="card-content" id="PI_1">
+                            <div class="card-content">
                                 <h4>훈련 대상자</h4>
+                                <p id="PI_1"></p>
                             </div>
                         </div>
                     </div>
@@ -105,8 +121,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar"></i>
-                            <div class="card-content" id="PI_2">
+                            <div class="card-content">
                                 <h4>예약된 프로젝트</h4>
+                                <p id="PI_2"></p>
                             </div>
                         </div>
                     </div>
@@ -114,8 +131,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar-check-o"></i>
-                            <div class="card-content" id="PI_3">
+                            <div class="card-content">
                                 <h4>진행중인 프로젝트</h4>
+                                <p id="PI_3"></p>
                             </div>
                         </div>
                     </div>
@@ -123,8 +141,9 @@
                 <div class="col-md-3">
                     <div class="card card-simple-1">
                         <div class="card-body"><i class="la la-calendar-times-o"></i>
-                            <div class="card-content" id="PI_4">
+                            <div class="card-content">
                                 <h4>종료된 프로젝트</h4>
+                                <p id="PI_4"></p>
                             </div>
                         </div>
                     </div>
@@ -132,31 +151,33 @@
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <div class="box">
+                    <div class="box" style="height: 460px">
                         <div class="box-header">
                             <h3 class="chip--floating">진행중인 프로젝트 현황</h3>
                         </div>
                         <div class="m-3">
-                            <div class="form-select pgn-select"><select name="">
-                                <option value="1" selected>첫번째테스트</option>
-                                <option value="2">두번째테스트</option>
-                            </select>
+                            <div class="form-select pgn-select">
+                                <select name="selector">
+                                    <option value="1" selected>원 그래프 차트보기</option>
+<!--                                    <option value="2">막대그래프 차트보기</option>-->
+                                </select>
                             </div>
                         </div>
                         <div class="box-body">
-                            <div class="canvas-wrapper pb-2" style="height: 300px;">
-                                <div class="row p-2">
-                                    <div class="canvas-wrapper">
+                            <div class="canvas-wrapper pb-2" style="height: 300px">
+                                <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
+                                         font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
+                                <div class="row p-2" style="text-align: center">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category"></canvas>
                                     </div>
-
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category1"></canvas>
                                     </div>
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category2"></canvas>
                                     </div>
-                                    <div class="canvas-wrapper">
+                                    <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category3"></canvas>
                                     </div>
                                 </div>
@@ -170,53 +191,58 @@
                             <h5 class="chip--floating">Info</h5>
                         </div>
                         <div class="box-body pt-0">
-                            <table class="table--bordered">
+                            <table class="table--bordered" id="project_detail">
+                                <thead>
                                 <tbody>
-                                    <tr>
-                                        <td>사용 템플릿</td>
-                                        <td class="font-weight-bold">123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>메일 제목</td>
-                                        <td class="font-weight-bold">명절 보너스</td>
-                                    </tr>
-                                    <tr>
-                                        <td>메일 전송 계정</td>
-                                        <td class="font-weight-bold">sjabber@naver.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>훈련 기간</td>
-                                        <td class="font-weight-bold">2020.03.01 ~ 2021.12.11</td>
-                                    </tr>
-                                    <tr>
-                                        <td>훈련 대상자 태그</td>
-                                        <td class="font-weight-bold"><label class="badge badge-green">삼성전자</label>
-                                            <label class="badge badge-red">엘지전자</label>
-                                            <label class="badge badge-blue">레드팀</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>훈련 대상자 수</td>
-                                        <td class="font-weight-bold">121</td>
-                                    </tr>
-                                    <tr>
-                                        <td>발송</td>
-                                        <td class="font-weight-bold">60</td>
-                                    </tr>
-                                    <tr>
-                                        <td>열람</td>
-                                        <td class="font-weight-bold">10</td>
-                                    </tr>
-                                    <tr>
-                                        <td>감염</td>
-                                        <td class="font-weight-bold">2</td>
-                                    </tr>
-
-
+                                <tr>
+                                    <td width="200">사용 템플릿</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">메일 제목</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">메일 전송 계정</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">훈련 기간</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">훈련 대상자 태그</td>
+                                    <td class="font-weight-bold">
+<!--                                        <label class="badge badge-green"></label>-->
+<!--                                        <label class="badge badge-red"></label>-->
+<!--                                        <label class="badge badge-blue"></label></td>-->
+                                </tr>
+                                <tr>
+                                    <td width="200">훈련 대상자 수</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">전송</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">열람</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">접속</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">감염</td>
+                                    <td class="font-weight-bold"></td>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 </tbody>
-
                             </table>
 <!--                            <div class="canvas-wrapper">-->
-<!--                                <canvas class="pie-chart" id="pie-chart-category"></canvas>-->
+<!--                                <canvas class="pie-chart" id="under"></canvas>-->
 <!--                            </div>-->
                         </div>
                     </div>
@@ -230,9 +256,10 @@
                             <div class="toolbox"><a><i class="la la-print"></i></a></div>
                         </div>
                         <div class="box-body pt-0 px-0 responsive" style="height: 300px; overflow: auto">
-                            <table>
+                            <table id="project_list">
                                 <thead>
                                 <tr>
+                                    <th style="visibility:hidden;position:absolute;"></th>
                                     <th>프로젝트 No.</th>
                                     <th>프로젝트명</th>
                                     <th>상태</th>
@@ -241,114 +268,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>79012370123</td>
-                                    <td>John Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 2, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>72063370192</td>
-                                    <td>Jill Doe</td>
-                                    <td><label class="badge badge-red"> 종료</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79032370849</td>
-                                    <td>Jane Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79012370123</td>
-                                    <td>John Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 2, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>72063370192</td>
-                                    <td>Jill Doe</td>
-                                    <td><label class="badge badge-red"> 종료</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79032370849</td>
-                                    <td>Jane Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79012370123</td>
-                                    <td>John Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 2, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>72063370192</td>
-                                    <td>Jill Doe</td>
-                                    <td><label class="badge badge-red"> 종료</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79032370849</td>
-                                    <td>Jane Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79012370123</td>
-                                    <td>John Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 2, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>72063370192</td>
-                                    <td>Jill Doe</td>
-                                    <td><label class="badge badge-red"> 종료</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>79032370849</td>
-                                    <td>Jane Doe</td>
-                                    <td><label class="badge badge-green">진행중</label></td>
-                                    <td>January 3, 2019</td>
-                                    <td>
-                                        <button class="btn btn-secondary">결과보기</button>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -356,8 +275,9 @@
                 </div>
             </div>
         </div>
-        <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"
-                                                                      target="_blank">Al Jazari Studio</a></span></div>
+
+<!--        <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"-->
+<!--                                                                      target="_blank">Al Jazari Studio</a></span></div>-->
     </div>
 </div>
 
@@ -378,22 +298,16 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     console.log(r.responseText);
-                    if (rObj.info1.length > 0) {
-                        $('#PI_1').append('<p>' + project_info[0] + '</p>')
-                        $('#PI_2').append('<p>' + project_info[1] + '</p>')
-                        $('#PI_3').append('<p>' + project_info[2] + '</p>')
-                        $('#PI_4').append('<p>' + project_info[3] + '</p>')
-                    } else {
-                        $('#PI_1').append('<p>0</p>')
-                        $('#PI_2').append('<p>0</p>')
-                        $('#PI_3').append('<p>0</p>')
-                        $('#PI_4').append('<p>0</p>')
-                    }
+
+                    $('#PI_1').text(rObj.info1.targets);
+                    $('#PI_2').text(rObj.info1.scheduled);
+                    $('#PI_3').text(rObj.info1.ongoing);
+                    $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        GetProject();
+                        GetDashBoard_Info1();
                     } else {
                         document.location.href = '/';
                     }
@@ -403,9 +317,365 @@
         r.send();
     }
 
-    GetDashBoard_Info1();
-    GetDashBoard();
+    function GetDashBoard_Info2(number) {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info2?p_num=' + number, true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    //console.log(r.responseText)
 
+                    if (rObj.project_detail != null) {
+                        // table 비워주기
+                        $('#project_detail > tbody').empty();
+                        $('#title').empty();
+                        $('#NoProject').empty();
+
+                        // Note json 형식
+                        // 사용템플릿, 메일제목, 메일전송계정, 훈련기간, 훈련대상자 태그, 훈련대상자 수, 발송, 열람, 감염
+                        // tmp_no, mail_title, sender_email, start_date, end_date, tag_no, targets, send_no, reading, infection
+
+                        // 태그 분리작업
+                        let full_tag = ''
+
+                        // 그래프
+                        let ctxPieCategory = document.getElementById("pie-chart-category");
+                        let ctxPieCategory1 = document.getElementById("pie-chart-category1");
+                        let ctxPieCategory2 = document.getElementById("pie-chart-category2");
+                        let ctxPieCategory3 = document.getElementById("pie-chart-category3");
+
+                        let s_per = rObj.project_detail.send_no;
+                        let r_per = rObj.project_detail.reading;
+                        let i_per = rObj.project_detail.infection;
+                        let t_per = rObj.project_detail.targets;
+
+                        if (ctxPieCategory) {
+                            ctxPieCategory.width = 229;
+                            ctxPieCategory.height = 229;
+
+                            var pieData = {
+                                type: "doughnut",
+                                data: {
+                                    datasets: [
+                                        {
+                                            data: [t_per - s_per, s_per],
+                                            backgroundColor: ["#b6cbe3", "#046abd"]//, "#FFCC54", "#F6554D"]
+                                        }
+                                    ],
+                                    //labels: ["Sports", "Fashion", "Electronics", "Home & Garden"],
+                                    labels: ["미 전송", "전송"]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: '메일 전송 현황'
+                                    },
+                                    maintainAspectRatio: false,
+                                    layout: {
+                                        padding: {
+                                            left: 0,
+                                            right: 0,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            };
+
+                            new Chart(ctxPieCategory.getContext("2d"), pieData);
+                        }
+
+                        if (ctxPieCategory1) {
+                            ctxPieCategory1.width = 229;
+                            ctxPieCategory1.height = 229;
+
+                            var pieData = {
+                                type: "doughnut",
+                                data: {
+                                    datasets: [
+                                        {
+                                            data: [t_per - r_per, r_per],
+                                            backgroundColor: ["#f7ebcd", "#e7c502"]
+                                        }
+                                    ],
+                                    labels: ["미 열람", "열람"]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: '열람 현황'
+                                    },
+                                    maintainAspectRatio: false,
+                                    layout: {
+                                        padding: {
+                                            left: 0,
+                                            right: 0,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            };
+
+                            new Chart(ctxPieCategory1.getContext("2d"), pieData);
+                        }
+
+                        if (ctxPieCategory2) {
+                            ctxPieCategory2.width = 229;
+                            ctxPieCategory2.height = 229;
+
+                            var pieData = {
+                                type: "doughnut",
+                                data: {
+                                    datasets: [
+                                        {
+                                            data: [t_per - i_per, i_per],
+                                            backgroundColor: ["#f5d1b5", "#e87107"]
+                                        }
+                                    ],
+                                    labels: ["미 접속", "접속"]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: '접속 현황'
+                                    },
+
+                                    maintainAspectRatio: false,
+                                    layout: {
+                                        padding: {
+                                            left: 0,
+                                            right: 0,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            };
+
+                            new Chart(ctxPieCategory2.getContext("2d"), pieData);
+                        }
+
+                        if (ctxPieCategory3) {
+                            ctxPieCategory3.width = 229;
+                            ctxPieCategory3.height = 229;
+
+                            var pieData = {
+                                type: "doughnut",
+                                data: {
+                                    datasets: [
+                                        {
+                                            data: [t_per - i_per, i_per],
+                                            backgroundColor: ["#f5c4c1", "#ef1334"]
+                                        }
+                                    ],
+                                    labels: ["미 감염", "감염"]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: '감염 현황'
+                                    },
+                                    maintainAspectRatio: false,
+                                    layout: {
+                                        padding: {
+                                            left: 0,
+                                            right: 0,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            };
+
+                            new Chart(ctxPieCategory3.getContext("2d"), pieData);
+                        }
+
+                        for (let i = 0; i < rObj.project_detail.tag_no.length; i++) {
+                            if (rObj.project_detail.tag_no[i] !== "") {
+                                if (i === 0) {
+                                    full_tag += '<label class="badge badge-green">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (i === 1) {
+                                    full_tag += '<label class="badge badge-red">' + rObj.project_detail.tag_no[i] + '</label>'
+                                } else if (i === 2) {
+                                    full_tag += '<label class="badge badge-blue">' + rObj.project_detail.tag_no[i] + '</label>'
+                                }
+                            }
+                        }
+
+                        if (full_tag === '') {
+                            return
+                        } else {
+
+                            $('#title').append(
+                                '<td style="text-align: center; font-size: x-large; font-weight: normal;' +
+                                ' width: 100%; font-style: italic">'+ rObj.project_detail.p_name +'</td>'
+                            )
+
+                            // 전송비율
+                            let send_percentage = (rObj.project_detail.send_no / rObj.project_detail.targets) * 100;
+                            send_percentage = parseInt(send_percentage);
+
+                            // 열람비율
+                            let reading_percentage = (rObj.project_detail.reading / rObj.project_detail.targets) * 100;
+                            reading_percentage = parseInt(reading_percentage);
+
+                            // 접속비율
+                            let connect_percentage = (rObj.project_detail.connect / rObj.project_detail.targets) * 100;
+                            connect_percentage = parseInt(connect_percentage);
+
+                            // 감염비율
+                            let infection_percentage = (rObj.project_detail.infection / rObj.project_detail.targets) * 100;
+                            infection_percentage = parseInt(infection_percentage);
+
+
+                            $('#project_detail > tbody:last').append(
+                                '<tr>' +
+                                '<td width="200">사용 템플릿</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.tmp_name + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">메일 제목</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.mail_title + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">메일 전송 계정</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.sender_email + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">훈련 기간</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.start_date +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;~&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                rObj.project_detail.end_date + '</td>' +
+                                '</tr>' + // + rObjs.project_detail.end_date + '</td></tr>' +
+                                '<tr>' +
+                                '<td width="200">훈련 대상자 태그</td>' +
+                                '<td class="font-weight-bold">' + full_tag + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">훈련 대상자 수</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.targets + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">전송</td>' +
+                                '<td class="font-weight-bold">'  + rObj.project_detail.send_no +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + send_percentage + "%)" + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">열람</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.reading +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + reading_percentage + "%)" + '</td>' +
+                                '</tr>' +
+                                '<td width="200">접속</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.connect +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" +'</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td width="200">감염</td>' +
+                                '<td class="font-weight-bold">' + rObj.project_detail.infection +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + infection_percentage + "%)" +'</td>' +
+                                '</tr>'
+                            );
+                        }
+
+                    } else if (rObj.project_detail === null) {
+
+                        //document.getElementById('under').style.background = "#f2eff1";
+                        $('#project_list').append('<tr style="background-color:white"><td colspan="6" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center"><span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
+                            '</div></td></tr>');
+                    }
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
+                }
+            }
+        };
+        r.send();
+    }
+
+    function GetDashBoard_Info3() {
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info3', true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    console.log(r.responseText)
+
+                    if (rObj.project_list != null) {
+                        // table 비워주기
+                        $('#project_list > tbody').empty();
+
+                        // No, 프로젝트명, 상태, 종료일, 결과(버튼)
+                        // p_no ,p_name , p_status, end_date
+                        for (let i = 0; i < rObj.project_list.length; i++) {
+                            // 태그 분리작업
+                            let status_tag = ''
+
+                            if (rObj.project_list[i].p_status !== "") {
+                                if (rObj.project_list[i].p_status === "0") {
+                                    status_tag += '<label class="badge badge-green">' + '예약' + '</label>'
+                                } else if (rObj.project_list[i].p_status === "1") {
+                                    status_tag += '<label class="badge badge-red">' + '진행중' + '</label>'
+                                } else if (rObj.project_list[i].p_status === "2") {
+                                    status_tag += '<label class="badge badge-blue">' + '종료' + '</label>'
+                                } else if (rObj.project_list[i].p_status === "3") {
+                                    status_tag += '<label class="badge badge-info">' + '오류' + '</label>'
+                                }
+                            }
+
+                            if (status_tag === '') {
+                                return
+                            } else {
+                                GetDashBoard_Info2(rObj.project_list[0].p_no);
+
+                                $('#project_list > tbody:last').append('<tr onclick="GetDashBoard_Info2('+ rObj.project_list[i].p_no+')">'
+                                    + '<td id=' + rObj.project_list[i].p_no
+                                    + ' style="visibility:hidden;position:absolute;">'
+                                    + rObj.project_list[i].p_no + '</td>'
+                                    + '<td>' + '&nbsp;&nbsp;&nbsp;' + rObj.project_list[i].fake_no + '</td>'
+                                    + '<td>' + rObj.project_list[i].p_name + '</td><td>' + status_tag + '</td>'
+                                    + '<td>' + rObj.project_list[i].end_date + '</td>'
+                                    + '<td><button class="btn btn-secondary">결과보기</button></td></tr>');
+                            }
+                        }
+                    } else if (rObj.project_list === null) {
+                        $('#project_list').append('<tr style="background-color:white"><td colspan="6" align="center">' +
+                            '<div class="alert alert" style="background-color:white">' +
+                            '<p align="center"><span style="border: 1px; font-size:15px;' +
+                            'font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>' +
+                            '</div></td></tr>');
+                    }
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
+                }
+            }
+        };
+        r.send();
+    }
+
+    GetDashBoard();
+    GetDashBoard_Info1();
+    GetDashBoard_Info3();
 
 </script>
 <!--<script type="text/javascript">-->
