@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
     <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/sport.css" type="text/css">
     <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -338,10 +339,10 @@
 <script src="/js/jquery.serialize-object.min.js"></script>
 <script src="/js/lib/Sortable.min.js"></script>
 <script>
-    getTagForTargetInfo();
+
+    var tg_total = [5];
 
     function GetTarget(page) {
-        console.log('GetTarget')
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -351,7 +352,6 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-
                     console.log(r.responseText);
 
                     if (rObj.targets != null) {
@@ -363,13 +363,29 @@
                             for (let j = 0; j < rObj.targets[i].tg_tag.length; j++) {
                                 // console.log(rObj.targets[i].tg_tag[j])
                                 if (rObj.targets[i].tg_tag[j] !== "") {
-                                    if (j === 0) {
-                                        full_tag += '<label class="badge badge-green">' + rObj.targets[i].tg_tag[j] + '</label>'
-                                    } else if (j === 1) {
-                                        full_tag += '<label class="badge badge-red">' + rObj.targets[i].tg_tag[j] + '</label>'
-                                    } else if (j === 2) {
-                                        full_tag += '<label class="badge badge-blue">' + rObj.targets[i].tg_tag[j] + '</label>'
+
+                                    if (tg_total[0] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[1] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label2">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[2] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label3">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[3] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label4">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[4] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label5">' + rObj.targets[i].tg_tag[j] + '</label>'
                                     }
+
+                                    // if (j === 0) {
+                                    //     full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    //     // full_tag += '<label class="badge badge-green">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    // } else if (j === 1) {
+                                    //     full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    //     // full_tag += '<label class="badge badge-red">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    // } else if (j === 2) {
+                                    //     full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    //     // full_tag += '<label class="badge badge-blue">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    // }
                                 }
                             }
 
@@ -415,7 +431,6 @@
     }
 
     function getTagForTargetInfo() {
-        console.log('getTagForTargetInfo')
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/setting/getTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -426,9 +441,12 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     if (rObj.tags.length > 0) {
+                        //console.log(r.responseText);
                         $('#tag_menage > tbody').empty();
                         $('#tag_select').empty();
                         for (let j = 0; j < rObj.tags.length; j++) {
+                            tg_total[j] = rObj.tags[j].tag_name;
+
                             $('#tag_menage >tbody:last').append("<tr id='tag_" + rObj.tags[j].tag_no + "'>" +
                                 "                        <td>" + rObj.tags[j].tag_name + "</td>\n" +
                                 "                        <td>" + rObj.tags[j].created_t + "</td>\n" +
@@ -618,13 +636,17 @@
                             "                        </tr>");
 
                     }else if(r.status === 400) {
-                        alert('태그명을 입력해 주세요.');
+                        alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)');
                     } else if (r.status === 403) {
                         const tokenResult = Refresh();
                         if (tokenResult) {
                             // GetTarget(page)
                             console.log("true")
                         }
+                    } else if (r.status === 402) {
+                        alert('태그는 최대 5개까지만 등록이 가능합니다.');
+                    } else if (r.status === 500) {
+                        alert('서버에러');
                     } else {
                         rObj = JSON.parse(r.responseText);
                         alert(rObj.err);
@@ -697,7 +719,8 @@
                 let rObj;
                 if (r.readyState === 4) {
                     if (r.status === 200) {
-                        document.location.reload();
+                        //document.location.reload();
+                        location.reload();
                     } else if (r.status === 400) {
                         alert("등록정보를 입력해주세요. ");
                     } else if (r.status === 402) {
@@ -836,76 +859,61 @@
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
-            let rObj2;
+            let rObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    rObj2 = JSON.parse(r.responseText);
+                    rObj = JSON.parse(r.responseText);
 
-                    if (rObj2.targets != null) {
+                    if (rObj.targets != null) {
                         // table 비워주기
                         $('#targets > tbody').empty();
-                        for (let i = 0; i < rObj2.targets.length; i++) {
-                            if (rObj2.targets[i].tg_tag.length === 0) {
-                                $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj2.targets[i].tg_no +
-                                    '" style="visibility:hidden;position:absolute;">' + rObj2.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                                    '<span></span></div></td><td>' + rObj2.targets[i].tg_name + "(" +
-                                    rObj2.targets[i].tg_email + ")" + '</td><td>' + rObj2.targets[i].tg_phone + '</td><td>' + rObj2.targets[i].tg_organize +
-                                    '</td><td>' + rObj2.targets[i].tg_position + '</td><td>' + rObj2.targets[i].created_t + '</td>' +
-                                    '<td></td></tr>');
-                            } else {
-                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj2.targets[i].tg_no +
-                                    '" style="visibility:hidden;position:absolute;">' + rObj2.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                                    '<span></span></div></td><td>' + rObj2.targets[i].tg_name + "(" +
-                                    rObj2.targets[i].tg_email + ")" + '</td><td>' + rObj2.targets[i].tg_phone + '</td><td>' + rObj2.targets[i].tg_organize +
-                                    '</td><td>' + rObj2.targets[i].tg_position + '</td><td>' + rObj2.targets[i].created_t + '</td>' +
-                                    '<td><label class="badge badge-green">' + rObj2.targets[i].tg_tag + '</label></td></tr>');
+                        for (let i = 0; i < rObj.targets.length; i++) {
+                            // 태그 분리해주는 작업 ..
+                            let full_tag = ''
+                            for (let j = 0; j < rObj.targets[i].tg_tag.length; j++) {
+                                // console.log(rObj.targets[i].tg_tag[j])
+                                if (rObj.targets[i].tg_tag[j] !== "") {
+
+                                    if (tg_total[0] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[1] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label2">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[2] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label3">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[3] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label4">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    } else if (tg_total[4] === rObj.targets[i].tg_tag[j]) {
+                                        full_tag += '<label id="label5">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                    }
+                                }
                             }
 
+                            if (full_tag === '') {
+                                $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
+                                    '<td></td></tr>');
+                            } else {
+                                $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
+                                    '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
+                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
+                                    '<td>' + full_tag + '</td></tr>');
+                            }
                         }
                     } else {
                         $('#targets > tbody:last').append('<tr style="background-color:white"><td colspan="10" align="center">' +
                             '<div class="alert alert" style="background-color:white">' +
                             '<p align="center">Info<span style="border: 1px; font-size:15px;' +
-                            'font-style: italic; font-weight: 100;">해당하는 대상자가 없습니다.</span></p>' +
+                            'font-style: italic; font-weight: 100;">등록된 대상자가 없습니다.</span></p>' +
                             '</div></td></tr>');
                     }
 
-                    search_paging(rObj2.total, page);
+                    search_paging(rObj.total, page);
 
-                    if (rObj2.tags.length > 0) {
-                        $('#tag_menage > tbody').empty();
-                        $('#tag_select').empty();
-                        for (let j = 0; j < rObj2.tags.length; j++) {
-                            $('#tag_menage > tbody:last').append("<tr id='tag_" + rObj2.tags[j].tag_no + "'>" +
-                                "                        <td>" + rObj2.tags[j].tag_name + "</td>\n" +
-                                "                        <td>" + rObj2.tags[j].created_t + "</td>\n" +
-                                "                        <td>\n" +
-                                "                        <button class=\"btn btn-secondary\" onclick='deleteTag(" + rObj2.tags[j].tag_no + ")'><i class=\"la la-trash\"></i></button>\n" +
-                                "                        </td>\n" +
-                                "                        </tr>");
-                            if (j === 0) {
-                                // const option = ;
-                                console.log(rObj2.tags[j].tag_no);
-                                $('#tag_selector_1').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
-                                $('#tag_selector_2').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
-                                $('#tag_selector_3').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
-
-                                $('#tag_selector_1').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector_2').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector_3').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector2').append("<option value='" + rObj2.tags[j].tag_no + "'>" + rObj2.tags[j].tag_name + "</option>");
-                            } else {
-                                $('#tag_selector_1').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector_2').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector_3').append("<option value='" + rObj2.tags[j].tag_no + "' >" + rObj2.tags[j].tag_name + "</option>");
-                                $('#tag_selector2').append("<option value='" + rObj2.tags[j].tag_no + "'>" + rObj2.tags[j].tag_name + "</option>");
-                            }
-                        }
-                    } else {
-                        $('#tag_menage > tbody:last').append('<tr><td colspan="3"><div class="alert alert">\n' +
-                            '                  <p>Info<span>등록된 태그가 존재하지 않습니다.</span></p>\n' +
-                            '                </div></tr></td>');
-                    }
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
@@ -1063,10 +1071,6 @@
         obj.value = phone;
     }
 
-    // CheckLogin();
-    GetDashBoard();
-    GetTarget(1);
-
     $("#search_text").keypress(function (e) {
         if (e.keyCode === 13) {
             const division = $('#search_division').val();
@@ -1102,6 +1106,13 @@
             return false;
         }
     });
+
+    // 비동기 순차처리
+    getTagForTargetInfo();
+    setTimeout(function () {
+        GetTarget(1);
+    },170)
+    GetDashBoard();
 
 </script>
 </body>

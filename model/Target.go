@@ -385,24 +385,33 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 		sub = ue
 
 		// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
-		for i := 1; i <= 3; i++ {
-			if len(sub) < i {
+		//for i := 1; i <= 3; i++ {
+		//	if len(sub) < i {
+		//		sub = append(sub, "0")
+		//	}
+		//}
+		for j := 0; j < 3; j++ {
+			if len(sub) < j + 1 {
 				sub = append(sub, "0")
+			}
+
+			if sub[j] == "" {
+				sub[j] = "0"
 			}
 		}
 
 	Loop1:
-		for i := 0; i < len(sub); i++ {
-			if isValueIn(sub[i], list) {
+		for k := 0; k < len(sub); k++ {
+			if isValueIn(sub[k], list) {
 			Loop2:
 				for key, val := range Hashmap {
-					if val == sub[i] {
-						sub[i] = strconv.Itoa(key)
+					if val == sub[k] {
+						sub[k] = strconv.Itoa(key)
 						break Loop2
 					}
 				}
 			} else {
-				sub[i] = "0"
+				sub[k] = "0"
 				continue Loop1
 			}
 		}
@@ -646,21 +655,54 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 	return nil
 }
 
-func (t *Tag) CreateTag(conn *sql.DB, num int) error {
-	t.TagName = strings.Trim(t.TagName, " ")
-	if len(t.TagName) < 1 {
-		return fmt.Errorf(" Tag Name is empty. ")
+func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
+
+	// 태그 이름 검사 (400 에러)
+	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TagName)
+	if validName != true {
+		return fmt.Errorf(" Tag Name is not correct. "), 400
 	}
 
-	_, err := conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
+	// 태그 중복여부와 개수를 검사한다.
+	rows, err := conn.Query(`SELECT tag_name
+									FROM tag_info
+									WHERE user_no = $1
+									GROUP BY tag_name;`, num)
 	if err != nil {
-		fmt.Println(err)
-		return fmt.Errorf("Tag create error. ")
+		return fmt.Errorf("%v", err), 500
+	}
+
+	var tag_name1 []string
+	var tag_name2 string
+	var count int
+
+	for rows.Next() {
+		err = rows.Scan(&tag_name2)
+		count += 1
+		tag_name1 = append(tag_name1, tag_name2)
+	}
+
+	// 태그 이름 중복검사 (400 에러)
+	for i := 0; i < len(tag_name1); i++  {
+		if t.TagName == tag_name1[i] {
+			return fmt.Errorf(" That tag name already exists. "), 400
+		}
+	}
+
+	// 태그 개수 검사 (402 에러)
+	if count >= 5 {
+		return fmt.Errorf(" The tag is already full. "), 402
+	}
+
+	// 위 조건들 전부 충족할 경우 태그 등록
+	_, err = conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
+	if err != nil {
+		return fmt.Errorf("Tag create error. "), 500
 	}
 
 	defer conn.Close()
 
-	return nil
+	return nil, 200
 }
 
 func (t *Tag) DeleteTag(conn *sql.DB, num int) error {

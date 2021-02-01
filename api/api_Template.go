@@ -86,11 +86,13 @@ func EditTemplate(c *gin.Context) {
 
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
-	err := tmp.Update(&conn, num)
+	err, errCode := tmp.Update(&conn, num)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(errCode, gin.H{"error": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
 	}
 }
 
