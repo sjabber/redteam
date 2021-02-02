@@ -1,5 +1,6 @@
 package com.hanium.mer.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -12,11 +13,15 @@ import java.util.Base64;
 @Service
 public class AESService {
 
+    @Value("${Key}")
+    private String key;
+
+    @Value("${AESiv}")
+    private String iv;
+
     public Key getAESKey() throws Exception {
         String iv;
         Key keySpec;
-
-        String key = "qlwkndlqiwndliansdlnqwd";
         iv = key.substring(0, 16);
         byte[] keyBytes = new byte[16];
         byte[] b = key.getBytes("UTF-8");
@@ -35,7 +40,6 @@ public class AESService {
     // 암호화
     public String encAES(String str) throws Exception {
         Key keySpec = getAESKey();
-        String iv = "0987654321654321";
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
         byte[] encrypted = c.doFinal(str.getBytes("UTF-8"));
@@ -47,7 +51,6 @@ public class AESService {
     // 복호화
     public String decAES(String enStr) throws Exception {
         Key keySpec = getAESKey();
-        String iv = "0987654321654321";
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
         byte[] byteStr = Base64.getDecoder().decode(enStr.getBytes("UTF-8"));

@@ -24,13 +24,15 @@ public class ApiSMTPController {
     SMTPService smtpService;
     @Autowired
     AESService aesService;
+    @Autowired
+    TokenUtils tokenUtils;
 
     @GetMapping("/setting/smtpSetting")
     public ResponseEntity<Object> getSMTPSetting(HttpServletRequest request) throws UnsupportedEncodingException {
 
         Optional<SmtpVo> smtp;
 
-        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
+        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
         if(claims != null){
             smtp = smtpService.getSMTP(Long.parseLong(claims.get("user_no").toString()));;
             return new ResponseEntity<Object>(new Smtp_setting(smtp.get()), HttpStatus.OK);
@@ -45,7 +47,7 @@ public class ApiSMTPController {
             throws UnsupportedEncodingException {
 
         Optional<SmtpVo> smtp;
-        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
+        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try{
                 if ( !smtpService.setSMTP(Long.parseLong(claims.get("user_no").toString()), newSmtp)){
@@ -94,7 +96,7 @@ public class ApiSMTPController {
     public ResponseEntity<Object> connectionSTMPTest(HttpServletRequest request) throws UnsupportedEncodingException{
 
         Optional<SmtpVo> smtp = null;
-        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
+        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
         if(claims != null){
             smtp = smtpService.getSMTP(Long.parseLong(claims.get("user_no").toString()));
         }else{
