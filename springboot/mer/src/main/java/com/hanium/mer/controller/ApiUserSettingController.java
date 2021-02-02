@@ -34,15 +34,13 @@ public class ApiUserSettingController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    TokenUtils tokenUtils;
 
     @GetMapping("/setting/userSetting")
     public ResponseEntity<Object> getUserSetting(HttpServletRequest request) throws UnsupportedEncodingException {
         Optional<UserVo> user;
         Claims claims = null;
         try {
-            claims = tokenUtils.getClaimsFormToken(request.getCookies());
+            claims = TokenUtils.getClaimsFormToken(request.getCookies());
         }catch(ExpiredJwtException e){
             e.printStackTrace();
             return new ResponseEntity<Object>("error", HttpStatus.FORBIDDEN);
@@ -64,7 +62,7 @@ public class ApiUserSettingController {
         UserVo user;
         Claims claims = null;
         try {
-            claims = tokenUtils.getClaimsFormToken(request.getCookies());
+            claims = TokenUtils.getClaimsFormToken(request.getCookies());
         }catch(ExpiredJwtException e){
             e.printStackTrace();
             return new ResponseEntity<Object>("token expired", HttpStatus.FORBIDDEN);

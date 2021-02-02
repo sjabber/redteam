@@ -1,7 +1,6 @@
 package com.hanium.mer.service;
 
 import com.hanium.mer.repogitory.ProjectRepository;
-import com.hanium.mer.repogitory.TargetRepository;
 import com.hanium.mer.repogitory.TemplateRepository;
 import com.hanium.mer.vo.ProjectVo;
 import com.hanium.mer.vo.TemplateVO;
@@ -23,9 +22,6 @@ public class ProjectService {
 
     @Autowired
     TemplateRepository templateRepository;
-
-    @Autowired
-    TargetRepository targetRepository;
 
     public void addProject(ProjectVo newProject){
         log.info("newProject");
@@ -51,12 +47,4 @@ public class ProjectService {
         log.info("get tmpNo {}", tmpNo);
         return templateRepository.findByTmpNo(tmpNo);
     }
-
-    public boolean isTarget(int tagNo){
-        if(targetRepository.countByTag(tagNo) > 0){
-            return true;
-        }
-        return false;
-    }
-
 }

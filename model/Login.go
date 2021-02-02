@@ -54,32 +54,46 @@ func (u *User) GetAuthToken() (string, string, error) {
 }
 
 // 패스워드가 확실한지 체크하고 사용자가 로그인상태인지 확인하는 메서드
-func (u *User) IsAuthenticated(conn *sql.DB) (error, int) {
-	num := 200 // 기본적으로 200 (StatusOk의 값을 넣어놓는다.)
-
+func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
+	loginCount := 0
 	u.Email = strings.ToLower(u.Email)
 
 	if u.Email == "" || u.Password == "" {
-		num = 400 // 아이디나 패스워드를 입력하지 않은경우.
-		return fmt.Errorf("Please enter your account information. "), num
+		return fmt.Errorf("Please enter your account information. "), 400, loginCount
 	}
 
 	row := conn.QueryRowContext(context.Background(),
 		"SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
 	if err != nil || u.UserNo == 0 || u.Name == "" {
-		num = 403 // 일치하는 계정이 존재하지 않을 경우.
-		return fmt.Errorf("this account does not exist. "), num
+		return fmt.Errorf("this account does not exist. "), 403, loginCount
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
 	if err != nil {
-		num = 401 // 패스워드가 일치하지 않을경우.
-		return fmt.Errorf("The password is incorrect. "), num
+		conn.QueryRow(`select login_count from user_info where user_no = $1`, u.UserNo).Scan(&loginCount)
+		if loginCount >= 5 {
+			return fmt.Errorf("Exceeded number of login attempts "), 408, loginCount
+		}
+		conn.QueryRow(`
+update user_info
+set login_count = login_count + 1
+where user_no = $1
+  and login_count < 5
+returning login_count`, u.UserNo)
+		return fmt.Errorf("The password is incorrect. "), 401, loginCount
+	} else {
+		// 5회 안에 로그인 성공 시 login count 초기화
+		conn.Exec(`
+update user_info
+set login_count = 0
+where user_no = $1
+  and login_count < 5
+`, u.UserNo)
 	}
 
 	defer conn.Close()
-	return nil, num
+	return nil, 200, loginCount
 }
 
 // 토큰이 유효한지 검사하는 메서드

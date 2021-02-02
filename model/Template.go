@@ -3,14 +3,13 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"regexp"
 	"time"
 )
 
 type Template struct {
-	FakeNo int `json:"fake_no"`
-	TmpNo  int `json:"tmp_no"`
-	//UserNo       int	`json:"user_no"`		  // 사용자(사원) 번호
+	FakeNo         int    `json:"fake_no"`
+	TmpNo          int    `json:"tmp_no"`
 	Division       string `json:"tmp_division"`  // 구분
 	Kind           string `json:"tmp_kind"`      // 훈련유형
 	FileInfo       string `json:"file_info"`     // 첨부파일 정보
@@ -21,6 +20,7 @@ type Template struct {
 	DownloadType   string `json:"download_type"` // 다운로드 파일 타입
 	CreatedTime    string `json:"created_time"`  // 생성시간
 	CreateRealTime time.Time
+	//UserNo       int	`json:"user_no"`		  // 사용자(사원) 번호
 }
 
 //템플릿 생성 메서드, json 형식으로 데이터를 입력받아서 DB에 저장한다.
@@ -145,7 +145,7 @@ ORDER BY row_num;`
 }
 
 // 템플릿 수정 메서드, 템플릿 번호(tmp_no)에 해당하는 템플릿을 수정한다.
-func (t *Template) Update(conn *sql.DB, num int) error {
+func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 
 	// t.TmpNo가 3이하면 템플릿이 생성되도록 코드를 짜고
 	// 4이상이면 수정이 되도록 코드를 수정한다.
@@ -153,40 +153,114 @@ func (t *Template) Update(conn *sql.DB, num int) error {
 
 	if t.TmpNo <= 3 {
 		//Note 템플릿 생성
+
+		// 템플릿 이름 검사 (400 에러)
+		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TmpName)
+		if validName != true {
+			return fmt.Errorf(" Template Name is not correct. "), 400
+		}
+
+		// 템플릿 중복여부와 개수를 검사한다.
+		rows, err := conn.Query(`SELECT tmp_name
+										FROM template_info
+										WHERE user_no = $1 OR (user_no = 0 and tmp_no > 0)
+										GROUP BY tmp_name;`, num)
+		if err != nil {
+			return fmt.Errorf("%v", err), 500
+		}
+
+		var tmp_name1 []string
+		var tmp_name2 string
+		var count int
+
+		for rows.Next() {
+			err = rows.Scan(&tmp_name2)
+			count += 1
+			tmp_name1 = append(tmp_name1, tmp_name2)
+		}
+
+		// 템플릿 이름 중복검사 (400 에러)
+		for i := 0; i < len(tmp_name1); i++ {
+			if t.TmpName == tmp_name1[i] {
+				return fmt.Errorf(" That template name already exists. "), 400
+			}
+		}
+
+		// 템플릿 개수 검사 (402 에러)
+		if count >= 13 {
+			return fmt.Errorf(" User template is already full. "), 402
+		}
+
+		// 위 조건들 전부 충족할 경우 태그 등록
 		query = `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
  	mail_title, mail_content, sender_name, download_type, user_no)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
-		_, err := conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
+		_, err = conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
 			t.Content, t.SenderName, t.DownloadType, num)
 
 		if err != nil {
-			log.Panic(err)
-			return fmt.Errorf("Error create template. ")
+			return fmt.Errorf("%v", err), 500
 			// 템플릿 업데이트 오류
 		}
-		return nil
+		return nil, 200
 
 	} else if t.TmpNo >= 4 {
 		//Note 템플릿 수정
+
+		// 템플릿 이름 검사 (400 에러)
+		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TmpName)
+		if validName != true {
+			return fmt.Errorf(" Template Name is not correct. "), 400
+		}
+
+		// 템플릿 중복여부를 검사한다.
+		rows, err := conn.Query(`SELECT tmp_name, tmp_no
+										FROM template_info
+										WHERE user_no = $1 OR (user_no = 0 and tmp_no > 0)
+										GROUP BY tmp_name, tmp_no;`, num)
+		if err != nil {
+			return fmt.Errorf("%v", err), 500
+		}
+
+		var tmpNo	 int
+		var tmpName1 []string
+		var tmpName2 string
+
+		for rows.Next() {
+			err = rows.Scan(&tmpName2, &tmpNo)
+			if tmpNo == t.TmpNo {
+				continue
+			}
+
+			tmpName1 = append(tmpName1, tmpName2)
+		}
+
+		// 템플릿 이름 중복검사 (400 에러)
+		for i := 0; i < len(tmpName1); i++ {
+			if t.TmpName == tmpName1[i] {
+				return fmt.Errorf(" That template name already exists. "), 400
+			}
+		}
+
+		// 바뀐 태그 이름이 중복되지 않는경우 수정을 허용한다.
 		query = `UPDATE template_info SET tmp_division = $1, tmp_kind = $2, file_info = $3, tmp_name = $4,
                         sender_name = $5, mail_title = $6, mail_content = $7, 
                          download_type = $8 WHERE user_no = $9 AND tmp_no = $10;`
 
-		_, err := conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.SenderName, t.MailTitle, t.Content,
+		_, err = conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.SenderName, t.MailTitle, t.Content,
 			t.DownloadType, num, t.TmpNo)
 
 		if err != nil {
-			log.Panic(err)
-			return fmt.Errorf("Error updating template. ")
+			return fmt.Errorf("%v", err), 500
 			// 템플릿 업데이트 오류
 		}
-		return nil
+		return nil, 200
 	}
 
 	defer conn.Close()
 
-	return nil
+	return nil, 200
 }
 
 func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {

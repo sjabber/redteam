@@ -63,6 +63,34 @@ function CheckLoginInLoginPage() {
     r.send();
 }
 
+function Tg_total() {
+    const r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:5000/setting/getTag', true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    r.withCredentials = true;
+    r.onreadystatechange = function () {
+        let rObj;
+        if (r.readyState === 4) {
+            if (r.status === 200) {
+                rObj = JSON.parse(r.responseText);
+                if (rObj.tags.length > 0) {
+                    for (let j = 0; j < rObj.tags.length; j++) {
+                        tg_total[j] = rObj.tags[j].tag_name;
+                    }
+                }
+            } else if (r.status === 403) {
+                const tokenResult = Refresh();
+                if (tokenResult) {
+                    Tg_total();
+                    console.log("true")
+                }
+            } else {
+                document.location.href = '/';
+            }
+        }
+    };
+    r.send();
+}
 
 function Login() {
     const r = new XMLHttpRequest();
@@ -70,6 +98,7 @@ function Login() {
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
+        let rObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
                 document.location.href = './dashboard/total'
@@ -80,9 +109,11 @@ function Login() {
             } else if (r.status === 402) {
                 alert("이메일, 비밀번호 형식이 잘못됐습니다. ");
             } else if (r.status === 403) {
-                alert("존재하지 않는 계정입니다. ");
+                alert("존재하지 않는 계정입니다.");
             } else if (r.status === 500) {
                 alert("서버에러");
+            } else if (r.status === 408) {
+                alert("로그인 실패 횟수를 초과했습니다(5회)\n관리자에게 연락해주세요.")
             }
         }
     };
@@ -109,7 +140,7 @@ function GetDashBoard() {
                 // user_name.text(responseObj.name);
             } else if (r.status === 403) {
                 const tokenResult = Refresh();
-                if (tokenResult){
+                if (tokenResult) {
                     GetDashBoard()
                     console.log("true")
                 }

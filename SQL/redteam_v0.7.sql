@@ -8,7 +8,8 @@ create table user_info
     created_time  timestamp default now(),
     modified_time timestamp default now(),
     is_enabled    smallint  default 1,
-    user_pw_hash  varchar(255)
+    user_pw_hash  varchar(255),
+    login_count   smallint  default 0
 );
 
 alter table user_info

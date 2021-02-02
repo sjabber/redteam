@@ -234,10 +234,10 @@ func RegTag(c *gin.Context) {
 
 	tag := model.Tag{}
 	c.ShouldBindJSON(&tag)
-	err := tag.CreateTag(&conn, num)
+	err, errCode := tag.CreateTag(&conn, num)
 	if err != nil {
 		log.Print(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"target_registration_error": err.Error()})
+		c.JSON(errCode, gin.H{"target_registration_error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
 	}

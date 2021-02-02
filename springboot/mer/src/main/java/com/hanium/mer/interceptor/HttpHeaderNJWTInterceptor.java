@@ -3,7 +3,6 @@ package com.hanium.mer.interceptor;
 import com.hanium.mer.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,9 +18,6 @@ import java.util.Date;
 @Component
 public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    TokenUtils tokenUtils;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
@@ -34,14 +30,14 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
-        //System.out.println("cookie num: "+ cookies.length);
+        System.out.println("cookie num: "+ cookies.length);
         if (cookies != null) {
             for (Cookie c : cookies) {
 
                 try{
                     if (c.getName().equals("access-token")) {
                         System.out.println(c.getValue());
-                        tokenUtils.isValidToken(c.getValue());
+                        TokenUtils.isValidToken(c.getValue());
                         return true;
                     }
                 } catch (ExpiredJwtException e) {

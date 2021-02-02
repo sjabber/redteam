@@ -42,8 +42,7 @@ public class ApiProjectController {
     SMTPService smtpService;
     @Autowired
     TemplateService templateService;
-    @Autowired
-    TokenUtils tokenUtils;
+
     @Autowired
     KafkaProducerService kafkaProducerService;
 
@@ -53,7 +52,7 @@ public class ApiProjectController {
     public ResponseEntity<Object> addProject(HttpServletRequest request, @RequestBody ProjectDto projectDto)
             throws UnsupportedEncodingException {
 
-        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
+        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try{
                 ProjectVo newProject = new ProjectVo();
@@ -108,13 +107,6 @@ public class ApiProjectController {
                 newProject.setTagSecond(Integer.parseInt(projectDto.getTag_no().get(1)));
                 newProject.setTagThird(Integer.parseInt(projectDto.getTag_no().get(2)));
 
-                // tag에 타겟 없음
-                if( (newProject.getTagFirst() != 0 && !projectService.isTarget(newProject.getTagFirst()))
-                    || (newProject.getTagSecond() != 0 && !projectService.isTarget(newProject.getTagSecond()))
-                    || (newProject.getTagThird() != 0 && !projectService.isTarget(newProject.getTagThird()))){
-                    return new ResponseEntity<Object>("프로젝트 태그에 대상이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-                }
-
                 //TODO p_status 설정, 안해도 자동 진행으로 저장됨 db default값
                 if(LocalDate.now().isBefore(projectDto.getStart_date())){
                     newProject.setPStatus(2);
@@ -140,7 +132,7 @@ public class ApiProjectController {
     public ResponseEntity<Object> addProject(HttpServletRequest request, @RequestParam(defaultValue = "1") int page)
             throws UnsupportedEncodingException {
 
-        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
+        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
         if (claims != null) {
             try {
                 Map<String,Object> map = new HashMap<>();
@@ -161,8 +153,8 @@ public class ApiProjectController {
     public ResponseEntity<Object> sendMessageTest(HttpServletRequest request, Long p_no)
             throws UnsupportedEncodingException {
 
-        Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
-        System.out.println(tokenUtils.create());
+        Claims claims = TokenUtils.getClaimsFormToken(request.getCookies());
+        System.out.println(TokenUtils.create());
         if (claims != null) {
             try {
                 //TODO 프로젝트 번호로 받아오기

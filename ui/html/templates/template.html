@@ -186,7 +186,7 @@
                                 </script>
                                 <div class="form-group">
                                     <div style="color: red;font-weight: bold; font-size: small">
-                                        {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : 악성메일 훈련 솔루션 IP, {{target_position}}
+                                        {{target_name}} : 훈련 대상자의 이름, {{count_ip}} : email 열람 시 count, {{link_ip}} : link 클릭 시 count {{download_ip}} : download 파일 실행 시 count, {{target_position}}
                                         : 직급, {{target_orgarnize}} : 조직, {{target_phone}} : 훈련 대상자의 전화번호
                                     </div>
                                 </div>
@@ -389,14 +389,20 @@
         r.onreadystatechange = function () {
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    alert("템플릿 수정 완료했습니다.")
-                    location.reload()
+                    alert("템플릿 수정 완료했습니다.");
+                    location.reload();
+                } else if (r.status === 400) {
+                    alert("해당 템플릿의 이름이 중복되었거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)");
+                } else if (r.status === 402) {
+                    alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
                         editTml();
                         console.log("true")
                     }
+                } else if (r.status === 500) {
+                    alert("서버에러");
                 }
             }
         };
