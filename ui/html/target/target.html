@@ -344,7 +344,7 @@
 
     function GetTarget(page) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, true);
+        r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -432,7 +432,7 @@
 
     function getTagForTargetInfo() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTag', true);
+        r.open('GET', 'http://localhost:5000/setting/getTag', false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -1109,9 +1109,10 @@
 
     // 비동기 순차처리
     getTagForTargetInfo();
-    setTimeout(function () {
-        GetTarget(1);
-    },170)
+    // setTimeout(function () {
+    //     GetTarget(1);
+    // },170)
+    GetTarget(1);
     GetDashBoard();
 
 </script>

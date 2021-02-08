@@ -43,7 +43,7 @@ function Logout() {
 
 function CheckLoginInLoginPage() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/checklogin', true);
+    r.open('GET', 'http://localhost:5000/api/checklogin', false);
     r.withCredentials = true;
     r.onreadystatechange = function () {
         // let responseObj;
