@@ -11,6 +11,7 @@ import (
 
 // Target(훈련대상)을 관리하기 위한 json 구조체
 type Target struct {
+	FakeNo           int       `json:"fake_no"`
 	TargetNo         int       `json:"tg_no"`
 	TargetName       string    `json:"tg_name"`
 	TargetEmail      string    `json:"tg_email"`
@@ -58,29 +59,26 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	t.TargetOrganize = strings.Trim(t.TargetOrganize, " ")
 	t.TargetPosition = strings.Trim(t.TargetPosition, " ")
 
-	if len(t.TargetName) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf("Target's name is empty ")
-	} else if len(t.TargetEmail) < 1 {
+	if len(t.TargetEmail) < 1 {
 		errcode = 400
 		return errcode, fmt.Errorf(" Target's E-mail is empty ")
-	} else if len(t.TargetPhone) < 1 {
+	} else if len(t.TargetName) < 1 {
 		errcode = 400
-		return errcode, fmt.Errorf(" Target's Phone number is empty ")
-	} else if len(t.TargetOrganize) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf(" Target's Organize is empty ")
-	} else if len(t.TargetPosition) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf(" Target's Position is empty ")
+		return errcode, fmt.Errorf("Target's name is empty ")
 	}
 
-	//else if len(t.TagArray) < 1 {
-	//	return fmt.Errorf(" Target's Tag is empty ")
+	//else if len(t.TargetPhone) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Phone number is empty ")
+	//} else if len(t.TargetOrganize) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Organize is empty ")
+	//} else if len(t.TargetPosition) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Position is empty ")
+	//} else if len(t.TagArray) < 1 {
+	//	return errcode, fmt.Errorf(" Target's Tag is empty ")
 	//}
-
-	// 추후 조건 좀더 꼼꼼하게 만들기..
-	// ex) 엑셀파일 중간에 값이 비워져있는 경우 채워넣을 Default 값에 대한 조건 등...
 
 	// 이메일 형식검사
 	var validEmail, _ = regexp.MatchString(
@@ -106,6 +104,22 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	if phoneNumber != true {
 		errcode = 402
 		return errcode, fmt.Errorf("Phone number format is incorrect. ")
+	}
+
+	// 등록된 대상자 수를 조회한다.
+	row := conn.QueryRow(`SELECT count(target_no)
+								FROM target_info
+								WHERE user_no = $1;`, num)
+	err := row.Scan(&t.TargetNo)
+	if err != nil {
+		errcode = 500
+		return errcode, fmt.Errorf("Target's Tag number query Error. ")
+	}
+
+	// 등록된 대상자 수 검사 (405에러)
+	if t.TargetNo >= 300 {
+		errcode = 405
+		return errcode, fmt.Errorf(" The target is already full. ")
 	}
 
 	// 태그 중복제거
@@ -136,7 +150,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 		"tag1, tag2, tag3, user_no) " +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
-	_, err := conn.Exec(query1, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition,
+	_, err = conn.Exec(query1, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition,
 		t.TagArray[0], t.TagArray[1], t.TagArray[2], num)
 	if err != nil {
 		errcode = 500
@@ -160,6 +174,7 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	// 대상목록들을 20개씩만 잘라서 반하여 페이징처리한다.
 	query := `
     SELECT
+       row_num,
        target_name,
        target_email,
        target_phone,
@@ -205,7 +220,7 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 
 	// 목록들을 하나하나 읽어들여온다.
 	for rows.Next() {
-		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
+		err = rows.Scan(&tg.FakeNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 			&tg.TargetPosition, &tags[0], &tags[1], &tags[2], &tg.TargetCreateTime, &tg.TargetNo)
 		if err != nil {
 			fmt.Printf("Targets scanning Error. : %v", err)
@@ -304,13 +319,24 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 
 // 반복해서 읽고 값을 넣는것을 메서드로 구현하고 API는 이걸 그냥 사용하기만 하면됨.
 // Excel 파일로부터 대상의 정보를 일괄적으로 읽어 DB에 등록한다.
-func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
+func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, error) {
+
+	// 훈련대상자 수를 300명으로 제한하기 위해 조회한다.
+	var count int	// 등록된 훈련대상자 수
+	row := conn.QueryRow(`SELECT count(target_no) 
+								FROM target_info
+								WHERE user_no = $1;`, num)
+	err := row.Scan(&count)
+	if count >= 300 {
+		return 405, fmt.Errorf("The target is already full. ")
+	}
+
 
 	// str -> 일괄등록하기 위한 업로드 경로 + 파일 이름이 담기는 변수
 	f, err := excelize.OpenFile(uploadPath)
 	if err != nil {
 		fmt.Println(err)
-		return nil
+		return 400, nil
 	}
 
 	user1 := strconv.Itoa(num) //int -> string
@@ -328,7 +354,11 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 
 	i := 2 // 2행부터 값을 읽어온다.
-	for i <= 501 {
+	for i <= 301 {
+		if count >= 301 {
+			return 405, fmt.Errorf("The target is already full. ")
+		}
+
 		str := strconv.Itoa(i)
 
 		t.TargetName = f.GetCellValue("Sheet1", "A"+str)
@@ -423,6 +453,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 			user1 + "," + sub[0] + "," + sub[1] + "," + sub[2] + ")," + "\n"
 
 		i++
+		count++
 	}
 
 	BigString = BigString[:len(BigString)-2]
@@ -440,7 +471,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 	//bulkFile.Close()
 
-	return nil
+	return 200, nil
 }
 
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
@@ -689,9 +720,9 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 		}
 	}
 
-	// 태그 개수 검사 (402 에러)
+	// 태그 개수 검사 (405 에러)
 	if count >= 5 {
-		return fmt.Errorf(" The tag is already full. "), 402
+		return fmt.Errorf(" The tag is already full. "), 405
 	}
 
 	// 위 조건들 전부 충족할 경우 태그 등록

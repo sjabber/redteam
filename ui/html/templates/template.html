@@ -393,7 +393,7 @@
                     location.reload();
                 } else if (r.status === 400) {
                     alert("해당 템플릿의 이름이 중복되었거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)");
-                } else if (r.status === 402) {
+                } else if (r.status === 405) {
                     alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();

@@ -186,9 +186,9 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 			}
 		}
 
-		// 템플릿 개수 검사 (402 에러)
+		// 템플릿 개수 검사 (405 에러)
 		if count >= 13 {
-			return fmt.Errorf(" User template is already full. "), 402
+			return fmt.Errorf(" User template is already full. "), 405
 		}
 
 		// 위 조건들 전부 충족할 경우 태그 등록

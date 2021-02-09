@@ -26,7 +26,7 @@ func RegTarget(c *gin.Context) {
 
 	errcode, err := target.CreateTarget(&conn, num)
 	if err != nil {
-		log.Println("RegTarget error occurred, account :", c.Keys["email"])
+		//log.Println("RegTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
 		c.JSON(errcode, gin.H{"error": err.Error()})
 		return
@@ -143,9 +143,10 @@ func ImportTargets(c *gin.Context) {
 		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
 		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file error: %s", err.Error()))
 		return
-	} else {
-		c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename))
-	} // 파일 전송이 완료됨.
+	}
+	//else {
+	//	c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename))
+	//} // 파일 전송이 완료됨.
 
 	/////////////////아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.////////////////////////////
 	db, _ := c.Get("db")
@@ -155,13 +156,13 @@ func ImportTargets(c *gin.Context) {
 	c.ShouldBindJSON(&target)
 
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
-	err = target.ImportTargets(&conn, uploadPath, num)
+	errcode, err := target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
-		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
+		//log.Println("ImportTarget error occurred, account :", c.Keys["email"])
 		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"Batch registration error": err.Error()})
+		c.JSON(errcode, gin.H{"Batch registration error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"Batch registration success": c.Keys["email"]})
+		c.JSON(errcode, gin.H{"Batch registration success": c.Keys["email"]})
 	}
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
