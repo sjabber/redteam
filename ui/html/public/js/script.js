@@ -65,7 +65,7 @@ function CheckLoginInLoginPage() {
 
 function Tg_total() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/setting/getTag', true);
+    r.open('GET', 'http://localhost:5000/setting/getTag', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {

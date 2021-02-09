@@ -94,6 +94,22 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) (error, int) {
 		return fmt.Errorf("Project Name format is incorrect. "), ErrorCode
 	}
 
+	// 등록된 대상자 수를 조회한다.
+	row := conn.QueryRow(`SELECT COUNT(p_no)
+								FROM project_info
+								WHERE user_no = $1;`, num)
+	err := row.Scan(&p.PNo)
+	if err != nil {
+		ErrorCode = 500
+		return fmt.Errorf("%v", err), ErrorCode
+	}
+
+	// 등록된 대상자 수 검사 (405에러)
+	if p.PNo >= 10 {
+		ErrorCode = 405
+		return fmt.Errorf("The project is already full. "), ErrorCode
+	}
+
 	// 태그 중복제거
 	keys := make(map[string]bool)
 	ue := []string{}

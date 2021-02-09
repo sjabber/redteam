@@ -113,7 +113,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	err := row.Scan(&t.TargetNo)
 	if err != nil {
 		errcode = 500
-		return errcode, fmt.Errorf("Target's Tag number query Error. ")
+		return errcode, fmt.Errorf("%v", err)
 	}
 
 	// 등록된 대상자 수 검사 (405에러)
@@ -309,8 +309,6 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 			return fmt.Errorf("Error deleting target ")
 		}
 	}
-
-
 
 	defer conn.Close()
 

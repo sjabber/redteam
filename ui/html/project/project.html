@@ -499,7 +499,7 @@
 
     function GetProject() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/getProject', true);
+        r.open('GET', 'http://localhost:5000/api/getProject', false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -706,6 +706,8 @@
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
                 } else if (r.status === 402) {
                     alert("선택한 태그 중에는 훈련대상자가 존재하지 않습니다.");
+                } else if (r.status === 405) {
+                    alert("프로젝트는 최대 10개 까지만 등록이 가능합니다. ");
                 } else if (r.status === 500) {
                     alert("서버에러");
                 }

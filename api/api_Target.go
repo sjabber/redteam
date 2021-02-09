@@ -172,7 +172,6 @@ func ImportTargets(c *gin.Context) {
 	//	fmt.Println(err2)
 	//	panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
 	//}
-
 	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
 	if err2 != nil {
 		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
