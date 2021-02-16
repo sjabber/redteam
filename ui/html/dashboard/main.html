@@ -149,17 +149,310 @@
                     </div>
                 </div>
             </div>
+            <div class="pgn-modal" style="width: 60%;
+       height: 70%;
+       margin:0 auto;
+       /*display:table;*/
+       position: absolute;
+       left: 0;
+       right:0;
+       top: 40%;
+       /*border:1px solid;*/
+       -webkit-transform:translateY(-50%);
+       -moz-transform:translateY(-50%);
+       -ms-transform:translateY(-50%);
+       -o-transform:translateY(-50%);
+       transform:translateY(-50%);" id="result_viewer">
+                <div class="pgn-modal-wrapper" style="height: 100%; overflow-y: auto">
+                    <div class="modal__header">
+                        <h3 style="text-align: center">악성메일 훈련 보고서</h3>
+                        <div class="toolbox">
+                            <button class="btn-modal-close" onclick="CloseResultViewer()"><i
+                                    class="la la-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal__body">
+                        <div class="form-group">
+                            <h5>1. 프로젝트 정보</h5>
+                            <table class="table--bordered" id="p_info">
+                                <thead>
+                                <tbody>
+                                <tr>
+                                    <td width="200">프로젝트명</td>
+                                    <td class="font-weight-normal">파일첨부 테스트</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">사용 템플릿</td>
+                                    <td class="font-weight-normal">사용자템플릿1</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">상태</td>
+                                    <td class="font-weight-normal">양호(정보 유출률 0%)</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">진행률</td>
+                                    <td class="font-weight-normal">100%</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">프로젝트 기간</td>
+                                    <td class="font-weight-normal">2021-02-08 ~ 2021-02-12</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">메일 전송 계정</td>
+                                    <td class="font-weight-normal">pig3653@naver.com</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">프로젝트 생성자</td>
+                                    <td class="font-weight-normal">dd@test.com</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">훈련 대상자 태그</td>
+                                    <td class="font-weight-normal">
+                                        <label class="badge badge-green">삼성전자</label>
+                                        <label class="badge badge-red">엘지전자</label>
+                                        <!--                                        <label class="badge badge-blue"></label></td>-->
+                                </tr>
+                                <tr>
+                                    <td width="200">훈련 대상자 수</td>
+                                    <td class="font-weight-normal">20</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">발송</td>
+                                    <td class="font-weight-normal">15</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">발송 실패</td>
+                                    <td class="font-weight-normal">5</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">Email 열람</td>
+                                    <td class="font-weight-normal">6</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">Link 접속</td>
+                                    <td class="font-weight-normal">4</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">첨부파일 다운로드</td>
+                                    <td class="font-weight-normal">2</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">프로젝트 생성일</td>
+                                    <td class="font-weight-normal">2021-02-01</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">프로젝트 최종 수정일</td>
+                                    <td class="font-weight-normal">2021-02-09</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <br>
+                            <br>
+                            <h5>2. 프로젝트 요약</h5>
+                            <h6>2.1 전체 프로젝트 결과</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>분류</th>
+                                        <th>정보 유출자 수</th>
+                                        <th>정보 유출률</th>
+                                        <th>상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>전체</td>
+                                        <td>12 /20명</td>
+                                        <td>60%</td>
+                                        <td>취약</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6>2.2 가장 많은 정보 유출자 수</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>분류</th>
+                                        <th>대상</th>
+                                        <th>정보 유출자 수</th>
+                                        <th>정보 유출률</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>태그</td>
+                                        <td>삼성전자</td>
+                                        <td>5 /15명</td>
+                                        <td>33%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>소속</td>
+                                        <td>구글</td>
+                                        <td>2 /5명</td>
+                                        <td>33%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>직급</td>
+                                        <td>대리</td>
+                                        <td>2 /5명</td>
+                                        <td>33%</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6>2.3 가장 높은 정보 유출률</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>분류</th>
+                                        <th>대상</th>
+                                        <th>정보 유출자 수</th>
+                                        <th>정보 유출률</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>태그</td>
+                                        <td>삼성전자</td>
+                                        <td>5 /15명</td>
+                                        <td>33%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>소속</td>
+                                        <td>구글</td>
+                                        <td>2 /5명</td>
+                                        <td>33%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>직급</td>
+                                        <td>대리</td>
+                                        <td>2 /5명</td>
+                                        <td>33%</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <br>
+                            <h5>3. 프로젝트 결과 통계</h5>
+                            <h6>3.1 태그별 통계</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th width="200">태그</th>
+                                        <th>유출률(%)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>삼성전자</td>
+                                        <td>
+                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>엘지전자</td>
+                                        <td>
+                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6>3.2 소속별 통계</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th width="200">소속</th>
+                                        <th>유출률(%)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>구글</td>
+                                        <td>
+                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>네이버</td>
+                                        <td>
+                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6>3.3 직급별 통계</h6>
+                            <div class="box-body pt-0 px-0 responsive">
+                                <table class="table--bordered">
+                                    <thead>
+                                    <tr>
+                                        <th width="200">직급</th>
+                                        <th>유출률(%)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>대리</td>
+                                        <td>
+                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>과장</td>
+                                        <td>
+                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal__footer">
+                        <div class="modal__footer">
+                            <button class="btn btn-ghost" onclick="CloseResultViewer()">취소</button>
+                            <button class="btn btn-primary pull-right" id="project_reg"
+                                    onclick="DownloadResult()">
+                                다운로드
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-8">
                     <div class="box" style="height: 460px">
+
                         <div class="box-header">
                             <h3 class="chip--floating">진행중인 프로젝트 현황</h3>
                         </div>
+
+
                         <div class="m-3">
                             <div class="form-select pgn-select">
                                 <select name="selector">
                                     <option value="1" selected>원 그래프 차트보기</option>
-                                    <option value="2">막대그래프 차트보기</option>
+                                    <!--                                    <option value="2">막대그래프 차트보기</option>-->
                                 </select>
                             </div>
                         </div>
@@ -213,9 +506,9 @@
                                 <tr>
                                     <td width="200">훈련 대상자 태그</td>
                                     <td class="font-weight-bold">
-<!--                                        <label class="badge badge-green"></label>-->
-<!--                                        <label class="badge badge-red"></label>-->
-<!--                                        <label class="badge badge-blue"></label></td>-->
+                                        <!--                                        <label class="badge badge-green"></label>-->
+                                        <!--                                        <label class="badge badge-red"></label>-->
+                                        <!--                                        <label class="badge badge-blue"></label></td>-->
                                 </tr>
                                 <tr>
                                     <td width="200">훈련 대상자 수</td>
@@ -241,9 +534,9 @@
                                 <tbody>
                                 </tbody>
                             </table>
-<!--                            <div class="canvas-wrapper">-->
-<!--                                <canvas class="pie-chart" id="under"></canvas>-->
-<!--                            </div>-->
+                            <!--                            <div class="canvas-wrapper">-->
+                            <!--                                <canvas class="pie-chart" id="under"></canvas>-->
+                            <!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -276,8 +569,8 @@
             </div>
         </div>
 
-<!--        <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"-->
-<!--                                                                      target="_blank">Al Jazari Studio</a></span></div>-->
+        <!--        <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"-->
+        <!--                                                                      target="_blank">Al Jazari Studio</a></span></div>-->
     </div>
 </div>
 
@@ -520,7 +813,7 @@
 
                             $('#title').append(
                                 '<td style="text-align: center; font-size: x-large; font-weight: normal;' +
-                                ' width: 100%; font-style: italic">'+ rObj.project_detail.p_name +'</td>'
+                                ' width: 100%; font-style: italic">' + rObj.project_detail.p_name + '</td>'
                             )
 
                             // 전송비율
@@ -569,7 +862,7 @@
                                 '</tr>' +
                                 '<tr>' +
                                 '<td width="200">전송</td>' +
-                                '<td class="font-weight-bold">'  + rObj.project_detail.send_no +
+                                '<td class="font-weight-bold">' + rObj.project_detail.send_no +
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(" + send_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
@@ -579,12 +872,12 @@
                                 '</tr>' +
                                 '<td width="200">접속</td>' +
                                 '<td class="font-weight-bold">' + rObj.project_detail.connect +
-                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" +'</td>' +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                 '<td width="200">감염</td>' +
                                 '<td class="font-weight-bold">' + rObj.project_detail.infection +
-                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + infection_percentage + "%)" +'</td>' +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(" + infection_percentage + "%)" + '</td>' +
                                 '</tr>'
                             );
                         }
@@ -652,14 +945,14 @@
                                     GetDashBoard_Info2(rObj.project_list[0].p_no);
                                 }
 
-                                $('#project_list > tbody:last').append('<tr onclick="GetDashBoard_Info2('+ rObj.project_list[i].p_no+')">'
+                                $('#project_list > tbody:last').append('<tr onclick="GetDashBoard_Info2(' + rObj.project_list[i].p_no + ')">'
                                     + '<td id=' + rObj.project_list[i].p_no
                                     + ' style="visibility:hidden;position:absolute;">'
                                     + rObj.project_list[i].p_no + '</td>'
                                     + '<td>' + '&nbsp;&nbsp;&nbsp;' + rObj.project_list[i].fake_no + '</td>'
                                     + '<td>' + rObj.project_list[i].p_name + '</td><td>' + status_tag + '</td>'
                                     + '<td>' + rObj.project_list[i].end_date + '</td>'
-                                    + '<td><button class="btn btn-secondary" onclick="result()">결과보기</button></td></tr>');
+                                    + '<td><button class="btn btn-secondary" onclick="ResultViewer(' + rObj.project_list[i].p_no + ')">결과보기</button></td></tr>');
                             }
                         }
                     } else if (rObj.project_list === null) {
@@ -682,8 +975,24 @@
         r.send();
     }
 
-    function result() {
-        alert('결과보기 미 개발상태.');
+    function ResultViewer(p_no) {
+        // alert('결과보기 미 개발상태.' + p_no);
+        GetResult(p_no);
+        $("#result_viewer").show();
+    }
+
+    function CloseResultViewer() {
+        $("#result_viewer").hide();
+    }
+
+    function DownloadResult() {
+    //    todo excel로 다운받는 기능 구현 예정
+        console.log('DownloadResult()')
+
+    }
+    function GetResult(p_no) {
+    //    todo GetResult api 구현해야함
+        console.log('GetResult : p_no -> ' + p_no)
     }
 
     GetDashBoard();
@@ -692,24 +1001,6 @@
     GetDashBoard_Info3();
 
 </script>
-<!--<script type="text/javascript">-->
-<!--    $(document).ready(function () {-->
-<!--        $(".sidebar").load("../navigation.html");-->
-<!--        // $(".user-img").on("click", function () {-->
-<!--        //     const user_img = $("#user-img");-->
-<!--        //     if (user_img.hasClass("user-img active") === true) {-->
-<!--        //         console.log("있냐");-->
-<!--        //         user_img.removeClass("user-img")-->
-<!--        //     } else {-->
-<!--        //         console.log("없냐");-->
-<!--        //         user_img.addClass("user-img active")-->
-<!--        //     }-->
-<!--        //     // this.addClass("active")-->
-<!--        //-->
-<!--        // });-->
-<!--    });-->
-
-<!--</script>-->
 </body>
 
 </html>
