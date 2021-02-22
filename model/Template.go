@@ -269,7 +269,7 @@ func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {
 	FROM template_info
 	WHERE tmp_no = $1 and user_no = $2`
 
-	if tmpNo <= 3 && tmpNo >= 0 {
+	if tmpNo <= 5 && tmpNo >= 0 {
 		userNo = 0
 	}
 

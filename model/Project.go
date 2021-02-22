@@ -788,7 +788,7 @@ func parsing(str string, str1 string, str2 string, str3 string, str4 string, str
 
 	// todo 추후 도메인 추가로 필요, 그때는 파싱이 아니라 접속한 사이트에 넣어야함. (접속, 감염 두개 추가필요!)
 	if strings.Contains(str, "{{count_ip}}") {
-		s := "<html>\n<body>\n<img src=\"http://localhost:5000/api/CountTarget?" +
+		s := "<html>\n<body>\n<img width=1" + " height=1" + " src=\"http://localhost:5000/api/CountTarget?" +
 			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\">\n" +
 			"<a href=\"http://localhost:5000/api/CountTarget?" +
 			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\"></a>\n</body>\n</html>"
