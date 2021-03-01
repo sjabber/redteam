@@ -76,6 +76,16 @@ app.get('/warn/warning2', function (req, res) {
     fs.createReadStream("./warn/warning2.html").pipe(res);
 })
 
+app.get('/warn/google1', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./warn/google1.html").pipe(res);
+})
+
+app.get('/warn/google2', function (req, res) {
+    res.writeHead(200, {"Content-Type": "text/html"});
+    fs.createReadStream("./warn/google2.html").pipe(res);
+})
+
 app.get('/help/project', function (req, res) {
     res.writeHead(200, {"Content-Type": "text/html"});
     fs.createReadStream("./help/project_help.html").pipe(res);

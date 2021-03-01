@@ -622,7 +622,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    //console.log(r.responseText)
+                    console.log(r.responseText)
 
                     if (rObj.project_detail != null) {
                         // table 비워주기
@@ -632,7 +632,8 @@
 
                         // Note json 형식
                         // 사용템플릿, 메일제목, 메일전송계정, 훈련기간, 훈련대상자 태그, 훈련대상자 수, 발송, 열람, 감염
-                        // tmp_no, mail_title, sender_email, start_date, end_date, tag_no, targets, send_no, reading, infection
+                        // tmp_no, mail_title, sender_email, start_date, end_date, tag_no, targets, send_no, reading,
+                        // connect_no, infection
 
                         // 태그 분리작업
                         let full_tag = ''
@@ -643,10 +644,11 @@
                         let ctxPieCategory2 = document.getElementById("pie-chart-category2");
                         let ctxPieCategory3 = document.getElementById("pie-chart-category3");
 
-                        let s_per = rObj.project_detail.send_no;
-                        let r_per = rObj.project_detail.reading;
-                        let i_per = rObj.project_detail.infection;
-                        let t_per = rObj.project_detail.targets;
+                        let s_per = rObj.project_detail.send_no; // 보낸 수
+                        let r_per = rObj.project_detail.reading; // 읽은 수
+                        let c_per = rObj.project_detail.connect_no // 접속 수
+                        let i_per = rObj.project_detail.infection; // 감염된 수
+                        let t_per = rObj.project_detail.targets; // 총 훈련 대상자
 
                         if (ctxPieCategory) {
                             ctxPieCategory.width = 229;
@@ -728,7 +730,7 @@
                                 data: {
                                     datasets: [
                                         {
-                                            data: [t_per - i_per, i_per],
+                                            data: [t_per - c_per, c_per],
                                             backgroundColor: ["#f5d1b5", "#e87107"]
                                         }
                                     ],
@@ -825,7 +827,7 @@
                             reading_percentage = parseInt(reading_percentage);
 
                             // 접속비율
-                            let connect_percentage = (rObj.project_detail.connect / rObj.project_detail.targets) * 100;
+                            let connect_percentage = (rObj.project_detail.connect_no / rObj.project_detail.targets) * 100;
                             connect_percentage = parseInt(connect_percentage);
 
                             // 감염비율
@@ -871,7 +873,7 @@
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(" + reading_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<td width="200">접속</td>' +
-                                '<td class="font-weight-bold">' + rObj.project_detail.connect +
+                                '<td class="font-weight-bold">' + rObj.project_detail.connect_no +
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<tr>' +

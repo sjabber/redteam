@@ -41,6 +41,29 @@
             }
         });
     })
+
+    // 현재 URL이 가진 파라미터들을 가져온다.
+    function get_query(){
+        var url = document.location.href;
+        var result = url.substring(url.indexOf('?') + 1);
+        return result;
+    }
+
+    // 가져온 파라미터 값
+    var connection_link = get_query();
+    //console.log(result)
+
+    // div 태그안에 api를 호출하는 img 태그를 삽입.
+    var newDIV = document.createElement("div");
+
+    var img = document.createElement("img");
+    img.style.height="0px";
+    img.style.width="0px";
+    img.src="http://localhost:5000/api/CountTarget?" + connection_link;
+
+    newDIV.appendChild(img);
+    document.body.appendChild(newDIV);
+
 </script>
 </body>
 

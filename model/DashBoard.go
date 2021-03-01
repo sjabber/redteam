@@ -23,7 +23,7 @@ type PInfo2 struct {
 	Targets     string   `json:"targets"`
 	SendNo      string   `json:"send_no"`
 	Reading     string   `json:"reading"`
-	Connect     string   `json:"connect"`
+	Connect     string   `json:"connect_no"`
 	Infection   string   `json:"infection"`
 }
 
@@ -110,8 +110,8 @@ func GetDashboardInfo2(conn *sql.DB, num int, pnum int) (PInfo2, error) {
 				    COUNT(distinct pti.target_no) as Targets,
 				    T.send_no,
 				    COUNT(distinct ci.target_no) as Read,
-				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as connect,
-				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Infection
+				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Connect,
+				    COUNT(CASE WHEN ci.download_status THEN 1 END) as Infection
 			FROM (SELECT p_no,
 			  			 p_name,
 						 tmp_name,

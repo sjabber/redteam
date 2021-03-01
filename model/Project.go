@@ -441,9 +441,9 @@ func AutoStartProject() {
 	c := cron.New(cron.WithLocation(kor))
 
 	// 매 특정 시간마다 프로젝트들의 날짜를 점검하여 실행 종료시킨다.
-	c.AddFunc("43 4 * * *", Auto) // 매일 정각에 프로젝트를 검토후 진행&종료시킨다.
+	c.AddFunc("50 20 * * *", Auto) // 매일 정각에 프로젝트를 검토후 진행&종료시킨다.
 	//c.AddFunc("48-50 19 * * *", Auto) //매일 12시 15-18분 마다 실행할 프로젝트를 검토한다.
-	c.AddFunc("57-59 11 * * *", Auto) //하루 끝에 최종적으로 한번더 검토한다.
+	c.AddFunc("57-59 23 * * *", Auto) //하루 끝에 최종적으로 한번더 검토한다.
 	c.Start()
 	wg.Wait()
 }
@@ -788,13 +788,22 @@ func parsing(str string, str1 string, str2 string, str3 string, str4 string, str
 
 	// todo 추후 도메인 추가로 필요, 그때는 파싱이 아니라 접속한 사이트에 넣어야함. (접속, 감염 두개 추가필요!)
 	if strings.Contains(str, "{{count_ip}}") {
-		s := "<html>\n<body>\n<img width=1" + " height=1" + " src=\"http://localhost:5000/api/CountTarget?" +
+		s := "<html>\n<body>\n<img width=0" + " height=0" + " src=\"http://localhost:5000/api/CountTarget?" +
 			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\">\n" +
-			"<a href=\"http://localhost:5000/api/CountTarget?" +
-			"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\"></a>\n</body>\n</html>"
+			//"<a href=\"http://localhost:5000/api/CountTarget?" +
+			//"tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=false&download=false\"></a>" +
+			"\n</body>\n</html>"
 
 		str = strings.Replace(str, "{{count_ip}}", s, -1)
 	}
+
+	// 접속 사이트에 링크를 첨부한다.
+	if strings.Contains(str, "{{link_ip}}") {
+		s := "tNo=" + str5 + "&pNo=" + str6 + "&email=true&link=true&download=false"
+		str = strings.Replace(str, "{{link_ip}}", s, -1)
+	}
+
+	// 감염 사이트 링크는 자바스크립트에서 처리한다.
 
 	return str
 }
