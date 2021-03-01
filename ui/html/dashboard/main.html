@@ -179,70 +179,74 @@
                                 <tbody>
                                 <tr>
                                     <td width="200">프로젝트명</td>
-                                    <td class="font-weight-normal">파일첨부 테스트</td>
+                                    <td class="font-weight-normal"></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">프로젝트 설명</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">사용 템플릿</td>
-                                    <td class="font-weight-normal">사용자템플릿1</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
-                                    <td width="200">상태</td>
-                                    <td class="font-weight-normal">양호(정보 유출률 0%)</td>
+                                    <td width="200">유출 상태</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
-                                    <td width="200">진행률</td>
-                                    <td class="font-weight-normal">100%</td>
+                                    <td width="200">메일 전송률</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">프로젝트 기간</td>
-                                    <td class="font-weight-normal">2021-02-08 ~ 2021-02-12</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">메일 전송 계정</td>
-                                    <td class="font-weight-normal">pig3653@naver.com</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">프로젝트 생성자</td>
-                                    <td class="font-weight-normal">dd@test.com</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">훈련 대상자 태그</td>
                                     <td class="font-weight-normal">
-                                        <label class="badge badge-green">삼성전자</label>
-                                        <label class="badge badge-red">엘지전자</label>
+                                        <!--                                        <label class="badge badge-green">삼성전자</label>-->
+                                        <!--                                        <label class="badge badge-red">엘지전자</label>-->
                                         <!--                                        <label class="badge badge-blue"></label></td>-->
                                 </tr>
                                 <tr>
                                     <td width="200">훈련 대상자 수</td>
-                                    <td class="font-weight-normal">20</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">발송</td>
-                                    <td class="font-weight-normal">15</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">발송 실패</td>
-                                    <td class="font-weight-normal">5</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">Email 열람</td>
-                                    <td class="font-weight-normal">6</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">Link 접속</td>
-                                    <td class="font-weight-normal">4</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">첨부파일 다운로드</td>
-                                    <td class="font-weight-normal">2</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">프로젝트 생성일</td>
-                                    <td class="font-weight-normal">2021-02-01</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 <tr>
                                     <td width="200">프로젝트 최종 수정일</td>
-                                    <td class="font-weight-normal">2021-02-09</td>
+                                    <td class="font-weight-normal"></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -253,7 +257,7 @@
                             <h5>2. 프로젝트 요약</h5>
                             <h6>2.1 전체 프로젝트 결과</h6>
                             <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
+                                <table class="table--bordered" id="totalResult">
                                     <thead>
                                     <tr>
                                         <th>분류</th>
@@ -263,20 +267,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>전체</td>
-                                        <td>12 /20명</td>
-                                        <td>60%</td>
-                                        <td>취약</td>
-                                    </tr>
-
                                     </tbody>
                                 </table>
                             </div>
 
-                            <h6>2.2 가장 많은 정보 유출자 수</h6>
+                            <h6>2.2 분류 별 TOP 유출률</h6>
                             <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
+                                <table class="table--bordered" id="resultPerClassification">
                                     <thead>
                                     <tr>
                                         <th>분류</th>
@@ -286,69 +283,17 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>태그</td>
-                                        <td>삼성전자</td>
-                                        <td>5 /15명</td>
-                                        <td>33%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>소속</td>
-                                        <td>구글</td>
-                                        <td>2 /5명</td>
-                                        <td>33%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>직급</td>
-                                        <td>대리</td>
-                                        <td>2 /5명</td>
-                                        <td>33%</td>
-                                    </tr>
-
                                     </tbody>
                                 </table>
                             </div>
 
-                            <h6>2.3 가장 높은 정보 유출률</h6>
-                            <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>분류</th>
-                                        <th>대상</th>
-                                        <th>정보 유출자 수</th>
-                                        <th>정보 유출률</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>태그</td>
-                                        <td>삼성전자</td>
-                                        <td>5 /15명</td>
-                                        <td>33%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>소속</td>
-                                        <td>구글</td>
-                                        <td>2 /5명</td>
-                                        <td>33%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>직급</td>
-                                        <td>대리</td>
-                                        <td>2 /5명</td>
-                                        <td>33%</td>
-                                    </tr>
 
-                                    </tbody>
-                                </table>
-                            </div>
                             <br>
                             <br>
                             <h5>3. 프로젝트 결과 통계</h5>
                             <h6>3.1 태그별 통계</h6>
                             <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
+                                <table class="table--bordered" id="perTag">
                                     <thead>
                                     <tr>
                                         <th width="200">태그</th>
@@ -356,26 +301,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>삼성전자</td>
-                                        <td>
-                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>엘지전자</td>
-                                        <td>
-                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
-                                        </td>
-                                    </tr>
-
                                     </tbody>
                                 </table>
                             </div>
 
                             <h6>3.2 소속별 통계</h6>
                             <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
+                                <table class="table--bordered" id="perOrgan">
                                     <thead>
                                     <tr>
                                         <th width="200">소속</th>
@@ -386,13 +318,15 @@
                                     <tr>
                                         <td>구글</td>
                                         <td>
-                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
+                                            <progress class="valign-middle" value="5" max="15"></progress>
+                                            33%(5/15명)
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>네이버</td>
                                         <td>
-                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
+                                            <progress class="valign-middle" value="1" max="5"></progress>
+                                            20%(1/5명)
                                         </td>
                                     </tr>
 
@@ -402,7 +336,7 @@
 
                             <h6>3.3 직급별 통계</h6>
                             <div class="box-body pt-0 px-0 responsive">
-                                <table class="table--bordered">
+                                <table class="table--bordered" id="perPosition">
                                     <thead>
                                     <tr>
                                         <th width="200">직급</th>
@@ -413,13 +347,15 @@
                                     <tr>
                                         <td>대리</td>
                                         <td>
-                                            <progress class="valign-middle" value="5" max="15"></progress>33%(5/15명)
+                                            <progress class="valign-middle" value="5" max="15"></progress>
+                                            33%(5/15명)
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>과장</td>
                                         <td>
-                                            <progress class="valign-middle" value="1" max="5"></progress>20%(1/5명)
+                                            <progress class="valign-middle" value="1" max="5"></progress>
+                                            20%(1/5명)
                                         </td>
                                     </tr>
 
@@ -988,13 +924,205 @@
     }
 
     function DownloadResult() {
-    //    todo excel로 다운받는 기능 구현 예정
+        //    todo excel로 다운받는 기능 구현 예정
         console.log('DownloadResult()')
 
     }
+
     function GetResult(p_no) {
-    //    todo GetResult api 구현해야함
+        //    todo GetResult api 구현해야함
         console.log('GetResult : p_no -> ' + p_no)
+        const r = new XMLHttpRequest();
+        r.open('GET', 'http://localhost:5000/api/resultDetail?p_no=' + p_no, true);
+        r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        r.withCredentials = true;
+        r.onreadystatechange = function () {
+            let rObj;
+            if (r.readyState === 4) {
+                if (r.status === 200) {
+                    rObj = JSON.parse(r.responseText);
+                    if (rObj.resultDetail != null) {
+                        console.log(r.responseText)
+                        emptyTable();
+
+                        fullTag = ''
+                        for (let i = 0; i < rObj.resultDetail.ProjectInfo.tag_array.length; i++) {
+
+                            if (i === 0) {
+                                fullTag += "<label id=\"label1\">" + rObj.resultDetail.ProjectInfo.tag_array[i].tag_name + "</label>"
+                            }
+                            if (i === 1) {
+                                fullTag += "<label id=\"label2\">" + rObj.resultDetail.ProjectInfo.tag_array[i].tag_name + "</label>"
+                            }
+                            if (i === 2) {
+                                fullTag += "<label id=\"label3\">" + rObj.resultDetail.ProjectInfo.tag_array[i].tag_name + "</label>"
+                            }
+
+                        }
+
+                        $('#p_info > tbody:last').append(
+                            '<tr>' +
+                            '<td width="200">프로젝트명</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_name + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">프로젝트 설명</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_description + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">사용 템플릿</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.tml_name + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">유출 상태</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_status_percent +' %'+ '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">메일 전송률</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.progress_percent +' %'+ '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">프로젝트 기간</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.start_date +
+                            "&nbsp;&nbsp;&nbsp;&nbsp;~&nbsp;&nbsp;&nbsp;&nbsp;" +
+                            rObj.resultDetail.ProjectInfo.end_date + '</td>' +
+                            '</tr>' + // + rObjs.project_detail.end_date + '</td></tr>' +
+                            '<tr>' +
+                            '<td width="200">프로젝트 생성자</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_make_user + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">훈련 대상자 태그</td>' +
+                            '<td class="font-weight-normal">' + fullTag + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">훈련 대상자 수</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.target_count + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">발송</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.send_count + '</td>' +
+                            '</tr>' +
+                            '<td width="200">발송 실패</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.send_fail_count + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">Email 열람</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.email_read + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">Link 접속</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.link_click + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">첨부파일 다운로드</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.download + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">프로젝트 생성일</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_created_time + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td width="200">프로젝트 최종 수정일</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_modified_time + '</td>' +
+                            '</tr>'
+                        );
+                        warnLevel = '양호'
+                        if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 70){
+                            warnLevel = '심각'
+                        } else if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 30){
+                            warnLevel = '주의'
+                        }
+                        $('#totalResult > tbody:last').append(
+                            '<tr>' +
+                            '<td >전체</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultOfAll.infection_count +
+                            ' / ' +rObj.resultDetail.ProjectSummary.ResultOfAll.total_count +' 명'+'</td>' +
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultOfAll.rate +' %' +'</td>' +
+                            '<td >'+warnLevel+'</td>' +
+                            '</tr>'
+                        );
+                        $('#resultPerClassification > tbody:last').append(
+                            '<tr>' +
+                            '<td >태그</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.tag_name +'</td>'+
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.infection_count +
+                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.total_count +' 명'+'</td>' +
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.rate+' %'+'</td>' +
+                            '</tr>'+
+                            '<tr>' +
+                            '<td >소속</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.organ_name +'</td>'+
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.infection_count +
+                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.total_count +' 명'+'</td>' +
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.rate+' %'+'</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<td >직급</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.position_name +'</td>'+
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.infection_count +
+                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.total_count +' 명'+'</td>' +
+                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.rate+' %'+'</td>' +
+                            '</tr>'
+                        );
+                        for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerTag.length; i++) {
+                            $('#perTag > tbody:last').append(
+                                '<tr>' +
+                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerTag[i].tag_name+'</td>' +
+                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count+'" max="'+
+                                rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count+'"></progress>'+
+                                rObj.resultDetail.ResultPerStatistic.PerTag[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count+
+                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count +' 명)'+'</td>' +
+                                '</tr>'
+                            )
+                        }
+                        for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerOrgan.length; i++) {
+                            $('#perOrgan > tbody:last').append(
+                                '<tr>' +
+                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].organ_name+'</td>' +
+                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count+'" max="'+
+                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count+'"></progress>'+
+                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count+
+                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count +' 명)'+'</td>' +
+                                '</tr>'
+                            )
+                        }
+                        for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerPosition.length; i++) {
+                            $('#perPosition > tbody:last').append(
+                                '<tr>' +
+                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerPosition[i].position_name+'</td>' +
+                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count+'" max="'+
+                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count+'"></progress>'+
+                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count+
+                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count +' 명)'+'</td>' +
+                                '</tr>'
+                            )
+                        }
+
+
+                    }
+
+                } else if (r.status === 403) {
+                    const tokenResult = Refresh();
+                    if (tokenResult) {
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
+                }
+            }
+        };
+        r.send();
+
+    }
+
+    function emptyTable() {
+        $('#p_info > tbody').empty();
+        $('#totalResult > tbody').empty();
+        $('#resultPerClassification > tbody').empty();
+        $('#perTag > tbody').empty();
+        $('#perOrgan > tbody').empty();
+        $('#perPosition > tbody').empty();
     }
 
     GetDashBoard();

@@ -30,18 +30,18 @@ type Project struct {
 	TemplateNo   string   `json:"tmp_no"`        // 적용할 템플릿 번호나 이름
 	SendNo       int      `json:"send_no"`       // 메일 보낸 횟수
 	Reading      string   `json:"reading"`       //읽은 사람
-	Connect		 string   `json:"connect"`
-	Infection    string   `json:"infection"`     // 감염비율
-	Targets      int      `json:"targets"`       // 훈련 대상자수
-	StartDate    string   `json:"start_date"`    // 프로젝트 시작일
-	EndDate      string   `json:"end_date"`      // 프로젝트 종료일
+	Connect      string   `json:"connect"`
+	Infection    string   `json:"infection"`  // 감염비율
+	Targets      int      `json:"targets"`    // 훈련 대상자수
+	StartDate    string   `json:"start_date"` // 프로젝트 시작일
+	EndDate      string   `json:"end_date"`   // 프로젝트 종료일
 }
 
 // 프로젝트 시작(Consumer)에서 사용하는 구조체
 type ProjectStart struct {
 	PNo            int    `json:"p_no"`
 	TmpNo          int    `json:"tmp_no"`
-	TargetNo       int    `json:"target_no"`       // 훈련대상자들 번호
+	TargetNo       int    `json:"target_no"` // 훈련대상자들 번호
 	UserNo         int    `json:"user_no"`
 	TargetName     string `json:"target_name"`     // 훈련대상의 이름
 	TargetEmail    string `json:"target_email"`    // 훈련대상의 이메일주소
@@ -124,7 +124,6 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) (error, int) {
 
 	p.TagArray = nil
 	p.TagArray = ue
-
 
 	// 태그 개수에 따른 입력
 	switch len(p.TagArray) {
@@ -236,7 +235,7 @@ func (p *Project) ProjectCreate(conn *sql.DB, num int) (error, int) {
 										WHERE tag1 = $1 or tag2 = $1 or tag3 = $1
 												or tag1 = $2 or tag2 = $2 or tag3 = $2
 												or tag1 = $3 or tag2 = $3 or tag3 = $3`,
-												p.TagArray[0], p.TagArray[1], p.TagArray[2])
+			p.TagArray[0], p.TagArray[1], p.TagArray[2])
 		err := row.Scan(&count)
 		if err != nil {
 			ErrorCode = 500
@@ -547,7 +546,6 @@ func Auto() {
 		}
 	}
 
-
 }
 
 // 사용자가 시작버튼을 누른경우에만 동작한다.
@@ -701,7 +699,6 @@ func (p *ProjectStart) Consumer() {
 			continue // 이 경우 그냥 스킵
 			//panic(err.Error()) // 이 경우 프로세스 중지.
 		}
-
 
 		// 파싱작업 수행
 		p.MailContent = parsing(p.MailContent, p.TargetName, p.TargetOrganize,
