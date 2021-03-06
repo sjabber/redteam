@@ -440,8 +440,9 @@ func AutoStartProject() {
 	c := cron.New(cron.WithLocation(kor))
 
 	// 매 특정 시간마다 프로젝트들의 날짜를 점검하여 실행 종료시킨다.
-	c.AddFunc("50 20 * * *", Auto) // 매일 정각에 프로젝트를 검토후 진행&종료시킨다.
-	//c.AddFunc("48-50 19 * * *", Auto) //매일 12시 15-18분 마다 실행할 프로젝트를 검토한다.
+	c.AddFunc("0 0 * * *", Auto) // 매일 정각에 프로젝트를 검토후 진행&종료시킨다.
+	c.AddFunc("09-10 19 * * *", Auto)
+	//c.AddFunc("26-29 17 * * *", Auto) //매일 오후 5시 26-29분 마다 실행할 프로젝트를 검토한다.
 	c.AddFunc("57-59 23 * * *", Auto) //하루 끝에 최종적으로 한번더 검토한다.
 	c.Start()
 	wg.Wait()
@@ -531,7 +532,7 @@ func Auto() {
 			}
 
 			// 프로젝트가 종료일이면 종료한다.
-		} else if endDate == time.Now().Format("2006-01-02") && status == "0" || status == "1" {
+		} else if endDate == time.Now().Format("2006-01-02") && (status == "0" || status == "1") {
 			_, err = conn.Exec(`UPDATE project_info
  								SET p_status = 2
  								WHERE user_no = $1 AND p_no = $2`,

@@ -377,7 +377,7 @@
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <div class="box" style="height: 460px">
+                    <div class="box" style="height: 94%; overflow: hidden">
 
                         <div class="box-header">
                             <h3 class="chip--floating">진행중인 프로젝트 현황</h3>
@@ -392,7 +392,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" style="height: 100%">
                             <div class="canvas-wrapper pb-2" style="height: 300px">
                                 <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
                                          font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
@@ -914,7 +914,6 @@
     }
 
     function ResultViewer(p_no) {
-        // alert('결과보기 미 개발상태.' + p_no);
         GetResult(p_no);
         $("#result_viewer").show();
     }
