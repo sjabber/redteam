@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -9,15 +10,11 @@ import (
 	"strconv"
 )
 // 토큰안에 이름도 넣는다.
-var Account interface{}
+var Account string
 
 func Dashboard(c *gin.Context) {
 
-	Account = c.Keys["email"]
-	//if Account == nil {
-	//	c.JSON(http.StatusForbidden, gin.H{})
-	//	return
-	//}
+	Account = fmt.Sprintf("%v", c.Keys["email"])
 
 	// email, name 을 출력할 수 있도록 만든다.
 	c.JSON(http.StatusOK, gin.H{"email": c.Keys["email"], "name": c.Keys["name"]})

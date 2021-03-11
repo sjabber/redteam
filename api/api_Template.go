@@ -59,11 +59,10 @@ func TemplateDetail(c *gin.Context) {
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
+	// GET 메서드로 전달받은 템플릿 번호 --> tn에 저장
 	tn := c.Query("template_no")
 	tmpNo, _ := strconv.Atoi(tn)
 	fmt.Print(tmpNo)
-
-	//tmp_no := 1
 
 	tmp, err := model.Detail(&conn, num, tmpNo)
 	if err != nil {

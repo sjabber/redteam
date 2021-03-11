@@ -98,25 +98,24 @@ func GetDashboardInfo2(conn *sql.DB, num int, pnum int) (PInfo2, error) {
 
 	var tags [3]int
 
-	query = `SELECT T.tmp_name,
-				    mail_title,
-				    sender_name,
+	query = `SELECT ti.tmp_name,
+				    ti.mail_title,
+				    ti.sender_name,
        			    p_name,
 				    to_char(p_start_date, 'YYYY-MM-DD'),
 				    to_char(p_end_date, 'YYYY-MM-DD'),
 				    T.tag1,
 				    T.tag2,
 				    T.tag3,
-				    COUNT(distinct pti.target_no) as Targets,
+				    target_count as Targets,
 				    T.send_no,
 				    COUNT(distinct ci.target_no) as Read,
 				    COUNT(CASE WHEN ci.link_click_status THEN 1 END) as Connect,
 				    COUNT(CASE WHEN ci.download_status THEN 1 END) as Infection
-			FROM (SELECT p_no,
+			FROM (SELECT target_count,
+			             p.p_no,
 			  			 p_name,
-						 tmp_name,
-						 mail_title,
-						 sender_name,
+			             tml_no,
 						 p_start_date,
 						 p_end_date,
 						 tag1,
@@ -125,12 +124,14 @@ func GetDashboardInfo2(conn *sql.DB, num int, pnum int) (PInfo2, error) {
 						 send_no,
 						 p.user_no
 				  FROM project_info as p
-						   LEFT JOIN template_info ti on p.tml_no = ti.tmp_no
+			            LEFT JOIN (SELECT COUNT(target_no) AS target_count, user_no, p_no FROM project_target_info
+			                GROUP BY user_no, p_no) AS pti ON pti.user_no = p.user_no AND pti.p_no = p.p_no
 		  WHERE p.user_no = $1  AND p.p_no = $2) AS T
-			 LEFT JOIN project_target_info pti on T.user_no = pti.user_no AND T.p_no = pti.p_no
+			 LEFT JOIN template_info ti on T.tml_no = ti.tmp_no
 			 LEFT JOIN target_info ta on T.user_no = ta.user_no
 			 LEFT JOIN count_info ci on ta.target_no = ci.target_no AND T.p_no = ci.project_no
-		  GROUP BY T.tmp_name, mail_title, sender_name, p_name, p_start_date, p_end_date, T.tag1, T.tag2, T.tag3, T.send_no;`
+		  GROUP BY ti.tmp_name, ti.mail_title, ti.sender_name, p_name, to_char(p_start_date, 'YYYY-MM-DD'),
+		           to_char(p_end_date, 'YYYY-MM-DD'), T.tag1, T.tag2, T.tag3, target_count, T.send_no;`
 
 	row := conn.QueryRow(query, num, pnum)
 

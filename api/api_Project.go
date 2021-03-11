@@ -166,10 +166,10 @@ func StartProjectList(c *gin.Context) {
 }
 
 // 카프카 컨슈머, 컴파일과 동시에 별도 고루틴에서 계속 작동한다.
-func Consumer() {
-	p := model.ProjectStart{}
-	p.Consumer()
-}
+//func Consumer() {
+//	p := model.ProjectStart{}
+//	p.Consumer()
+//}
 
 func GetTag(c *gin.Context) {
 	// 계정정보

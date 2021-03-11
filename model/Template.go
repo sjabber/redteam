@@ -264,19 +264,25 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 }
 
 func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {
-	var query = `SELECT tmp_no, tmp_division, tmp_kind, tmp_name, file_info, sender_name, mail_title,
- 	mail_content, download_type
-	FROM template_info
-	WHERE tmp_no = $1 and user_no = $2`
+	var query = `SELECT tmp_no, tmp_division, tmp_kind, tmp_name, file_info,
+       smtp_id, mail_title, mail_content, download_type
+	FROM template_info as ti
+        LEFT JOIN smtp_info si on si.user_no = $1
+	WHERE tmp_no = $2 and ti.user_no = $3;`
 
-	if tmpNo <= 5 && tmpNo >= 0 {
-		userNo = 0
+	var userNo2 int
+
+	// 기본템플릿 (0 - 4)은 user_no 가 0으로 설정되어있다.
+	if tmpNo <= 4 && tmpNo >= 0 {
+		userNo2 = 0
+	} else {
+		userNo2 = userNo
 	}
 
 	//var Detail []Template
 	tmp := Template{}
 
-	tmpDetail := conn.QueryRow(query, tmpNo, userNo)
+	tmpDetail := conn.QueryRow(query, userNo, tmpNo, userNo2)
 	err := tmpDetail.Scan(&tmp.TmpNo, &tmp.Division, &tmp.Kind, &tmp.TmpName, &tmp.FileInfo, &tmp.SenderName,
 		&tmp.MailTitle, &tmp.Content, &tmp.DownloadType)
 

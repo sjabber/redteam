@@ -393,10 +393,13 @@
                             </div>
                         </div>
                         <div class="box-body" style="height: 100%">
-                            <div class="canvas-wrapper pb-2" style="height: 300px">
+                            <div class="canvas-wrapper pb-2" style="height: 300px; align-content: center;">
                                 <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
                                          font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
-                                <div class="row p-2" style="text-align: center">
+                                <div class="row p-2" style="height: 100%; width: 100%; overflow-y: auto;">
+<!--                                <div class="row p-2" style="text-align: center">-->
+<!--                                    style="height: 100%; overflow-y: auto"-->
+<!--                                    <div class="pgn-modal-wrapper" style="height: 100%; overflow-y: auto">-->
                                     <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category"></canvas>
                                     </div>
@@ -587,8 +590,8 @@
                         let t_per = rObj.project_detail.targets; // 총 훈련 대상자
 
                         if (ctxPieCategory) {
-                            ctxPieCategory.width = 229;
-                            ctxPieCategory.height = 229;
+                            ctxPieCategory.width = 180;
+                            ctxPieCategory.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -623,8 +626,8 @@
                         }
 
                         if (ctxPieCategory1) {
-                            ctxPieCategory1.width = 229;
-                            ctxPieCategory1.height = 229;
+                            ctxPieCategory1.width = 180;
+                            ctxPieCategory1.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -658,8 +661,8 @@
                         }
 
                         if (ctxPieCategory2) {
-                            ctxPieCategory2.width = 229;
-                            ctxPieCategory2.height = 229;
+                            ctxPieCategory2.width = 180;
+                            ctxPieCategory2.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -694,8 +697,8 @@
                         }
 
                         if (ctxPieCategory3) {
-                            ctxPieCategory3.width = 229;
-                            ctxPieCategory3.height = 229;
+                            ctxPieCategory3.width = 180;
+                            ctxPieCategory3.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
