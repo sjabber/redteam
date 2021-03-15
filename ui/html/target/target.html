@@ -898,14 +898,16 @@
                             if (full_tag === '') {
                                 $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
+                                    rObj.targets[i].tg_name + "(" +
                                     rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td></td></tr>');
                             } else {
                                 $('#targets > tbody:last').append('<tr><td id="target_' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
-                                    '<span></span></div></td><td>' + rObj.targets[i].tg_name + "(" +
+                                    '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
+                                    rObj.targets[i].tg_name + "(" +
                                     rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td>' + full_tag + '</td></tr>');
