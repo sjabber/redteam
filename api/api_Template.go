@@ -56,6 +56,7 @@ func TemplateDetail(c *gin.Context) {
 	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
 	num := c.Keys["number"].(int)
 
+	// DB
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
@@ -80,6 +81,7 @@ func EditTemplate(c *gin.Context) {
 	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
 	num := c.Keys["number"].(int)
 
+	// DB
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
@@ -96,24 +98,11 @@ func EditTemplate(c *gin.Context) {
 }
 
 // 템플릿 삭제하기
-//func DeleteTemplateList(c *gin.Context) {
-//	db, _ := c.Get("db")
-//	num := c.Keys["number"].(int)
-//	conn := db.(sql.DB)
-//
-//	tmp := model.Template{}
-//	c.ShouldBindJSON(&tmp)
-//	err := tmp.Delete(&conn, num)
-//	if err != nil {
-//		log.Print(err.Error())
-//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-//		return
-//	}
-//}
-
 func DelTml(c *gin.Context) {
-	// num (계정번호) => 해당 계정으로 등록한 정보들만 볼 수 있다.
+	// 계정정보
 	num := c.Keys["number"].(int)
+
+	// DB
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 

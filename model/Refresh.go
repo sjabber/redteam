@@ -19,7 +19,7 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 	})
 
 	if err != nil {
-		fmt.Printf("에러내용 %v \n", err)
+		fmt.Errorf("error : %v \n", err)
 		return false, User{}
 	}
 
@@ -38,8 +38,8 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 	}
 }
 
-// Access 토큰만 반환해 주는 메서드
-func (u *User) GetAccessToken() (string, string, error) {
+// 토큰을 재발행 해주는 메서드
+func (u *User) GetNewToken() (string, string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_email"] = u.Email

@@ -416,7 +416,7 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
-
+    // 계정별 태그정보 (최대 5개)
     var tg_total = [5];
 
     function GetTag() {
@@ -451,10 +451,8 @@
                         $('#tag').append("<option value=''>등록된 대상자가 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        console.log("true")
-                    }
+                    Refresh();
+                    GetTag();
                 } else {
                     document.location.href = '/';
                 }
@@ -485,10 +483,8 @@
                         $('#template').append("<option value=''>등록된 템플릿이 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        console.log("true")
-                    }
+                    Refresh();
+                    GetTmpl();
                 } else {
                     document.location.href = '/';
                 }
@@ -509,8 +505,8 @@
                     rObj = JSON.parse(r.responseText);
                     console.log(r.responseText);
 
-                    let date = new Date();
-                    let today = date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
+                    // let date = new Date();
+                    // let today = date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
 
                     if (rObj.project_list != null) {
                         // table 비워주기
@@ -619,7 +615,7 @@
                                     + '<td><div class="pgn-checkbox">'
                                     + '<input type="checkbox" name=""><span></span></div></td><td>' + rObj.project_list[i].fake_no + '</td>'
                                     + '<td>' + rObj.project_list[i].p_name + '</td><td>' + full_tag + '</td>'
-                                    + '<td>' + status + '</td><td><button onclick="OpenModal(' + rObj.project_list[i].tml_no + ')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
+                                    + '<td>' + status + '</td><td><button onclick="OpenModal(' + rObj.project_list[i].tml_no + "," + rObj.project_list[i].p_no + ')" class="btn btn-primary">' + rObj.project_list[i].tmp_no + '</buttom></td>'
                                     + '<td>' + rObj.project_list[i].targets + ' 명</td>' // 전체 대상자수
                                     + '<td><progress class="valign-middle" value="' + rObj.project_list[i].send_no + '" max="'
                                     + rObj.project_list[i].targets + '"></progress>' + send_percentage
@@ -647,12 +643,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetProject();
-                    } else {
-                        document.location.href = '/';
-                    }
+                    Refresh();
+                    GetProject();
                 }
             }
         };
@@ -698,10 +690,8 @@
                     alert("프로젝트 생성이 완료되었습니다.");
                     location.reload();
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        console.log("true")
-                    }
+                    Refresh();
+                    CreateProject();
                 } else if (r.status === 400) {
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
                 } else if (r.status === 402) {
@@ -748,10 +738,8 @@
                         alert('해당 프로젝트가 종료되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            ProjectEnd(p_no);
-                        }
+                        Refresh();
+                        ProjectEnd(p_no);
                     } else {
                         document.location.href = '/';
                     }
@@ -778,12 +766,8 @@
                         alert('프로젝트가 시작되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            ProjectStart(p_no);
-                        }
-                    } else {
-                        document.location.href = '/';
+                        Refresh();
+                        ProjectStart(p_no);
                     }
                 }
             };
@@ -821,10 +805,8 @@
                         // location.reload()
                         // console.log('프로젝트 종료일 변경')
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            console.log("true")
-                        }
+                        Refresh();
+                        modifyEndDate(p_no);
                     } else if (r.status === 400) {
                         rObj = JSON.parse(r.responseText);
                         if (rObj.dateCompare === true) {
@@ -847,6 +829,7 @@
                 $("input[type=checkbox]").prop("checked", false);
             }
         });
+
         $('#del_project').click(function () {
             let tbodyTr = $('tbody tr');
             const tdArr = [];	// 배열 선언
@@ -869,10 +852,9 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                const tokenResult = Refresh();
-                                if (tokenResult) {
-                                    console.log("true")
-                                }
+                                Refresh();
+                                alert("세션 만료, 다시 삭제해 주세요.");
+                                // Note 위의 알림없이 메서드가 다시 작동하여 삭제되도록 개선 필요.
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -889,8 +871,8 @@
         });
     });
 
-    function OpenModal(i) {
-        GetTmlDetailPrjMgr(i); //todo 김태호 멘티 test 용 추가함.
+    function OpenModal(i, j) {
+        GetTmlDetailPrjMgr(i, j); //todo 김태호 멘티 test 용 추가함.
         $("#tml_viewer").show().center();
     }
 
@@ -922,9 +904,9 @@
         return this;
     }
 
-    function GetTmlDetailPrjMgr(tml_no) {
+    function GetTmlDetailPrjMgr(tml_no, p_no) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
+        r.open('GET', 'http://localhost:5000/setting/ProjectDetail?template_no=' + tml_no + '&project_no=' + p_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -949,12 +931,8 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetTmlDetail(tml_no);
-                    }
-                } else {
-                    document.location.href = '/';
+                    Refresh();
+                    GetTmlDetailPrjMgr(tml_no, p_no);
                 }
             }
         };
@@ -995,11 +973,8 @@
                     alert("템플릿 수정 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        editTml();
-                        console.log("true")
-                    }
+                    Refresh();
+                    editTml();
                 }
             }
         };
@@ -1008,13 +983,10 @@
 
     }
 
-    // 비동기 순차처리
-    Tg_total();
-    // setTimeout(function () {
-    //     GetProject();
-    // },170)
+    GetDashBoard(); // 비동기 순차처리
+    Tg_total(); // 비동기 순차처리
     GetProject();
-    GetDashBoard();
+
 </script>
 </body>
 

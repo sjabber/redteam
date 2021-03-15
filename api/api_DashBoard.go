@@ -9,6 +9,7 @@ import (
 	"redteam/model"
 	"strconv"
 )
+
 // 토큰안에 이름도 넣는다.
 var Account string
 
@@ -33,15 +34,15 @@ func GetDashboardInfo1(c *gin.Context) {
 
 	Info1, err := model.GetDashboardInfo1(&conn, num)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"info1" : Info1,
+			"info1": Info1,
 		})
 	}
 
@@ -66,12 +67,12 @@ func GetDashboardInfo2(c *gin.Context) {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_detail" : Info2,
+			"project_detail": Info2,
 		})
 	}
 
@@ -92,12 +93,12 @@ func GetDashboardInfo3(c *gin.Context) {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_list" : Info3,
+			"project_list": Info3,
 		})
 	}
 

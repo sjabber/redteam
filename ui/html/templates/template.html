@@ -271,23 +271,67 @@
                         // No, id, 구분, 훈련유형, 첨부파일 정보, 템플릿명, 메일 제목, 발송자명, 다운로드 유형, 등록일
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
 
-
                         for (let i = 0; i < rObj.tmpls.length; i++) {
-                            if (rObj.tmpls[i].tmp_division === "기본") {
+                            // switch (rObj.tmpls[i].tmp_division) {
+                            //     case "1":
+                            //         rObj.tmpls[i].tmp_division = "기본";
+                            //         break;
+                            //     case "2":
+                            //         rObj.tmpls[i].tmp_division = "사용자";
+                            //         break;
+                            // }
+
+                            switch (rObj.tmpls[i].tmp_kind) {
+                                case "1":
+                                    rObj.tmpls[i].tmp_kind = "경고 안내";
+                                    break;
+                                case "2":
+                                    rObj.tmpls[i].tmp_kind = "피싱 유도";
+                                    break;
+                                case "3":
+                                    rObj.tmpls[i].tmp_kind = "실태 조사";
+                                    break;
+                            }
+
+                            switch (rObj.tmpls[i].file_info) {
+                                case "1":
+                                    rObj.tmpls[i].file_info = "EXE";
+                                    break;
+                                case "2":
+                                    rObj.tmpls[i].file_info = "HTML";
+                                    break;
+                                case "3":
+                                    rObj.tmpls[i].file_info = "Excel";
+                                    break;
+                            }
+
+                            switch (rObj.tmpls[i].download_type) {
+                                case "1" :
+                                    rObj.tmpls[i].download_type = "첨부파일 없음";
+                                    break;
+                                case "2":
+                                    rObj.tmpls[i].download_type = "링크 첨부";
+                                    break;
+                                case "3":
+                                    rObj.tmpls[i].download_type = "파일 첨부";
+                                    break;
+                            }
+
+                            if (rObj.tmpls[i].tmp_division === "1") {
                                 $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
                                     rObj.tmpls[i].fake_no + '</td><td>' +
                                     '<button class="btn btn-primary" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
-                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="fas fa-plus"></i></button>' +
-                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    ' onclick="OpenModal_tmp(' + rObj.tmpls[i].tmp_no + "," + rObj.tmpls[i].tmp_division + ')"><i class="fas fa-plus"></i></button>' +
+                                    '<span></span></div></td><td>기본</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
                                     '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
                                     rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
                                     '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
-                            } else if (rObj.tmpls[i].tmp_division === "사용자") {
+                            } else if (rObj.tmpls[i].tmp_division === "2") {
                                 $('#tmpls > tbody:last').append('<tr>' + '<td></td><td>' + rObj.tmpls[i].fake_no + '</td>' +
                                     rObj.tmpls[i].fake_no + '</td><td>' +
                                     '<button class="btn btn-c-success" id="tmp_modify_' + rObj.tmpls[i].tmp_no + '"' +
-                                    ' onclick="OpenModal(' + rObj.tmpls[i].tmp_no + ')"><i class="la la-pencil"></i></button>' +
-                                    '<span></span></div></td><td>' + rObj.tmpls[i].tmp_division + '</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
+                                    ' onclick="OpenModal_tmp(' + rObj.tmpls[i].tmp_no + "," + rObj.tmpls[i].tmp_division + ')"><i class="la la-pencil"></i></button>' +
+                                    '<span></span></div></td><td>사용자</td><td>' + rObj.tmpls[i].tmp_kind + '</td><td>' + rObj.tmpls[i].file_info +
                                     '</td><td>' + rObj.tmpls[i].tmp_name + '</td><td>' + rObj.tmpls[i].title + '</td><td>' +
                                     rObj.tmpls[i].sender_name + '</td><td>' + rObj.tmpls[i].download_type + '</td>' +
                                     '<td>' + rObj.tmpls[i].created_time + '</td></tr>');
@@ -308,11 +352,8 @@
                     // paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetTemplates();
-                        // console.log("true")
-                    }
+                    Refresh();
+                    GetTemplates();
                 } else {
                     document.location.href = '/';
                 }
@@ -347,10 +388,8 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetTmlDetail(tml_no);
-                    }
+                    Refresh();
+                    GetTmlDetail(tml_no);
                 } else {
                     document.location.href = '/';
                 }
@@ -397,11 +436,8 @@
                 } else if (r.status === 405) {
                     alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        editTml();
-                        console.log("true")
-                    }
+                    Refresh();
+                    editTml();
                 } else if (r.status === 500) {
                     alert("서버에러");
                 }
@@ -433,11 +469,8 @@
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403 || r.status === 500) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        delTml();
-                        console.log("true")
-                    }
+                    Refresh();
+                    delTml();
                 }
             }
         };
@@ -445,11 +478,12 @@
     }
 
     var del_button = document.getElementById('del');
-    var reg_button = document.getElementById('reg_tag');
+    // var reg_button = document.getElementById('reg_tag');
 
-    function OpenModal(i) {
-        console.log(i + "번호")
-        if (i <= 5) {
+    function OpenModal_tmp(i, j) {
+        // 기본 템플릿(1) -> 추가하기
+        // 사용자 템플릿(2) -> 수정하기
+        if (j === 1) {
             del_button.disabled = true;
             $('#del').removeClass('btn btn-primary modal-dismiss');
             $('#del').addClass('btn btn-disabled');

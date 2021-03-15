@@ -14,7 +14,7 @@ func RefreshToken(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
 		log.Print("RefreshToken error occurred, account : ", Account)
-		c.Abort()
+		c.Abort() // 이후의 핸들러 호출하지 않도록.
 	}
 	// 해당 쿠키(refresh token)의 값을 검사한다.
 	// 검사에 통과하면 GetAccessToken 메서드로 access-token 을 재발급 받는다.
@@ -23,7 +23,7 @@ func RefreshToken(c *gin.Context) {
 	if isValid == false {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		log.Print("RefreshToken error occurred, account : ", Account)
-		c.Abort()
+		c.Abort() // 이후의 핸들러 호출하지 않도록.
 	} else {
 		// 검증에 통과한 후 쿠키에 access-token 을 붙여준다.
 		// 검증이 통과한 경우 반환받은 구조체안의 정보를 해당 키값에 세팅
@@ -35,10 +35,10 @@ func RefreshToken(c *gin.Context) {
 		// todo 여기에 위의 계정이 맞는지 검사하는 로직도 넣어주자.
 
 		//여기서 토큰을 쿠키에 붙인다.
-		accessToken, refreshToken, err := user.GetAccessToken()
+		accessToken, refreshToken, err := user.GetNewToken()
 		if err == nil {
-			c.SetCookie("access-token", accessToken, 1000, "", "", false, true)
-			c.SetCookie("refresh-token", refreshToken, 86400, "", "", false, true)
+			c.SetCookie("access-token", accessToken, 3600, "", "", true, true)
+			c.SetCookie("refresh-token", refreshToken, 604800, "", "", true, true)
 			c.JSON(http.StatusOK, gin.H{
 				"isOk": true,
 			})
