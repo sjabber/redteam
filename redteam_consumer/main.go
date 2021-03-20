@@ -22,9 +22,10 @@ func main() {
 
 func Command(command string) {
 	if command != "end" {
+		// 입력받은 값이 end 가 아니면 무한 반복
 		fmt.Scanln(&command)
 		Command(command)
-	}  else {
+	} else {
 		log.Println("Kafka server shutdown")
 	}
 }

@@ -423,6 +423,7 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 	w := kafka.Writer{
 		Addr:  kafka.TCP(brokerAddress),
 		Topic: topic,
+		Balancer: &kafka.LeastBytes{}, // 파티션이 여러개일 경우 균등분배
 	}
 
 	msg := ProjectStart2{}
@@ -470,12 +471,17 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 
 // todo Kafka producer function
 func produce(messages []byte, w kafka.Writer) {
-	err := w.WriteMessages(context.Background(), kafka.Message{
-		//Key: []byte("Key"),
+	err := w.WriteMessages(context.Background(),
+		kafka.Message{
+		Key: []byte("One"),
 		Value: messages,
 	})
 	if err != nil {
 		panic("could not write message " + err.Error())
+	}
+
+	if err := w.Close(); err != nil {
+		log.Fatal("failed to close writer: ", err)
 	}
 }
 

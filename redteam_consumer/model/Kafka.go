@@ -151,6 +151,7 @@ func Auto() {
 				w := kafka.Writer{
 					Addr:  kafka.TCP(brokerAddress),
 					Topic: topic,
+					Balancer: &kafka.LeastBytes{}, // 파티션이 여러개일 경우 균등분배
 				}
 
 				msg := ProjectStart2{}
@@ -203,8 +204,9 @@ func Auto() {
 
 // Kafka producer function
 func produce(messages []byte, w kafka.Writer) {
-	err := w.WriteMessages(context.Background(), kafka.Message{
-		//Key: []byte("Key"),
+	err := w.WriteMessages(context.Background(),
+		kafka.Message{
+		Key: []byte("One"),
 		Value: messages,
 	})
 	if err != nil {
@@ -214,6 +216,7 @@ func produce(messages []byte, w kafka.Writer) {
 
 // kafka consumer function
 func (p *ProjectStart) Consumer() {
+
 	// Kafka consumer
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:     []string{brokerAddress},
@@ -224,6 +227,9 @@ func (p *ProjectStart) Consumer() {
 		MaxWait:     3 * time.Second,  //3초만 기다린다.
 		StartOffset: kafka.LastOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
 		// 있는 경우 중단한 곳부터 계속된다.
+
+		//MinBytes:  10e3, // 10KB
+		//MaxBytes:  10e6, // 10MB
 	})
 
 	// 부득이하게 다른 DB connecting 방법 사용..
@@ -243,35 +249,38 @@ func (p *ProjectStart) Consumer() {
 		if err != nil {
 			panic("Could not read message : " + err.Error())
 		}
+		fmt.Printf("message at topic / partition / offset => %v / %v / %v: %s = %s\n",
+			Msg.Topic, Msg.Partition, Msg.Offset, string(Msg.Key), string(Msg.Value))
+
 
 		// json -> ProjectStart 객체 각각에 값으로 들어가도록 한다.
 		json.Unmarshal(Msg.Value, p)
 
 		row := conn.QueryRow(`SELECT target_name,
-       								target_email,
-       								target_organize,
-       								target_position,
-       								target_phone,
-       								mail_title,
-       								mail_content,
-       								smtp_id as sender_email,
-       								smtp_host,
-       								smtp_port,
-       								smtp_id,
-       								smtp_pw
+      								target_email,
+      								target_organize,
+      								target_position,
+      								target_phone,
+      								mail_title,
+      								mail_content,
+      								smtp_id as sender_email,
+      								smtp_host,
+      								smtp_port,
+      								smtp_id,
+      								smtp_pw
 								FROM (SELECT target_name, target_email, target_organize, target_position, target_phone
     								  FROM target_info
     								  WHERE target_no = $1 AND user_no = $2) as T
-        									LEFT JOIN template_info as tmp on tmp_no = $3
-        									LEFT JOIN smtp_info si on si.user_no = $2;`, p.TargetNo, p.UserNo, p.TmpNo)
+       									LEFT JOIN template_info as tmp on tmp_no = $3
+       									LEFT JOIN smtp_info si on si.user_no = $2;`, p.TargetNo, p.UserNo, p.TmpNo)
 
 		// 메일 전송에 필요한 정보들 바인딩
 		err = row.Scan(&p.TargetName, &p.TargetEmail, &p.TargetOrganize, &p.TargetPosition, &p.TargetPhone, &p.MailTitle,
 			&p.MailContent, &p.SenderEmail, &p.SmtpHost, &p.SmtpPort, &p.SmtpId, &p.SmtpPw)
 		if err == sql.ErrNoRows {
 			// 해당 대상자가 존재하지 않는 경우 // Note 이거 지우자 그냥. (project_info 테이블에서 un_send_no도 없애자)
-			_, err = conn.Exec(`UPDATE project_info 
-									SET un_send_no = project_info.un_send_no + 1 
+			_, err = conn.Exec(`UPDATE project_info
+									SET un_send_no = project_info.un_send_no + 1
 									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
 			if err != nil {
 				//continue // 에러나면 그냥 스킵해버리기...
@@ -282,7 +291,7 @@ func (p *ProjectStart) Consumer() {
 
 		} else if err != nil {
 			// 정말 알 수 없는 에러가 난 케이스
-			_, err = conn.Exec(`UPDATE project_info 
+			_, err = conn.Exec(`UPDATE project_info
 									SET p_status = 3
 									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
 			log.Println("error occurred 2")
@@ -310,7 +319,7 @@ func (p *ProjectStart) Consumer() {
 		}
 
 		// 메일 보낸 수 +1
-		_, err = conn.Exec(`UPDATE project_info 
+		_, err = conn.Exec(`UPDATE project_info
 								SET send_no = project_info.send_no + 1
 								WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
 		if err != nil {
@@ -320,8 +329,12 @@ func (p *ProjectStart) Consumer() {
 		// 메일 3개 보내면 3분 간격으로 쉬어준다.
 		chance++
 		if chance == 3 {
-			time.Sleep(3 * time.Minute)
+			time.Sleep(30 * time.Second)
 			chance = 0
+		}
+
+		if err := r.Close(); err != nil {
+			log.Fatal("failed to close reader:", err)
 		}
 	}
 }
