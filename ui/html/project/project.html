@@ -709,7 +709,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://localhost:5001/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {

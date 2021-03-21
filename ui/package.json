@@ -1,7 +1,21 @@
 {
-  "name": "ui",
+  "name": "redteam",
   "version": "1.0.0",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node .",
+    "build": "node build server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/bourbonkk/redteam.git"
+  },
+  "author": "mskim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/bourbonkk/redteam/issues"
+  },
+  "homepage": "https://gitlab.com/bourbonkk/redteam#readme"
 }
