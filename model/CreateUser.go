@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"database/sql"
 	"encoding/base64"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
@@ -18,8 +17,12 @@ import (
 var (
 	tokenSecret  = []byte(os.Getenv("TOKEN_SECRET"))
 	tokenRefresh = []byte(os.Getenv("TOKEN_REFRESH"))
-	key = "qlwkndlqiwndlian"
+	key = "qlwkndlqiwndlian" // 16글자 -> aes-128, 만약 32글자라면(32bit) -> aes-256
 )
+
+type Email struct {
+	Email         string `json:"email"`
+}
 
 func (u *User) CreateUsers() (int, error) {
 
@@ -79,9 +82,9 @@ func (u *User) CreateUsers() (int, error) {
 	row := db.QueryRow(query, u.Email)
 
 	// 403에러 : 회원가입시 이미 존재하는 계정이 있는경우
-	userLookup := User{}
+	userLookup := Email{}
 	err = row.Scan(&userLookup)
-	if err != sql.ErrNoRows {
+	if userLookup.Email != ""  {
 		num = 403  // 이미 존재하는 이메일입니다.
 		fmt.Println("found user : " + userLookup.Email)
 		return num, fmt.Errorf("This account already exists. ")

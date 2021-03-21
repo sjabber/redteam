@@ -8,16 +8,16 @@
 
 
 #### 시스템 구성도
-![image](https://user-images.githubusercontent.com/46473153/102982388-c7b10e80-454d-11eb-9343-72eabb065e63.png)
+![image](https://user-images.githubusercontent.com/46473153/111221494-e7704400-861d-11eb-9db8-893311c6f144.png)
 
 #### 시스템 개요도
-![image](https://user-images.githubusercontent.com/46473153/102982440-dac3de80-454d-11eb-99ed-08de6963437d.png)
+![image](https://user-images.githubusercontent.com/46473153/111221598-0cfd4d80-861e-11eb-85dc-908e7276eaf4.png)
 
 #### 시스템 주요 기능 리스트
-![image](https://user-images.githubusercontent.com/46473153/102982471-e911fa80-454d-11eb-8032-184ec2d08a42.png)
+![image](https://user-images.githubusercontent.com/46473153/111221652-1f778700-861e-11eb-9655-ed90bda56809.png)
 
 #### 프로젝트 개발환경
-![image](https://user-images.githubusercontent.com/46473153/102984178-8bcb7880-4550-11eb-97c2-20a0d4d60c0a.png)
+![image](https://user-images.githubusercontent.com/46473153/111221992-944ac100-861e-11eb-9ab5-8a0cbb5b17fc.png)
 
 ## 작품의 주요 기능 및 장점
 #### 기능
@@ -26,7 +26,7 @@
 - 훈련대상자 등록 및 관리
 - SMTP 연결테스트 및 설정
 - 악성메일 훈련 프로젝트 생성 및 예약
-- 훈련 진행상황 확인, 훈련결과 확인, 재훈련 대상자 확인
+- 훈련 진행상황 확인, 훈련결과 확인
 
 #### 장점
 - 무료 제공으로 인해 중소기업들의 부담 없는 사용이 가능

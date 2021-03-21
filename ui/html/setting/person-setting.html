@@ -168,6 +168,9 @@
                     $('#dropdown_name').text(responseObj.user_info.name);
                     $('#email').val(responseObj.user_info.email);
                     $('#name').val(responseObj.user_info.name);
+                } else if (r.status === 403) {
+                    Refresh();
+                    GetUserSetting();
                 } else {
                     document.location.href = '/';
                 }
@@ -175,8 +178,6 @@
         };
         r.send();
     }
-    // CheckLogin();
-    GetUserSetting();
 
     function SetUserSetting() {
         const email = $('#email').val();
@@ -208,6 +209,9 @@
                     alert("계정 정보를 확인해주세요.");
                 } else if (r.status === 401) {
                     alert("비밀번호를 확인해주세요.");
+                } else if (r.status === 403) {
+                    Refresh();
+                    SetUserSetting();
                 }
             }
         };
@@ -229,14 +233,18 @@
                 if (r.status === 200) {
                     alert("정상적으로 계정이 삭제되었습니다.");
                     Logout();
+                } else if (r.status === 403) {
+                    Refresh();
+                    deleteAccount();
                 } else {
                     alert("계정 삭제 실패했습니다.")
                 }
             }
         };
         r.send();
-        
     }
+
+    GetUserSetting();
 </script>
 </body>
 

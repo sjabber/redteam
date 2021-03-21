@@ -377,7 +377,7 @@
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <div class="box" style="height: 460px">
+                    <div class="box" style="height: 94%; overflow: hidden">
 
                         <div class="box-header">
                             <h3 class="chip--floating">진행중인 프로젝트 현황</h3>
@@ -392,11 +392,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="box-body">
-                            <div class="canvas-wrapper pb-2" style="height: 300px">
+                        <div class="box-body" style="height: 100%">
+                            <div class="canvas-wrapper pb-2" style="height: 300px; align-content: center;">
                                 <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
                                          font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
-                                <div class="row p-2" style="text-align: center">
+                                <div class="row p-2" style="height: 100%; width: 100%; overflow-y: auto;">
+                                    <!--                                <div class="row p-2" style="text-align: center">-->
+                                    <!--                                    style="height: 100%; overflow-y: auto"-->
+                                    <!--                                    <div class="pgn-modal-wrapper" style="height: 100%; overflow-y: auto">-->
                                     <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category"></canvas>
                                     </div>
@@ -516,6 +519,7 @@
 <script src="/js/demo.js"></script>
 <script src="/js/script.js"></script>
 <script>
+    // 계정별 태그정보 (최대 5개)
     var tg_total = [5];
 
     function GetDashBoard_Info1() {
@@ -536,12 +540,8 @@
                     $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetDashBoard_Info1();
-                    } else {
-                        document.location.href = '/';
-                    }
+                    Refresh();
+                    GetDashBoard_Info1();
                 }
             }
         };
@@ -558,7 +558,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    //console.log(r.responseText)
+                    console.log(r.responseText)
 
                     if (rObj.project_detail != null) {
                         // table 비워주기
@@ -568,7 +568,8 @@
 
                         // Note json 형식
                         // 사용템플릿, 메일제목, 메일전송계정, 훈련기간, 훈련대상자 태그, 훈련대상자 수, 발송, 열람, 감염
-                        // tmp_no, mail_title, sender_email, start_date, end_date, tag_no, targets, send_no, reading, infection
+                        // tmp_no, mail_title, sender_email, start_date, end_date, tag_no, targets, send_no, reading,
+                        // connect_no, infection
 
                         // 태그 분리작업
                         let full_tag = ''
@@ -579,14 +580,15 @@
                         let ctxPieCategory2 = document.getElementById("pie-chart-category2");
                         let ctxPieCategory3 = document.getElementById("pie-chart-category3");
 
-                        let s_per = rObj.project_detail.send_no;
-                        let r_per = rObj.project_detail.reading;
-                        let i_per = rObj.project_detail.infection;
-                        let t_per = rObj.project_detail.targets;
+                        let s_per = rObj.project_detail.send_no; // 보낸 수
+                        let r_per = rObj.project_detail.reading; // 읽은 수
+                        let c_per = rObj.project_detail.connect_no // 접속 수
+                        let i_per = rObj.project_detail.infection; // 감염된 수
+                        let t_per = rObj.project_detail.targets; // 총 훈련 대상자
 
                         if (ctxPieCategory) {
-                            ctxPieCategory.width = 229;
-                            ctxPieCategory.height = 229;
+                            ctxPieCategory.width = 180;
+                            ctxPieCategory.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -621,8 +623,8 @@
                         }
 
                         if (ctxPieCategory1) {
-                            ctxPieCategory1.width = 229;
-                            ctxPieCategory1.height = 229;
+                            ctxPieCategory1.width = 180;
+                            ctxPieCategory1.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -656,15 +658,15 @@
                         }
 
                         if (ctxPieCategory2) {
-                            ctxPieCategory2.width = 229;
-                            ctxPieCategory2.height = 229;
+                            ctxPieCategory2.width = 180;
+                            ctxPieCategory2.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
                                 data: {
                                     datasets: [
                                         {
-                                            data: [t_per - i_per, i_per],
+                                            data: [t_per - c_per, c_per],
                                             backgroundColor: ["#f5d1b5", "#e87107"]
                                         }
                                     ],
@@ -692,8 +694,8 @@
                         }
 
                         if (ctxPieCategory3) {
-                            ctxPieCategory3.width = 229;
-                            ctxPieCategory3.height = 229;
+                            ctxPieCategory3.width = 180;
+                            ctxPieCategory3.height = 180;
 
                             var pieData = {
                                 type: "doughnut",
@@ -761,7 +763,7 @@
                             reading_percentage = parseInt(reading_percentage);
 
                             // 접속비율
-                            let connect_percentage = (rObj.project_detail.connect / rObj.project_detail.targets) * 100;
+                            let connect_percentage = (rObj.project_detail.connect_no / rObj.project_detail.targets) * 100;
                             connect_percentage = parseInt(connect_percentage);
 
                             // 감염비율
@@ -807,7 +809,7 @@
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(" + reading_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<td width="200">접속</td>' +
-                                '<td class="font-weight-bold">' + rObj.project_detail.connect +
+                                '<td class="font-weight-bold">' + rObj.project_detail.connect_no +
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(" + connect_percentage + "%)" + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
@@ -828,12 +830,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetDashBoard_Info3();
-                    } else {
-                        document.location.href = '/';
-                    }
+                    Refresh();
+                    GetDashBoard_Info3();
                 }
             }
         };
@@ -866,9 +864,9 @@
                                 if (rObj.project_list[i].p_status === "0") {
                                     status_tag += '<label class="badge badge-green">' + '예약' + '</label>'
                                 } else if (rObj.project_list[i].p_status === "1") {
-                                    status_tag += '<label class="badge badge-red">' + '진행중' + '</label>'
+                                    status_tag += '<label class="badge badge-blue">' + '진행중' + '</label>'
                                 } else if (rObj.project_list[i].p_status === "2") {
-                                    status_tag += '<label class="badge badge-blue">' + '종료' + '</label>'
+                                    status_tag += '<label class="badge badge-red">' + '종료' + '</label>'
                                 } else if (rObj.project_list[i].p_status === "3") {
                                     status_tag += '<label class="badge badge-info">' + '오류' + '</label>'
                                 }
@@ -899,12 +897,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetDashBoard_Info3();
-                    } else {
-                        document.location.href = '/';
-                    }
+                    Refresh();
+                    GetDashBoard_Info3();
                 }
             }
         };
@@ -912,7 +906,6 @@
     }
 
     function ResultViewer(p_no) {
-        // alert('결과보기 미 개발상태.' + p_no);
         GetResult(p_no);
         $("#result_viewer").show();
     }
@@ -920,6 +913,7 @@
     function CloseResultViewer() {
         $("#result_viewer").hide();
     }
+
     function GetResult(p_no) {
         //    todo GetResult api 구현해야함
         console.log('GetResult : p_no -> ' + p_no)
@@ -966,11 +960,11 @@
                             '</tr>' +
                             '<tr>' +
                             '<td width="200">유출 상태</td>' +
-                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_status_percent +' %'+ '</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.p_status_percent + ' %' + '</td>' +
                             '</tr>' +
                             '<tr>' +
                             '<td width="200">메일 전송률</td>' +
-                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.progress_percent +' %'+ '</td>' +
+                            '<td class="font-weight-normal">' + rObj.resultDetail.ProjectInfo.progress_percent + ' %' + '</td>' +
                             '</tr>' +
                             '<tr>' +
                             '<td width="200">프로젝트 기간</td>' +
@@ -1019,73 +1013,73 @@
                             '</tr>'
                         );
                         warnLevel = '양호'
-                        if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 70){
+                        if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 70) {
                             warnLevel = '심각'
-                        } else if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 30){
+                        } else if (rObj.resultDetail.ProjectSummary.ResultOfAll.rate > 30) {
                             warnLevel = '주의'
                         }
                         $('#totalResult > tbody:last').append(
                             '<tr>' +
                             '<td >전체</td>' +
                             '<td >' + rObj.resultDetail.ProjectSummary.ResultOfAll.infection_count +
-                            ' / ' +rObj.resultDetail.ProjectSummary.ResultOfAll.total_count +' 명'+'</td>' +
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultOfAll.rate +' %' +'</td>' +
-                            '<td >'+warnLevel+'</td>' +
+                            ' / ' + rObj.resultDetail.ProjectSummary.ResultOfAll.total_count + ' 명' + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultOfAll.rate + ' %' + '</td>' +
+                            '<td >' + warnLevel + '</td>' +
                             '</tr>'
                         );
                         $('#resultPerClassification > tbody:last').append(
                             '<tr>' +
                             '<td >태그</td>' +
-                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.tag_name +'</td>'+
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.infection_count +
-                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.total_count +' 명'+'</td>' +
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.rate+' %'+'</td>' +
-                            '</tr>'+
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.tag_name + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.infection_count +
+                            ' / ' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.total_count + ' 명' + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CTag.rate + ' %' + '</td>' +
+                            '</tr>' +
                             '<tr>' +
                             '<td >소속</td>' +
-                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.organ_name +'</td>'+
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.infection_count +
-                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.total_count +' 명'+'</td>' +
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.rate+' %'+'</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.organ_name + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.infection_count +
+                            ' / ' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.total_count + ' 명' + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.COrgan.rate + ' %' + '</td>' +
                             '</tr>' +
                             '<tr>' +
                             '<td >직급</td>' +
-                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.position_name +'</td>'+
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.infection_count +
-                            ' / ' +rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.total_count +' 명'+'</td>' +
-                            '<td >'+rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.rate+' %'+'</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.position_name + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.infection_count +
+                            ' / ' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.total_count + ' 명' + '</td>' +
+                            '<td >' + rObj.resultDetail.ProjectSummary.ResultPerClassification.CPosition.rate + ' %' + '</td>' +
                             '</tr>'
                         );
                         for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerTag.length; i++) {
                             $('#perTag > tbody:last').append(
                                 '<tr>' +
-                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerTag[i].tag_name+'</td>' +
-                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count+'" max="'+
-                                rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count+'"></progress>'+
-                                rObj.resultDetail.ResultPerStatistic.PerTag[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count+
-                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count +' 명)'+'</td>' +
+                                '<td >' + rObj.resultDetail.ResultPerStatistic.PerTag[i].tag_name + '</td>' +
+                                '<td ><progress class="valign-middle" value="' + rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count + '" max="' +
+                                rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count + '"></progress>' +
+                                rObj.resultDetail.ResultPerStatistic.PerTag[i].rate + ' %(' + rObj.resultDetail.ResultPerStatistic.PerTag[i].infection_count +
+                                ' / ' + rObj.resultDetail.ResultPerStatistic.PerTag[i].total_count + ' 명)' + '</td>' +
                                 '</tr>'
                             )
                         }
                         for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerOrgan.length; i++) {
                             $('#perOrgan > tbody:last').append(
                                 '<tr>' +
-                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].organ_name+'</td>' +
-                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count+'" max="'+
-                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count+'"></progress>'+
-                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count+
-                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count +' 명)'+'</td>' +
+                                '<td >' + rObj.resultDetail.ResultPerStatistic.PerOrgan[i].organ_name + '</td>' +
+                                '<td ><progress class="valign-middle" value="' + rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count + '" max="' +
+                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count + '"></progress>' +
+                                rObj.resultDetail.ResultPerStatistic.PerOrgan[i].rate + ' %(' + rObj.resultDetail.ResultPerStatistic.PerOrgan[i].infection_count +
+                                ' / ' + rObj.resultDetail.ResultPerStatistic.PerOrgan[i].total_count + ' 명)' + '</td>' +
                                 '</tr>'
                             )
                         }
                         for (let i = 0; i < rObj.resultDetail.ResultPerStatistic.PerPosition.length; i++) {
                             $('#perPosition > tbody:last').append(
                                 '<tr>' +
-                                '<td >'+rObj.resultDetail.ResultPerStatistic.PerPosition[i].position_name+'</td>' +
-                                '<td ><progress class="valign-middle" value="'+rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count+'" max="'+
-                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count+'"></progress>'+
-                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].rate+' %('+rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count+
-                                ' / ' +rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count +' 명)'+'</td>' +
+                                '<td >' + rObj.resultDetail.ResultPerStatistic.PerPosition[i].position_name + '</td>' +
+                                '<td ><progress class="valign-middle" value="' + rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count + '" max="' +
+                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count + '"></progress>' +
+                                rObj.resultDetail.ResultPerStatistic.PerPosition[i].rate + ' %(' + rObj.resultDetail.ResultPerStatistic.PerPosition[i].infection_count +
+                                ' / ' + rObj.resultDetail.ResultPerStatistic.PerPosition[i].total_count + ' 명)' + '</td>' +
                                 '</tr>'
                             )
                         }
@@ -1094,12 +1088,8 @@
                     }
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetDashBoard_Info3();
-                    } else {
-                        document.location.href = '/';
-                    }
+                    Refresh();
+                    GetDashBoard_Info3();
                 }
             }
         };

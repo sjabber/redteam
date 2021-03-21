@@ -2,10 +2,12 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"redteam/model"
+	"strconv"
 )
 
 func ProjectCreate(c *gin.Context) {
@@ -165,12 +167,6 @@ func StartProjectList(c *gin.Context) {
 	}
 }
 
-// 카프카 컨슈머, 컴파일과 동시에 별도 고루틴에서 계속 작동한다.
-func Consumer() {
-	p := model.ProjectStart{}
-	p.Consumer()
-}
-
 func GetTag(c *gin.Context) {
 	// 계정정보
 	num := c.Keys["number"].(int)
@@ -179,9 +175,44 @@ func GetTag(c *gin.Context) {
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
-	c.JSON(http.StatusOK, gin.H{
-		"isOk":   1,
-		"status": http.StatusOK,
-		"tags":   model.GetTag(&conn, num), // 태그들
-	})
+	tags, err := model.GetTag(&conn, num)
+	if err != nil {
+		log.Print(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"isOk":   0,
+			"status": http.StatusBadRequest,
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"isOk":   1,
+			"status": http.StatusOK,
+			"tags":   tags, // 태그들
+		})
+	}
+
+}
+
+func ProjectDetail(c *gin.Context) {
+	// 계정정보
+	num := c.Keys["number"].(int)
+
+	// DB
+	db, _ := c.Get("db")
+	conn := db.(sql.DB)
+
+	// GET 메서드로 전달받은 템플릿 번호 --> tn에 저장
+	tn := c.Query("template_no")
+	pn := c.Query("project_no")
+	tmpNo, _ := strconv.Atoi(tn)
+	pNo, _ := strconv.Atoi(pn)
+	fmt.Print(tmpNo)
+
+	tmp, err := model.ProjectDetail(&conn, num, tmpNo, pNo)
+	if err != nil {
+		log.Print(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"tmpls": tmp})
+	}
 }

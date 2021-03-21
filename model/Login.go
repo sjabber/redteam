@@ -38,7 +38,7 @@ func (u *User) GetAuthToken() (string, string, error) {
 	claims["user_email"] = u.Email
 	claims["user_name"] = u.Name
 	claims["user_no"] = u.UserNo
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	authToken, err := token.SignedString(tokenSecret)
 
@@ -101,7 +101,7 @@ where user_no = $1
 func IsTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// fmt.Printf("Parsing: %v \n", token)
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method : %v",
 				token.Header["alg"])
 			// HMAC 을 사용하는 이유
@@ -112,6 +112,10 @@ func IsTokenValid(tokenString string) (bool, User) {
 	})
 
 	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return false, User{}
+		}
+
 		fmt.Errorf("Error content : %v \n", err)
 		return false, User{}
 	}

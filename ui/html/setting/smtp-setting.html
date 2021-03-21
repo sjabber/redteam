@@ -189,6 +189,9 @@
                     $('#timeout').val(responseObj.smtp_setting.smtp_timeout);
                     // console.log($('#protocol option:selected').val());
                     // console.log($('#tls_protocol option:selected').val());
+                } else if(r.status === 403) {
+                    Refresh();
+                    GetSmtpSetting();
                 } else {
                     document.location.href = '/';
                 }
@@ -196,9 +199,6 @@
         };
         r.send();
     }
-
-    // CheckLogin();
-    GetSmtpSetting();
 
     function SetSmtpSetting() {
         const hostname = $('#hostname').val();
@@ -231,6 +231,9 @@
                     alert("SMTP 정보를 확인해주세요.");
                 } else if (r.status === 401) {
                     alert("비밀번호를 확인해주세요.");
+                } else if (r.status === 403) {
+                    Refresh();
+                    SetSmtpSetting();
                 }
             }
         };
@@ -264,6 +267,9 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
+                } else if (r.status === 403) {
+                    Refresh();
+                    SmtpConnectionTest();
                 } else {
                     responseObj = r.responseText;
                     alert(responseObj)
@@ -302,6 +308,9 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
+                } else if(r.status === 403) {
+                    Refresh();
+                    SmtpSendMailTest();
                 } else {
                     responseObj = JSON.parse(r.responseText);
                     alert("SMTP 정보를 확인해주세요.\n"+responseObj.error.Msg);
@@ -309,8 +318,10 @@
             }
         };
         r.send(JSON.stringify(formData));
-
     }
+
+    GetDashBoard();
+    GetSmtpSetting();
 </script>
 </body>
 

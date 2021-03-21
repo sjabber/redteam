@@ -47,18 +47,22 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		bearer, err := c.Request.Cookie("access-token")
 		if err != nil {
-			log.Println(err.Error()) // named cookie not present
-			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+			log.Println(err) // named cookie not present
+
 			// access-token 을 읽어오는데 오류가 발생할 경우 403에러를 반환한다.
+			c.AbortWithStatus(http.StatusForbidden) // recover.go 로 이동하기전에 403 에러를 반환시켜버림.
+			//c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 			c.Abort()
+			return
 		}
 
 		isValid, user := model.IsTokenValid(bearer.Value)
-		if isValid == false || bearer == nil {
-			log.Println(err.Error())
-			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		if !isValid || bearer == nil {
 			// access-token 을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
+			c.AbortWithStatus(http.StatusForbidden) // recover.go 로 이동하기전에 403 에러를 반환시켜버림.
+			//c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 			c.Abort()
+			return
 		} else {
 			c.Set("number", user.UserNo)
 			c.Set("email", user.Email)
@@ -67,3 +71,28 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 		}
 	}
 }
+
+// 기존 함수 검증 미들웨어
+//func TokenAuthMiddleWare() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		bearer, err := c.Request.Cookie("access-token")
+//		if err != nil {
+//			log.Println(err) // named cookie not present
+//			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+//			// access-token 을 읽어오는데 오류가 발생할 경우 403에러를 반환한다.
+//			c.Abort()
+//		}
+//
+//		isValid, user := model.IsTokenValid(bearer.Value)
+//		if isValid == false || bearer == nil {
+//			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+//			// access-token 을 검증할 때 false (유효시간 만료 등)면 403에러를 반환한다.
+//			c.Abort()
+//		} else {
+//			c.Set("number", user.UserNo)
+//			c.Set("email", user.Email)
+//			c.Set("name", user.Name)
+//			c.Next()
+//		}
+//	}
+//}

@@ -2,22 +2,20 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"redteam/model"
 	"strconv"
 )
+
 // 토큰안에 이름도 넣는다.
-var Account interface{}
+var Account string
 
 func Dashboard(c *gin.Context) {
 
-	Account = c.Keys["email"]
-	//if Account == nil {
-	//	c.JSON(http.StatusForbidden, gin.H{})
-	//	return
-	//}
+	Account = fmt.Sprintf("%v", c.Keys["email"])
 
 	// email, name 을 출력할 수 있도록 만든다.
 	c.JSON(http.StatusOK, gin.H{"email": c.Keys["email"], "name": c.Keys["name"]})
@@ -36,15 +34,15 @@ func GetDashboardInfo1(c *gin.Context) {
 
 	Info1, err := model.GetDashboardInfo1(&conn, num)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"info1" : Info1,
+			"info1": Info1,
 		})
 	}
 
@@ -69,12 +67,12 @@ func GetDashboardInfo2(c *gin.Context) {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_detail" : Info2,
+			"project_detail": Info2,
 		})
 	}
 
@@ -95,12 +93,12 @@ func GetDashboardInfo3(c *gin.Context) {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
-			"isOk": 0,
+			"isOk":   0,
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"project_list" : Info3,
+			"project_list": Info3,
 		})
 	}
 

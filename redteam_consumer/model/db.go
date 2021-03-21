@@ -2,7 +2,7 @@ package model
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
+	_"github.com/lib/pq"
 	"os"
 )
 
@@ -21,7 +21,7 @@ func ConnectDB() (*sql.DB, error) {
 	//Note 서버 DB 연결시 사용하는 코드
 	db, err := sql.Open("postgres",
 		"user=" + dbUser + " password=" + dbPw + " dbname=" + dbName +
-			" host=" + dbHost + " sslmode=disable port=5432")
+		" host=" + dbHost + " sslmode=disable port=5432")
 
 	if db != nil {
 		db.SetMaxOpenConns(100)

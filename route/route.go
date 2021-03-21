@@ -63,16 +63,15 @@ func RegisterRoute(r *gin.Engine) {
 		apiV2.GET("/smtpConnectSimpleCheck", api.SmtpConnectionCheck) //Note - spring boot
 		apiV2.GET("/getProject", api.GetProject)
 		apiV2.POST("/projectModify", api.ModifyProject)
+		setting.GET("/ProjectDetail", api.ProjectDetail)
 		//apiV2.POST("/endProjectList", api.EndProjectList)
 		apiV2.POST("/delProject", api.DeleteProject)
 		apiV2.POST("/startProjectList", api.StartProjectList)
 		apiV2.GET("/resultDetail", api.ResultDetail)
 	}
 
-	//r.LoadHTMLGlob("./ui/html/target/*")
 	target := apiV1.Group("/target")
 	target.Use(middleware.TokenAuthMiddleWare())
-	//target.Static("/files", "C:/Users/Taeho/go/src/redteam")
 	{
 		target.GET("/getTarget", api.GetTarget)
 		target.POST("/delTarget", api.DeleteTarget)

@@ -11,13 +11,14 @@ import (
 
 // Target(훈련대상)을 관리하기 위한 json 구조체
 type Target struct {
+	FakeNo           int       `json:"fake_no"`
 	TargetNo         int       `json:"tg_no"`
 	TargetName       string    `json:"tg_name"`
 	TargetEmail      string    `json:"tg_email"`
 	TargetPhone      string    `json:"tg_phone"`
 	TargetOrganize   string    `json:"tg_organize"` //소속
 	TargetPosition   string    `json:"tg_position"` //직급
-	TargetTag        [3]string `json:"tg_tag"`      //태그, 추후에 slice 로 변경한다..
+	TargetTag        [3]string `json:"tg_tag"`      //태그 내보낼 때 사용
 	TargetCreateTime string    `json:"created_t"`
 	TagArray         []string  `json:"tag_no"` // 태그 입력받을 때 사용
 }
@@ -33,12 +34,8 @@ type Tag struct {
 	TagCreateTime string `json:"created_t"`
 }
 
-// 대상관리 페이지 맨 처음 GetTag가 실행되기 때문에
-// 태그들을 전역변수인 해시맵에 담아서 트랜잭션 횟수를 줄인다.
-var Hashmap = make(map[int]string) // 태그값들을 담아놓을 변수.
-
-//
-func isValueIn(value string, list []string) bool {
+// 해시테이블에 해당하는 태그 값이 들어가 있는지 점검할때 사용하는 메서드
+func isValueIn(value string, list map[int]string) bool {
 	for _, v := range list {
 		if v == value {
 			return true
@@ -58,29 +55,26 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	t.TargetOrganize = strings.Trim(t.TargetOrganize, " ")
 	t.TargetPosition = strings.Trim(t.TargetPosition, " ")
 
-	if len(t.TargetName) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf("Target's name is empty ")
-	} else if len(t.TargetEmail) < 1 {
+	if len(t.TargetEmail) < 1 {
 		errcode = 400
 		return errcode, fmt.Errorf(" Target's E-mail is empty ")
-	} else if len(t.TargetPhone) < 1 {
+	} else if len(t.TargetName) < 1 {
 		errcode = 400
-		return errcode, fmt.Errorf(" Target's Phone number is empty ")
-	} else if len(t.TargetOrganize) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf(" Target's Organize is empty ")
-	} else if len(t.TargetPosition) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf(" Target's Position is empty ")
+		return errcode, fmt.Errorf("Target's name is empty ")
 	}
 
-	//else if len(t.TagArray) < 1 {
-	//	return fmt.Errorf(" Target's Tag is empty ")
+	//else if len(t.TargetPhone) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Phone number is empty ")
+	//} else if len(t.TargetOrganize) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Organize is empty ")
+	//} else if len(t.TargetPosition) < 1 {
+	//	errcode = 400
+	//	return errcode, fmt.Errorf(" Target's Position is empty ")
+	//} else if len(t.TagArray) < 1 {
+	//	return errcode, fmt.Errorf(" Target's Tag is empty ")
 	//}
-
-	// 추후 조건 좀더 꼼꼼하게 만들기..
-	// ex) 엑셀파일 중간에 값이 비워져있는 경우 채워넣을 Default 값에 대한 조건 등...
 
 	// 이메일 형식검사
 	var validEmail, _ = regexp.MatchString(
@@ -106,6 +100,22 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	if phoneNumber != true {
 		errcode = 402
 		return errcode, fmt.Errorf("Phone number format is incorrect. ")
+	}
+
+	// 등록된 대상자 수를 조회한다.
+	row := conn.QueryRow(`SELECT count(target_no)
+								FROM target_info
+								WHERE user_no = $1;`, num)
+	err := row.Scan(&t.TargetNo)
+	if err != nil {
+		errcode = 500
+		return errcode, fmt.Errorf("%v", err)
+	}
+
+	// 등록된 대상자 수 검사 (405에러)
+	if t.TargetNo >= 300 {
+		errcode = 405
+		return errcode, fmt.Errorf(" The target is already full. ")
 	}
 
 	// 태그 중복제거
@@ -136,7 +146,7 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 		"tag1, tag2, tag3, user_no) " +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
-	_, err := conn.Exec(query1, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition,
+	_, err = conn.Exec(query1, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition,
 		t.TagArray[0], t.TagArray[1], t.TagArray[2], num)
 	if err != nil {
 		errcode = 500
@@ -160,14 +170,15 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	// 대상목록들을 20개씩만 잘라서 반하여 페이징처리한다.
 	query := `
     SELECT
+       row_num,
        target_name,
        target_email,
        target_phone,
        target_organize,
        target_position,
-       tag1,
-       tag2,
-       tag3,
+       COALESCE(tag_name1, '') as tag_name1, -- Null 일 경우 공백으로 대체
+       COALESCE(tag_name2, '') as tag_name2, -- Null 일 경우 공백으로 대체
+       COALESCE(tag_name3, '') as tag_name3, -- Null 일 경우 공백으로 대체
        to_char(modified_time, 'YYYY-MM-DD'),
        target_no
     FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num,
@@ -180,14 +191,25 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
              tag1,
              tag2,
              tag3,
-             modified_time
+             modified_time,
+             user_no
           FROM target_info
           WHERE user_no = $1
          ) AS T
+        left join (select tag_name as tag_name1, user_no, tag_no
+                    from tag_info
+                    where user_no = $1) ti1 on ti1.tag_no = T.tag1
+        left join (select tag_name as tag_name2, user_no, tag_no
+                    from tag_info
+                    where user_no = $1) ti2 on ti2.tag_no = T.tag2
+        left join (select tag_name as tag_name3, user_no, tag_no
+                    from tag_info
+                    where user_no = $1) ti3 on ti3.tag_no = T.tag3
     WHERE row_num > $2
     ORDER BY target_no asc
-    LIMIT 20;
+    LIMIT 20; -- 개수 20개 제한
 `
+
 	// 조건에 맞는 데이터를 조회한다.
 	rows, err := conn.Query(query, num, pageNum)
 	if err != nil {
@@ -200,19 +222,17 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	var targets []Target
 	tg := Target{}
 
-	//태그의 번호가 담길 변수
-	var tags [3]int
-
 	// 목록들을 하나하나 읽어들여온다.
 	for rows.Next() {
-		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
-			&tg.TargetPosition, &tags[0], &tags[1], &tags[2], &tg.TargetCreateTime, &tg.TargetNo)
+		err = rows.Scan(&tg.FakeNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
+			&tg.TargetPosition, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2], &tg.TargetCreateTime, &tg.TargetNo)
 		if err != nil {
-			fmt.Printf("Targets scanning Error. : %v", err)
+			fmt.Printf("%v", err)
 			continue
 		}
 
 		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
+		//  추후 프론트에서 이 과정이 수행되도록 수정하자..
 		var sub [3]string
 		phone := []rune(tg.TargetPhone)
 
@@ -238,31 +258,13 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
 		}
 
-		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
-		// 데이터베이스에서 일일히 조회할 필요없이 GetTag()를 통해 가져오고 저장한 값과 비교해 조회속도를 높인다.
-	Loop1:
-		for i := 0; i < len(tags); i++ {
-			if tags[i] == 0 {
-				tg.TargetTag[i] = ""
-				continue Loop1
-			}
-
-			for key, val := range Hashmap {
-				if key == tags[i] {
-					tg.TargetTag[i] = val
-					break
-				} else {
-					tg.TargetTag[i] = ""
-				}
-			}
-		}
-
 		targets = append(targets, tg)
 
+		// 태그 이름 비워주기
 		tg.TargetTag[0] = ""
 		tg.TargetTag[1] = ""
 		tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
-	}// for문 끝.
+	} // for문 끝.
 
 	// 전체 타겟(훈련대상)의 수를 반환한다.
 	query = `
@@ -295,8 +297,6 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 		}
 	}
 
-
-
 	defer conn.Close()
 
 	return nil
@@ -304,13 +304,23 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 
 // 반복해서 읽고 값을 넣는것을 메서드로 구현하고 API는 이걸 그냥 사용하기만 하면됨.
 // Excel 파일로부터 대상의 정보를 일괄적으로 읽어 DB에 등록한다.
-func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
+func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, error) {
+
+	// 훈련대상자 수를 300명으로 제한하기 위해 조회한다.
+	var count int // 등록된 훈련대상자 수
+	row := conn.QueryRow(`SELECT count(target_no) 
+								FROM target_info
+								WHERE user_no = $1;`, num)
+	err := row.Scan(&count)
+	if count >= 300 {
+		return 405, fmt.Errorf("The target is already full. ")
+	}
 
 	// str -> 일괄등록하기 위한 업로드 경로 + 파일 이름이 담기는 변수
 	f, err := excelize.OpenFile(uploadPath)
 	if err != nil {
 		fmt.Println(err)
-		return nil
+		return 400, nil
 	}
 
 	user1 := strconv.Itoa(num) //int -> string
@@ -318,17 +328,35 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 	// Bulk insert 하기 위해 값들을 쌓아놓을 변수
 	var BigString string
 
-	// 태그 값을 db 조회없이 비교, 대조하여 삽입하여 성능을 높이기 위한 변수
-	var list []string
-	pt := 0
-	for _,  value := range Hashmap {
-		list = append(list, value)
-		pt++
+	// 태그를 미리 담아놓는 변수
+	var list = make(map[int]string)
+
+	rows, err := conn.Query(`SELECT tag_no, tag_name
+								  FROM tag_info
+								  WHERE user_no = $1
+								  ORDER BY tag_no ASC;`, num)
+	if err != nil {
+		return 500, fmt.Errorf("%v", err)
 	}
 
+	for rows.Next() {
+		var key int
+		var value string
+
+		err = rows.Scan(&key, &value)
+		if err != nil {
+			fmt.Errorf("%v", err)
+		}
+
+		list[key] = value
+	}
 
 	i := 2 // 2행부터 값을 읽어온다.
-	for i <= 501 {
+	for i <= 301 {
+		if count >= 301 {
+			return 405, fmt.Errorf("The target is already full. ")
+		}
+
 		str := strconv.Itoa(i)
 
 		t.TargetName = f.GetCellValue("Sheet1", "A"+str)
@@ -381,17 +409,12 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 			}
 		}
 
-		sub = nil
+		// 중복 제거완료
 		sub = ue
 
-		// t.TagArray 값이 비어있으면 에러나는 관계로 값을 채워준다.
-		//for i := 1; i <= 3; i++ {
-		//	if len(sub) < i {
-		//		sub = append(sub, "0")
-		//	}
-		//}
+		// 비어있는 경우 0을 채워넣어 크기 3을 맞춘다.
 		for j := 0; j < 3; j++ {
-			if len(sub) < j + 1 {
+			if len(sub) < j+1 {
 				sub = append(sub, "0")
 			}
 
@@ -402,14 +425,16 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 	Loop1:
 		for k := 0; k < len(sub); k++ {
+			// 엑셀 파일의 태그정보와 DB의 정보가 일치할 경우
 			if isValueIn(sub[k], list) {
 			Loop2:
-				for key, val := range Hashmap {
+				for key, val := range list {
 					if val == sub[k] {
 						sub[k] = strconv.Itoa(key)
 						break Loop2
 					}
 				}
+				// 그렇지 않을 경우
 			} else {
 				sub[k] = "0"
 				continue Loop1
@@ -423,6 +448,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 			user1 + "," + sub[0] + "," + sub[1] + "," + sub[2] + ")," + "\n"
 
 		i++
+		count++
 	}
 
 	BigString = BigString[:len(BigString)-2]
@@ -440,36 +466,49 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) error {
 
 	//bulkFile.Close()
 
-	return nil
+	return 200, nil
 }
 
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
 func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
-	var tags [3]int
+	//var tags [3]int
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
-		query := `
-         SELECT target_no, target_name, target_email, target_phone, target_organize, target_position, 
-         		to_char(modified_time, 'YYYY-MM-YY HH24:MI'), tag1, tag2, tag3
-         from target_info
-         WHERE user_no = $1
-         ORDER BY target_no`
+		query := `SELECT target_no,
+						   target_name,
+						   target_email,
+						   target_phone,
+						   target_organize,
+						   target_position,
+						   to_char(modified_time, 'YYYY-MM-YY HH24:MI'),
+						   COALESCE(tag_name1, '') as tag_name1,
+						   COALESCE(tag_name2, '') as tag_name2,
+						   COALESCE(tag_name3, '') as tag_name3
+					from target_info as ta
+							 LEFT JOIN (SELECT tag_name as tag_name1, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti1 on ti1.tag_no = ta.tag1
+							 LEFT JOIN (SELECT tag_name as tag_name2, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti2 on ti2.tag_no = ta.tag2
+							 LEFT JOIN (SELECT tag_name as tag_name3, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti3 on ti3.tag_no = ta.tag3
+					WHERE ta.user_no = $1
+					ORDER BY target_no;`
 
 		rows, err := conn.Query(query, num)
 		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Database error. ")
+			return fmt.Errorf("%v", err)
 		}
-
 
 		// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Open Spreadsheet Error. ")
+			return fmt.Errorf("%v", err)
 		}
 		index := f.NewSheet("Sheet1")
 
@@ -477,52 +516,10 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		for rows.Next() {
 			tg := Target{}
 			err = rows.Scan(&tg.TargetNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
-				&tg.TargetPosition, &tg.TargetCreateTime, &tags[0], &tags[1], &tags[2])
+				&tg.TargetPosition, &tg.TargetCreateTime, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2])
 			if err != nil {
-				fmt.Printf("Target scanning error : %v", err)
-				continue
+				return fmt.Errorf("Target scanning error : %v ", err)
 			}
-
-			//query = `SELECT tag_no FROM tag_target_info WHERE user_no = $1 AND target_no = $2`
-			//rows2, err2 := conn.Query(query, num, tg.TargetNo)
-			//if err != nil {
-			//	fmt.Println(err)
-			//	return fmt.Errorf("Database error. ")
-			//}
-
-			//k := 0 // 태그의 인덱스를 담을 변수
-			//var tagNum string
-
-		Loop1:
-			for k := 0; k < len(tags); k++ {
-				if tags[k] == 0 {
-					tg.TargetTag[k] = ""
-					continue Loop1
-				}
-
-				for key, val := range Hashmap {
-					if key == tags[k] {
-						tg.TargetTag[k] = val
-						break
-					} else {
-						tg.TargetTag[k] = ""
-					}
-				}
-			}
-
-			//for k := 0; k < len(tags); k++ { // Note 이중 포문으로 태그의 이름을 조회한다.
-			//	if tags[k] == "0" {
-			//		tg.TargetTag[k] = ""
-			//		continue
-			//	}
-			//
-			//	tagName := conn.QueryRow(`SELECT tag_name FROM tag_info WHERE tag_no = $1`, tags[k])
-			//	err = tagName.Scan(&tg.TargetTag[k])
-			//	if err != nil {
-			//		_ = fmt.Errorf("Target's Tag number query Error. ")
-			//		continue
-			//	}
-			//}
 
 			str := strconv.Itoa(i)
 			f.SetCellValue("Sheet1", "A"+str, tg.TargetName)
@@ -547,7 +544,6 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
 		str := strconv.Itoa(num) //int -> string
 
-
 		// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정, api_Target.go 파일의 todo 3 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 파일 이름에 str변수 (
@@ -561,26 +557,42 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// todo -------------------아래부턴 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------
 	} else {
 
-		query := `SELECT target_name, target_email, target_phone, target_organize, target_position,
- 						 to_char(modified_time, 'YYYY-MM-YY HH24:MI'), tag1, tag2, tag3
-				FROM (SELECT target_name,
-             				 target_email,
-            				 target_phone,
-             				 target_organize,
-             				 target_position,
-             				 modified_time,
-             				 tag1,
-             				 tag2,
-             				 tag3
-      			FROM target_info
-      			WHERE user_no = $1) as T
-				WHERE tag1 = $2
-   				OR tag2 = $2
-   				OR tag3 = $2`
+		query := `SELECT target_name,
+						   target_email,
+						   target_phone,
+						   target_organize,
+						   target_position,
+						   to_char(modified_time, 'YYYY-MM-YY HH24:MI'),
+						   COALESCE(tag_name1, '') as tag_name1,
+						   COALESCE(tag_name2, '') as tag_name2,
+						   COALESCE(tag_name3, '') as tag_name3
+					FROM (SELECT target_name,
+								 target_email,
+								 target_phone,
+								 target_organize,
+								 target_position,
+								 modified_time,
+								 tag1,
+								 tag2,
+								 tag3
+						  FROM target_info as ta
+						  WHERE user_no = $1) as T
+							 LEFT JOIN (SELECT tag_name as tag_name1, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti1 on ti1.tag_no = T.tag1
+							 LEFT JOIN (SELECT tag_name as tag_name2, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti2 on ti2.tag_no = T.tag2
+							 LEFT JOIN (SELECT tag_name as tag_name3, user_no, tag_no
+										FROM tag_info
+										WHERE user_no = $1) ti3 on ti3.tag_no = T.tag3
+					WHERE tag1 = $2
+					   OR tag2 = $2
+					   OR tag3 = $2;`
 
 		result, err := conn.Query(query, num, tagNumber)
 		if err != nil {
-			fmt.Println(err)
+			return fmt.Errorf("%v", err)
 		}
 
 		i := 2
@@ -589,8 +601,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
-			fmt.Println(err)
-			return fmt.Errorf("Open Spreadsheet Error. ")
+			return fmt.Errorf("%v", err)
 		}
 
 		index := f.NewSheet("Sheet1")
@@ -601,27 +612,9 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			// 해당 태그에 속하는 대상들을 하나하나 가져온다.
 			err = result.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone,
 				&tg.TargetOrganize, &tg.TargetPosition, &tg.TargetCreateTime,
-				&tags[0], &tags[1], &tags[2]) //조회한 값들을 하나하나 바인딩
+				&tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2]) //조회한 값들을 하나하나 바인딩
 			if err != nil {
-				_ = fmt.Errorf("Target number scanning Error. ")
-				continue
-			}
-
-		Loop2:
-			for k := 0; k < len(tags); k++ {
-				if tags[k] == 0 {
-					tg.TargetTag[k] = ""
-					continue Loop2
-				}
-
-				for key, val := range Hashmap {
-					if key == tags[k] {
-						tg.TargetTag[k] = val
-						break
-					} else {
-						tg.TargetTag[k] = ""
-					}
-				}
+				return fmt.Errorf("%v", err)
 			}
 
 			str := strconv.Itoa(i)
@@ -644,9 +637,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정, api_Target.go 파일의 todo 3 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 파일 이름에 str변수 (
-		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err != nil {
-			fmt.Println(err2)
-			return fmt.Errorf("Registered Target downloading Error. ")
+		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err2 != nil {
+			return fmt.Errorf("%v", err2)
 		}
 	}
 
@@ -658,7 +650,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 
 	// 태그 이름 검사 (400 에러)
-	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TagName)
+	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$", t.TagName)
 	if validName != true {
 		return fmt.Errorf(" Tag Name is not correct. "), 400
 	}
@@ -672,32 +664,32 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 		return fmt.Errorf("%v", err), 500
 	}
 
-	var tag_name1 []string
-	var tag_name2 string
+	var tagName1 []string
+	var tagName2 string
 	var count int
 
 	for rows.Next() {
-		err = rows.Scan(&tag_name2)
+		err = rows.Scan(&tagName2)
 		count += 1
-		tag_name1 = append(tag_name1, tag_name2)
+		tagName1 = append(tagName1, tagName2)
+	}
+
+	// 태그 개수 검사 (405 에러)
+	if count >= 5 {
+		return fmt.Errorf(" The tag is already full. "), 405
 	}
 
 	// 태그 이름 중복검사 (400 에러)
-	for i := 0; i < len(tag_name1); i++  {
-		if t.TagName == tag_name1[i] {
+	for i := 0; i < len(tagName1); i++ {
+		if t.TagName == tagName1[i] {
 			return fmt.Errorf(" That tag name already exists. "), 400
 		}
-	}
-
-	// 태그 개수 검사 (402 에러)
-	if count >= 5 {
-		return fmt.Errorf(" The tag is already full. "), 402
 	}
 
 	// 위 조건들 전부 충족할 경우 태그 등록
 	_, err = conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
 	if err != nil {
-		return fmt.Errorf("Tag create error. "), 500
+		return fmt.Errorf("%v", err), 500
 	}
 
 	defer conn.Close()
@@ -724,7 +716,7 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 }
 
 // todo 4 : tag_info 에서 사용자 번호로 태그정보를 가져온다.
-func GetTag(conn *sql.DB, num int) []Tag {
+func GetTag(conn *sql.DB, num int) ([]Tag, error) {
 
 	var query string
 
@@ -735,8 +727,7 @@ func GetTag(conn *sql.DB, num int) []Tag {
 `
 	tags, err := conn.Query(query, num)
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		return nil, fmt.Errorf("%v", err)
 	}
 
 	var tag []Tag
@@ -744,23 +735,16 @@ func GetTag(conn *sql.DB, num int) []Tag {
 
 	for tags.Next() {
 		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
-		Hashmap[tg.TagNo] = tg.TagName
-
 		if err != nil {
-			fmt.Printf("Tags scanning Error. : %v", err)
-			continue
+			return nil, fmt.Errorf("%v", err)
 		}
 
 		tag = append(tag, tg)
 	}
 
-	//for key, val := range Hashmap {
-	//	fmt.Println(key, val)
-	//}
-
 	defer conn.Close()
 
-	return tag
+	return tag, nil
 }
 
 func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, searchText string) ([]Target, int, int, error) {
@@ -773,17 +757,18 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 	pageNum = (page - 1) * 20
 
 	// 대상목록들을 20개씩만 잘라서 반하여 페이징처리한다.
-	query := "SELECT target_name, " +
+	query := "SELECT row_num, " +
+		"target_name, " +
 		"target_email, " +
 		"target_phone, " +
 		"target_organize, " +
 		"target_position, " +
-		"tag1, " +
-		"tag2, " +
-		"tag3, " +
+		"COALESCE(tag_name1, '') as tag_name1, " +
+		"COALESCE(tag_name2, '') as tag_name2, " +
+		"COALESCE(tag_name3, '') as tag_name3, " +
 		"to_char(modified_time, 'YYYY-MM-DD')," +
 		"target_no " +
-		"FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num," +
+		"FROM (SELECT ROW_NUMBER() over (ORDER BY target_no) AS row_num, " +
 		"target_no, " +
 		"target_name, " +
 		"target_email, " +
@@ -795,8 +780,17 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 		"tag3, " +
 		"modified_time " +
 		"FROM target_info " +
-		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2" +
+		"WHERE user_no = $1 AND " + searchDivision + " LIKE $2 " +
 		") AS T " +
+		"LEFT JOIN (SELECT tag_name as tag_name1, user_no, tag_no " +
+		"FROM tag_info " +
+		"WHERE user_no = $1) ti1 on ti1.tag_no = T.tag1 " +
+		"LEFT JOIN (SELECT tag_name as tag_name2, user_no, tag_no " +
+		"FROM tag_info " +
+		"WHERE user_no = $1) ti2 on ti2.tag_no = T.tag2 " +
+		"LEFT JOIN (SELECT tag_name as tag_name3, user_no, tag_no " +
+		"FROM tag_info " +
+		"WHERE user_no = $1) ti3 on ti3.tag_no = T.tag3 " +
 		"WHERE row_num > $3 " +
 		"ORDER BY target_no asc " +
 		"LIMIT 20;"
@@ -804,24 +798,22 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 	searchText = "%" + searchText + "%"
 	rows, err := conn.Query(query, num, searchText, pageNum)
 	if err != nil {
-		fmt.Println(err)
-		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
+		return nil, 0, 0, fmt.Errorf("%v", err)
 	}
 
 	var targets []Target
 	tg := Target{}
 
-	var tags [3]int
-
 	for rows.Next() { // 목록들을 하나하나 읽어들여온다.
-		err = rows.Scan(&tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
-			&tg.TargetPosition, &tags[0], &tags[1], &tags[2], &tg.TargetCreateTime, &tg.TargetNo)
+		err = rows.Scan(&tg.FakeNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
+			&tg.TargetPosition, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2], &tg.TargetCreateTime, &tg.TargetNo)
 		if err != nil {
 			fmt.Printf("Targets scanning Error. : %v", err)
 			continue
 		}
 
 		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
+		//  추후 프론트에서 처리하도록 수정한다.
 		var sub [3]string
 		phone := []rune(tg.TargetPhone)
 
@@ -845,25 +837,6 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 			sub[1] = string(phone[3:7])
 			sub[2] = string(phone[7:11])
 			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		}
-
-		// Note 해당 대상(타겟)의 태그값을 여기서 읽어들어온다.
-		// 데이터베이스에서 일일히 조회할 필요없이 GetTag()를 통해 가져오고 저장한 값과 비교해 조회속도를 높인다.
-	Loop1:
-		for i := 0; i < len(tags); i++ {
-			if tags[i] == 0 {
-				tg.TargetTag[i] = ""
-				continue Loop1
-			}
-
-			for key, val := range Hashmap {
-				if key == tags[i] {
-					tg.TargetTag[i] = val
-					break
-				} else {
-					tg.TargetTag[i] = ""
-				}
-			}
 		}
 
 		targets = append(targets, tg)

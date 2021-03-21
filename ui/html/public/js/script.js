@@ -43,7 +43,7 @@ function Logout() {
 
 function CheckLoginInLoginPage() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/checklogin', true);
+    r.open('GET', 'http://localhost:5000/api/checklogin', false);
     r.withCredentials = true;
     r.onreadystatechange = function () {
         // let responseObj;
@@ -65,7 +65,7 @@ function CheckLoginInLoginPage() {
 
 function Tg_total() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/setting/getTag', true);
+    r.open('GET', 'http://localhost:5000/setting/getTag', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -125,7 +125,7 @@ function GetDashBoard() {
     const user_id = document.getElementById("dropdown_id");
     const user_name = document.getElementById("dropdown_name");
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/dashboard', true);
+    r.open('GET', 'http://localhost:5000/api/dashboard', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -139,12 +139,8 @@ function GetDashBoard() {
                 // user_id.text(responseObj.email);
                 // user_name.text(responseObj.name);
             } else if (r.status === 403) {
-                const tokenResult = Refresh();
-                if (tokenResult) {
-                    GetDashBoard()
-                    console.log("true")
-                }
-
+                Refresh();
+                GetDashBoard();
             } else {
                 document.location.href = '/';
             }
@@ -192,17 +188,19 @@ function getRoot() {
 
 function Refresh() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/RefreshToken', true);
+    r.open('GET', 'http://localhost:5000/api/RefreshToken', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
                 console.log(r.responseText);
+                // alert("인증 토큰 갱신 성공했습니다.");
                 return true;
             } else {
-                alert("인증 토큰 갱신 실패했습니다.")
-                document.location.href = "/";
+                //alert("인증 토큰 갱신 실패했습니다.");
+                // document.location.href = "/";
+                return false;
             }
         }
     };
