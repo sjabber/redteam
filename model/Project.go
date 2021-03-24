@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
 )
@@ -63,9 +64,9 @@ type ProjectDelete struct {
 	ProjectNumber []string `json:"project_list"` //front javascript 와 이름을 일치시켜야함.
 }
 
-const (
-	topic         = "redteam"
-	brokerAddress = "localhost:9092"
+var (
+	topic         = os.Getenv("KAFKA_TOPIC")
+	brokerAddress = os.Getenv("KAFKA_HOSTNAME") + ":" + os.Getenv("KAFKA_PORT")
 )
 
 //var Msg string

@@ -4,23 +4,17 @@ import (
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
-	"database/sql"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/segmentio/kafka-go"
 	"gopkg.in/gomail.v2"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-)
-
-var (
-	// todo 추후 환경변수로 변경
-	key = "qlwkndlqiwndlian"
 )
 
 type User struct {
@@ -60,9 +54,14 @@ type ProjectStart2 struct {
 	UserNo   int `json:"user_no"`
 }
 
-const (
-	topic         = "redteam"
-	brokerAddress = "localhost:9092"
+var (
+	topic         = os.Getenv("KAFKA_TOPIC")
+	brokerAddress = os.Getenv("KAFKA_HOSTNAME") + ":" + os.Getenv("KAFKA_PORT")
+)
+
+var (
+	key = []byte(os.Getenv("AES_KEY"))
+	iv = []byte(os.Getenv("AES_IV"))
 )
 
 // 프로젝트가 종료된 다음에 p_status 값 자동으로 변경시키는거 추가해야함.
@@ -214,130 +213,131 @@ func produce(messages []byte, w kafka.Writer) {
 	}
 }
 
+// 카프카 컨슈머는 springboot가 전담한다.
 // kafka consumer function
-func (p *ProjectStart) Consumer() {
-
-	// Kafka consumer
-	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:     []string{brokerAddress},
-		Topic:       topic,
-		GroupID:     "RedTeam",
-		MinBytes:    5,                //5 바이트
-		MaxBytes:    4132,             //1kB
-		MaxWait:     3 * time.Second,  //3초만 기다린다.
-		StartOffset: kafka.LastOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
-		// 있는 경우 중단한 곳부터 계속된다.
-
-		//MinBytes:  10e3, // 10KB
-		//MaxBytes:  10e6, // 10MB
-	})
-
-	// 부득이하게 다른 DB connecting 방법 사용..
-	conn, err := ConnectDB()
-	if err != nil {
-		panic(err.Error())
-	}
-	defer conn.Close()
-
-	// 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
-
-	chance := 0
-	for {
-		// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
-		// json 객체로 받은 값들을 sendMail 메서드에 잘 적재시킨다.
-		Msg, err := r.ReadMessage(context.Background())
-		if err != nil {
-			panic("Could not read message : " + err.Error())
-		}
-		fmt.Printf("message at topic / partition / offset => %v / %v / %v: %s = %s\n",
-			Msg.Topic, Msg.Partition, Msg.Offset, string(Msg.Key), string(Msg.Value))
-
-
-		// json -> ProjectStart 객체 각각에 값으로 들어가도록 한다.
-		json.Unmarshal(Msg.Value, p)
-
-		row := conn.QueryRow(`SELECT target_name,
-      								target_email,
-      								target_organize,
-      								target_position,
-      								target_phone,
-      								mail_title,
-      								mail_content,
-      								smtp_id as sender_email,
-      								smtp_host,
-      								smtp_port,
-      								smtp_id,
-      								smtp_pw
-								FROM (SELECT target_name, target_email, target_organize, target_position, target_phone
-    								  FROM target_info
-    								  WHERE target_no = $1 AND user_no = $2) as T
-       									LEFT JOIN template_info as tmp on tmp_no = $3
-       									LEFT JOIN smtp_info si on si.user_no = $2;`, p.TargetNo, p.UserNo, p.TmpNo)
-
-		// 메일 전송에 필요한 정보들 바인딩
-		err = row.Scan(&p.TargetName, &p.TargetEmail, &p.TargetOrganize, &p.TargetPosition, &p.TargetPhone, &p.MailTitle,
-			&p.MailContent, &p.SenderEmail, &p.SmtpHost, &p.SmtpPort, &p.SmtpId, &p.SmtpPw)
-		if err == sql.ErrNoRows {
-			// 해당 대상자가 존재하지 않는 경우 // Note 이거 지우자 그냥. (project_info 테이블에서 un_send_no도 없애자)
-			_, err = conn.Exec(`UPDATE project_info
-									SET un_send_no = project_info.un_send_no + 1
-									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
-			if err != nil {
-				//continue // 에러나면 그냥 스킵해버리기...
-				panic(err.Error())
-			}
-			log.Println("error occurred 1")
-			continue // 대상자가 없는 경우에는 보내지 못한 메일의 개수를 하나 올리고 다음으로 넘어간다.
-
-		} else if err != nil {
-			// 정말 알 수 없는 에러가 난 케이스
-			_, err = conn.Exec(`UPDATE project_info
-									SET p_status = 3
-									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
-			log.Println("error occurred 2")
-			continue // 이 경우 그냥 스킵
-			//panic(err.Error()) // 이 경우 프로세스 중지.
-		}
-
-		// 파싱작업 수행
-		p.MailContent = parsing(p.MailContent, p.TargetName, p.TargetOrganize,
-			p.TargetPosition, p.TargetPhone, strconv.Itoa(p.TargetNo), strconv.Itoa(p.PNo))
-
-		// smtp 패스워드 복호화 작업 수행
-		block, err := aes.NewCipher([]byte(key))
-		if err != nil {
-			panic(err.Error())
-		}
-		password, _ := base64.StdEncoding.DecodeString(p.SmtpPw)
-		password = Decrypt(block, password)
-		p.SmtpPw = string(password)
-
-		// 가공된 메일 전송
-		err = p.sendMail()
-		if err != nil {
-			panic("Could not send email : " + err.Error())
-		}
-
-		// 메일 보낸 수 +1
-		_, err = conn.Exec(`UPDATE project_info
-								SET send_no = project_info.send_no + 1
-								WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
-		if err != nil {
-			panic("Could not send email " + err.Error())
-		}
-
-		// 메일 3개 보내면 3분 간격으로 쉬어준다.
-		chance++
-		if chance == 3 {
-			time.Sleep(30 * time.Second)
-			chance = 0
-		}
-
-		if err := r.Close(); err != nil {
-			log.Fatal("failed to close reader:", err)
-		}
-	}
-}
+//func (p *ProjectStart) Consumer() {
+//
+//	// Kafka consumer
+//	r := kafka.NewReader(kafka.ReaderConfig{
+//		Brokers:     []string{brokerAddress},
+//		Topic:       topic,
+//		GroupID:     "RedTeam",
+//		MinBytes:    5,                //5 바이트
+//		MaxBytes:    4132,             //1kB
+//		MaxWait:     3 * time.Second,  //3초만 기다린다.
+//		StartOffset: kafka.LastOffset, // GroupID 이전에 동일한 설정으로 데이터 사용한 적이
+//		// 있는 경우 중단한 곳부터 계속된다.
+//
+//		//MinBytes:  10e3, // 10KB
+//		//MaxBytes:  10e6, // 10MB
+//	})
+//
+//	// 부득이하게 다른 DB connecting 방법 사용..
+//	conn, err := ConnectDB()
+//	if err != nil {
+//		panic(err.Error())
+//	}
+//	defer conn.Close()
+//
+//	// 보내는사람 이메일, 받는사람 이메일, 받는사람 이름, 메일제목, 메일 내용 순이다.
+//
+//	chance := 0
+//	for {
+//		// ReadMessage 메서드는 우리가 다음 이벤트를 받을 때까지 차단된다.
+//		// json 객체로 받은 값들을 sendMail 메서드에 잘 적재시킨다.
+//		Msg, err := r.ReadMessage(context.Background())
+//		if err != nil {
+//			panic("Could not read message : " + err.Error())
+//		}
+//		fmt.Printf("message at topic / partition / offset => %v / %v / %v: %s = %s\n",
+//			Msg.Topic, Msg.Partition, Msg.Offset, string(Msg.Key), string(Msg.Value))
+//
+//
+//		// json -> ProjectStart 객체 각각에 값으로 들어가도록 한다.
+//		json.Unmarshal(Msg.Value, p)
+//
+//		row := conn.QueryRow(`SELECT target_name,
+//      								target_email,
+//      								target_organize,
+//      								target_position,
+//      								target_phone,
+//      								mail_title,
+//      								mail_content,
+//      								smtp_id as sender_email,
+//      								smtp_host,
+//      								smtp_port,
+//      								smtp_id,
+//      								smtp_pw
+//								FROM (SELECT target_name, target_email, target_organize, target_position, target_phone
+//    								  FROM target_info
+//    								  WHERE target_no = $1 AND user_no = $2) as T
+//       									LEFT JOIN template_info as tmp on tmp_no = $3
+//       									LEFT JOIN smtp_info si on si.user_no = $2;`, p.TargetNo, p.UserNo, p.TmpNo)
+//
+//		// 메일 전송에 필요한 정보들 바인딩
+//		err = row.Scan(&p.TargetName, &p.TargetEmail, &p.TargetOrganize, &p.TargetPosition, &p.TargetPhone, &p.MailTitle,
+//			&p.MailContent, &p.SenderEmail, &p.SmtpHost, &p.SmtpPort, &p.SmtpId, &p.SmtpPw)
+//		if err == sql.ErrNoRows {
+//			// 해당 대상자가 존재하지 않는 경우 // Note 이거 지우자 그냥. (project_info 테이블에서 un_send_no도 없애자)
+//			_, err = conn.Exec(`UPDATE project_info
+//									SET un_send_no = project_info.un_send_no + 1
+//									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
+//			if err != nil {
+//				//continue // 에러나면 그냥 스킵해버리기...
+//				panic(err.Error())
+//			}
+//			log.Println("error occurred 1")
+//			continue // 대상자가 없는 경우에는 보내지 못한 메일의 개수를 하나 올리고 다음으로 넘어간다.
+//
+//		} else if err != nil {
+//			// 정말 알 수 없는 에러가 난 케이스
+//			_, err = conn.Exec(`UPDATE project_info
+//									SET p_status = 3
+//									WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
+//			log.Println("error occurred 2")
+//			continue // 이 경우 그냥 스킵
+//			//panic(err.Error()) // 이 경우 프로세스 중지.
+//		}
+//
+//		// 파싱작업 수행
+//		p.MailContent = parsing(p.MailContent, p.TargetName, p.TargetOrganize,
+//			p.TargetPosition, p.TargetPhone, strconv.Itoa(p.TargetNo), strconv.Itoa(p.PNo))
+//
+//		// smtp 패스워드 복호화 작업 수행
+//		block, err := aes.NewCipher(key)
+//		if err != nil {
+//			panic(err.Error())
+//		}
+//		password, _ := base64.StdEncoding.DecodeString(p.SmtpPw)
+//		password = Decrypt(block, password)
+//		p.SmtpPw = string(password)
+//
+//		// 가공된 메일 전송
+//		err = p.sendMail()
+//		if err != nil {
+//			panic("Could not send email : " + err.Error())
+//		}
+//
+//		// 메일 보낸 수 +1
+//		_, err = conn.Exec(`UPDATE project_info
+//								SET send_no = project_info.send_no + 1
+//								WHERE user_no = $1 AND p_no = $2`, p.UserNo, p.PNo)
+//		if err != nil {
+//			panic("Could not send email " + err.Error())
+//		}
+//
+//		// 메일 3개 보내면 3분 간격으로 쉬어준다.
+//		chance++
+//		if chance == 3 {
+//			time.Sleep(30 * time.Second)
+//			chance = 0
+//		}
+//
+//		if err := r.Close(); err != nil {
+//			log.Fatal("failed to close reader:", err)
+//		}
+//	}
+//}
 
 func (p *ProjectStart) sendMail() error {
 
@@ -422,8 +422,6 @@ func Decrypt(b cipher.Block, ciphertext []byte) []byte {
 		fmt.Println("The length of decrypted data must be a multiple of the block size. ")
 		return nil
 	}
-	// todo 추후 환경변수로 변경
-	iv := []byte("0987654321654321")
 
 	plaintext := make([]byte, len(ciphertext)) // 평문 데이터를 저장할 공간을 생성한다.
 	mode := cipher.NewCBCDecrypter(b, iv) // 암호화 블록과 초기화 벡터를 넣어 복호화된 블록모드의 인스턴스를 생성한다.

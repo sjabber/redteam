@@ -17,7 +17,8 @@ import (
 var (
 	tokenSecret  = []byte(os.Getenv("TOKEN_SECRET"))
 	tokenRefresh = []byte(os.Getenv("TOKEN_REFRESH"))
-	key = "qlwkndlqiwndlian" // 16글자 -> aes-128, 만약 32글자라면(32bit) -> aes-256
+	iv = []byte(os.Getenv("AES_IV"))
+	key = []byte(os.Getenv("AES_KEY")) // 16글자 -> aes-128, 만약 32글자라면(32bit) -> aes-256
 )
 
 type Email struct {
@@ -107,7 +108,7 @@ func (u *User) CreateUsers() (int, error) {
 
 
 	// Note smtp_info 테이블에 삽입될 비밀번호를 암호화한다.
-	block, err := aes.NewCipher([]byte(key)) // key 값을 블록에 집어넣는다.
+	block, err := aes.NewCipher(key) // key 값을 블록에 집어넣는다.
 	if err != nil {
 		num = 500
 		fmt.Println(err)
@@ -143,7 +144,7 @@ func Encrypt(b cipher.Block, plaintext []byte) []byte {
 
 	// CBC(Cipher Block Chaining) 방식을 사용하여 암호화
 	// 첫번째 블록은 직전 암호문이 없으므로 초기화 백터(iv)를 입력받는다.
-	iv := []byte("0987654321654321") // 16byte 의 크기를 갖는다. Note + iv값 환경변수 & 암호화
+	iv := []byte("0987654321654321") // 16byte 의 크기를 갖는다.
 	mode := cipher.NewCBCEncrypter(b, iv) // 암호화 블록과 초기화 벡터를 넣어서 암호화 블록 mode 인스턴스를 생성한다.
 	mode.CryptBlocks(ciphertext, plaintext) // 암호화 블록 mode 인스턴스로 암호화
 
@@ -158,7 +159,7 @@ func Decrypt(b cipher.Block, ciphertext []byte) []byte {
 		fmt.Println("The length of decrypted data must be a multiple of the block size. ")
 		return nil
 	}
-	iv := []byte("0987654321654321")
+	//iv := []byte("0987654321654321")
 
 	plaintext := make([]byte, len(ciphertext)) // 평문 데이터를 저장할 공간을 생성한다.
 	mode := cipher.NewCBCDecrypter(b, iv) // 암호화 블록과 초기화 벡터를 넣어 복호화된 블록모드의 인스턴스를 생성한다.

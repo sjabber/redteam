@@ -11,22 +11,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/sport.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 </head>
 
 <body>
 
-<video muted autoplay loop
+<video muted autoplay loop class="hidden-sm hidden-xs"
        style="margin: 0; position: fixed; min-width: 100%; min-height: 100%; max-width: 130%; max-height: 130%">
     <source src="/video/intro.mp4" type="video/mp4">
     <strong>Your browser does not support the video tag.</strong>
 </video>
 
-<div class="login-container-wrapper">
-    <div class="login-container">
-        <div class="login_container-form">
+<div class="center-wrapper">
+    <div class="centered-row" style="margin-top: 3%; margin-right: 10%; margin-left: 10%; justify-content: flex-end;
+                                        min-width: 30%; max-height: 93%">
+        <div class="col-md-3">
             <h4 class="color--primary text--center">REDTEAM 악성메일 모의훈련</h4>
-            <div id="box">
+            <div class="box">
                 <div class="box-header" style="text-align: center; margin-bottom: 2%">
                     <img src="/image/big_icon.png" alt="REDTEAM_logo" style="max-width: 100%; margin: auto;">
                 </div>
@@ -40,8 +44,8 @@
                     <button class="btn btn-md btn-primary btn-block" id="login-btn" onclick="Login()">로그인</button>
                 </div>
             </div>
-            <span class="d-block mt-4 helper-text text--center" style="color: white">회원이 아니신가요? <a class="ml-1"
-                                                                              href="./register">회원가입하기</a></span>
+            <span class="d-block mt-4 helper-text text--center" style="color: gray; font-weight: bold">회원이 아니신가요? <a class="ml-1"
+                                                                                                                     href="./register">회원가입하기</a></span>
         </div>
     </div>
 </div>

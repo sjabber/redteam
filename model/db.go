@@ -11,6 +11,7 @@ var (
 	dbPw = os.Getenv("DB_PW")
 	dbName = os.Getenv("DB_NAME")
 	dbHost = os.Getenv("DB_HOST")
+	dbPort = os.Getenv("DB_PORT")
 )
 
 func ConnectDB() (*sql.DB, error) {
@@ -21,7 +22,7 @@ func ConnectDB() (*sql.DB, error) {
 	//Note 서버 DB 연결시 사용하는 코드
 	db, err := sql.Open("postgres",
 		"user=" + dbUser + " password=" + dbPw + " dbname=" + dbName +
-			" host=" + dbHost + " sslmode=disable port=5432")
+			" host=" + dbHost + " sslmode=disable port=" + dbPort)
 
 	if db != nil {
 		db.SetMaxOpenConns(100)

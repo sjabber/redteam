@@ -54,7 +54,7 @@ func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
 	}
 
 	// smtp 패스워드 복호화 작업 수행
-	block, err := aes.NewCipher([]byte(key))
+	block, err := aes.NewCipher(key)
 	if err != nil {
 		panic(err.Error())
 	}
