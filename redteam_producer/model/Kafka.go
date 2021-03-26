@@ -76,9 +76,8 @@ func AutoStartProject() {
 	c := cron.New(cron.WithLocation(kor))
 
 	// 매 특정 시간마다 프로젝트들의 날짜를 점검하여 실행 종료시킨다.
-	//c.AddFunc("0 0 * * *", Auto) // 매일 정각에 프로젝트를 검토후 진행&종료시킨다.
+	c.AddFunc("15-16 6 * * *", Auto) // 매일 오전 6시 15-16분 마다 실행할 프로젝트를 검토한다.
 	c.AddFunc("09-10 14 * * *", Auto) // 매일 오후 2시 9-10분 마다 실행할 프로젝트를 검토한다.
-	c.AddFunc("15-18 6 * * *", Auto) // 매일 오후 2시 9-10분 마다 실행할 프로젝트를 검토한다.
 	c.AddFunc("58-59 23 * * *", Auto) //하루 끝에 최종적으로 한번더 검토한다.
 	c.Start()
 	wg.Wait()
