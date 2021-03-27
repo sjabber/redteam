@@ -16,18 +16,23 @@ func Login(c *gin.Context) {
 	if err != nil {
 		log.Println(err.Error())
 		// 입력값이 제대로 바인딩 되지 않은경우 400 에러를 반환한다.
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"isOk": false,
+		})
 		return
 	}
 
-	//로그인 자격증명을 검사한다.
+	// 로그인 자격증명을 검사한다.
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
+	// 로그인 시도 횟수 제한 5회
 	err, num, loginCount := user.IsAuthenticated(&conn) // 비밀번호 확인
 	if err != nil {
-		log.Println(err.Error())
-		c.JSON(num, gin.H{"error": err.Error(), "loginCount": loginCount})
+		c.JSON(num, gin.H{
+			"isOk":false,
+			"loginCount": loginCount,
+		})
 		return
 	}
 
@@ -41,7 +46,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"isOk": true,
 		})
-		log.Print("login true")
 		return
 	} else {
 		// access 토큰이 발급되지 않은 경우 500에러를 반환한다.

@@ -29,6 +29,7 @@ func ConnectDB() (*sql.DB, error) {
 		db.SetMaxIdleConns(10)
 	}
 	if err != nil {
+		SugarLogger.Error(err)
 		return nil, err
 	}
 	return db, err

@@ -11,20 +11,25 @@ import (
 func RefreshTokenValid(tokenString string) (bool, User) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok == false {
-			return nil, fmt.Errorf("unexpected signing method : %v",
-				token.Header["alg"])
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method : %v",	token.Header["alg"])
 		}
-		return tokenRefresh, nil //Refresh Token 만료
+		return tokenRefresh, nil
 	})
 
 	if err != nil {
-		fmt.Errorf("error : %v \n", err)
+		if err == jwt.ErrSignatureInvalid {
+			SugarLogger.Errorf("token invalid : %v", err)
+			return false, User{}
+		}
+
+		//SugarLogger.Infof("token expired : %v", err) // Refresh Token 만료
 		return false, User{}
 	}
 
+	// 위에서 ok가 true, token 의 valid 값이 true 면 여기서 true 를 반환하며 검증을 완료
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// 대시보드 API 로 반환될 구조체를 정의함.
+		// + 대시보드 API 로 반환될 구조체를 정의함.
 		user := User{
 			Email: claims["user_email"].(string),
 			Name: claims["user_name"].(string),
@@ -32,8 +37,8 @@ func RefreshTokenValid(tokenString string) (bool, User) {
 		}
 		return true, user
 	} else {
-		fmt.Errorf("The alg header %v \n", claims["alg"])
-		fmt.Println(err)
+		// 예상 밖 토큰 토큰인증에 문제가 발생한 경우 로그
+		SugarLogger.Errorf("unexpected error, ok : %v, token Valid : %v", ok, token.Valid)
 		return false, User{}
 	}
 }

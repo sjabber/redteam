@@ -24,6 +24,7 @@ where p_no = $1
 	err := conn.QueryRow(endTimeQuery, cm.ProjectNo).Scan(&end)
 	if err != nil {
 		// 카운트용 api이기 때문에 굳이 error를 표출하지 않음
+		SugarLogger.Error(err.Error())
 		return nil
 	}
 
@@ -54,6 +55,7 @@ insert into count_info (target_no,
 values ($1, $2, $3, $4, $5)
 `, cm.TargetNo, cm.ProjectNo, cm.EmailReadStatus, cm.LinkClickStatus, cm.DownloadStatus)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return err
 		}
 	} else { // 존재하면 값을 갱신해준다. resultCM은 현재 DB에 있는 값을 가지고, cm은 Get 메소드로부터 받은 값을 가지고있는다.
@@ -78,6 +80,7 @@ where target_no = $4
 `, cm.EmailReadStatus, cm.LinkClickStatus, cm.DownloadStatus, cm.TargetNo, cm.ProjectNo)
 	}
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return err
 	}
 	return nil

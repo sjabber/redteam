@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"redteam/model"
 	"strconv"
@@ -48,7 +47,6 @@ func GetProject(c *gin.Context) {
 	// 프로젝트 조회
 	projects, err := model.ReadProject(&conn, num)
 	if err != nil {
-		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk":   0,
@@ -73,7 +71,6 @@ func ModifyProject(c *gin.Context) {
 	result, err := p.EndDateModify(&conn, num)
 
 	if err != nil {
-		log.Println("GetProject error occurred, account :", c.Keys["email"])
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":      http.StatusInternalServerError,
 			"isOk":        false,
@@ -127,7 +124,6 @@ func DeleteProject(c *gin.Context) {
 
 	err := p.DeleteProject(&conn, num)
 	if err != nil {
-		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
 			"isOk":   0,
@@ -153,7 +149,6 @@ func StartProjectList(c *gin.Context) {
 	// 프로젝트 상태변경
 	err := p.StartProject(&conn, num)
 	if err != nil {
-		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
 			"isOk":   0,
@@ -177,14 +172,13 @@ func GetTag(c *gin.Context) {
 
 	tags, err := model.GetTag(&conn, num)
 	if err != nil {
-		log.Print(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"isOk":   0,
+			"isOk":   false,
 			"status": http.StatusBadRequest,
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"isOk":   1,
+			"isOk":   true,
 			"status": http.StatusOK,
 			"tags":   tags, // 태그들
 		})
@@ -209,10 +203,14 @@ func ProjectDetail(c *gin.Context) {
 
 	tmp, err := model.ProjectDetail(&conn, num, tmpNo, pNo)
 	if err != nil {
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"tmpls": tmp})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk":  true,
+			"tmpls": tmp,
+		})
 	}
 }

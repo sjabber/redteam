@@ -29,7 +29,9 @@ func CountTarget(c *gin.Context) {
 	downloadStatus, err := strconv.ParseBool(c.Query("download"))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"isOk": false,
+		})
 		return
 	}
 	db, _ := c.Get("db")
@@ -44,7 +46,9 @@ func CountTarget(c *gin.Context) {
 
 	err = counter.UpdateCount(&conn)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"isOk": true,
+		})
 		return
 	}
 }

@@ -102,14 +102,17 @@ func GetResultDetail(no string, userNo int, conn *sql.DB) (ResultDetail, error) 
 	}
 	err = rd.getProjectInfo(userNo, conn)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return rd, err
 	}
 	err = rd.getProjectSummary(userNo, conn)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return rd, err
 	}
 	err = rd.getResultPerStatistic(userNo, conn)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return rd, err
 	}
 	return rd, nil
@@ -201,8 +204,10 @@ group by p_no
 		&rd.ProjectInfo.Download)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			SugarLogger.Error(err.Error())
 			return nil
 		}
+		SugarLogger.Error(err.Error())
 		return err
 	}
 
@@ -231,6 +236,7 @@ where (ti.tag1 in (%s)
 	tt := conn.QueryRow(q, userNo)
 	err := tt.Scan(&rd.ProjectInfo.TargetCount)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return err
 	}
 	// 전송 실패 카운트
@@ -334,6 +340,7 @@ group by target_organize
 `
 	pOTQ, err := conn.Query(perOrganTotalQuery, rd.ProjectInfo.PNo)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return err
 	}
 	for pOTQ.Next() {
@@ -375,6 +382,7 @@ group by target_position
 `
 	pPTQ, err := conn.Query(perPositionTotalQuery, rd.ProjectInfo.PNo)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return err
 	}
 	for pPTQ.Next() {
