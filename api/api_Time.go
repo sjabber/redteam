@@ -3,8 +3,8 @@ package api
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
+	"redteam/model"
 )
 
 /*
@@ -25,8 +25,8 @@ func Time(c *gin.Context) {
 	query := "SELECT now()"
 	err := conn.QueryRow(query).Scan(&time)
 	if err != nil {
+		model.SugarLogger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, "health check error")
-		log.Print("Health check error occurred, account : ", Account)
 		return
 	}
 

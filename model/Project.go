@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/segmentio/kafka-go"
-	"log"
+	"os"
 	"regexp"
 	"strconv"
 )
@@ -63,9 +63,9 @@ type ProjectDelete struct {
 	ProjectNumber []string `json:"project_list"` //front javascript 와 이름을 일치시켜야함.
 }
 
-const (
-	topic         = "redteam"
-	brokerAddress = "localhost:9092"
+var (
+	topic         = os.Getenv("KAFKA_TOPIC")
+	brokerAddress = os.Getenv("KAFKA_HOSTNAME") + ":" + os.Getenv("KAFKA_PORT")
 )
 
 //var Msg string
@@ -395,6 +395,7 @@ func (p *ProjectDelete) DeleteProject(conn *sql.DB, num int) error {
 		// project_info 테이블에서 해당하는 프로젝트를 지운다.
 		_, err := conn.Exec("DELETE FROM project_info WHERE user_no = $1 AND p_no = $2", num, number)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return fmt.Errorf("Error deleting target ")
 		}
 	}
@@ -415,7 +416,8 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 
 	rows, err := conn.Query(query, p.PNo, num)
 	if err != nil {
-		return fmt.Errorf("project starting error : %v", err)
+		SugarLogger.Error(err.Error())
+		return fmt.Errorf("%v", err)
 	}
 
 	// 카프카에 넣을 메일 내용
@@ -434,6 +436,7 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
 			// DB 로부터 토픽에 작성할 내용들을 불러온다.
 			err = rows.Scan(&msg.PNo, &msg.TmpNo, &msg.TargetNo, &msg.UserNo)
 			if err != nil {
+				SugarLogger.Error(err.Error())
 				_ = fmt.Errorf("%v", err)
 			}
 
@@ -443,8 +446,7 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
  								SET p_start_date = now(), p_status = 3
  								WHERE user_no = $1 AND p_no = $2`, num, p.PNo)
 				if err != nil {
-					//_ = fmt.Errorf("%v", err)
-					log.Println(err)
+					SugarLogger.Error(err.Error())
 				}
 				break
 			}
@@ -461,7 +463,8 @@ func (p *ProjectStart2) StartProject(conn *sql.DB, num int) error {
                         WHERE user_no = $1 AND p_no = $2;`,
 		num, p.PNo)
 	if err != nil {
-		return fmt.Errorf("Error : updating project status. ")
+		SugarLogger.Error(err.Error())
+		return fmt.Errorf("%v", err)
 	}
 
 	defer conn.Close()
@@ -477,11 +480,11 @@ func produce(messages []byte, w kafka.Writer) {
 		Value: messages,
 	})
 	if err != nil {
-		panic("could not write message " + err.Error())
+		SugarLogger.Debug(err.Error())
 	}
 
-	if err := w.Close(); err != nil {
-		log.Fatal("failed to close writer: ", err)
+	if err2 := w.Close(); err2 != nil {
+		SugarLogger.Debug(err2.Error())
 	}
 }
 
@@ -500,6 +503,7 @@ func (p *Project) EndDateModify(conn *sql.DB, num int) (bool, error) {
 		return true, err
 	}
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return false, err
 	}
 
@@ -533,7 +537,8 @@ func ProjectDetail(conn *sql.DB, userNo int, tmpNo int, pNo int) (Template, erro
 
 	if err != nil {
 		// 읽어온 정보를 바인딩하는데 오류가 발생.
-		return Template{}, fmt.Errorf("Template detail scanning error : %v ", err)
+		SugarLogger.Error(err.Error())
+		return Template{}, fmt.Errorf("%v ", err)
 	}
 
 	//Detail = append(Detail, tmp)

@@ -18,11 +18,13 @@ func ResultDetail(c *gin.Context) {
 	resultDetail, err := model.GetResultDetail(c.Query("p_no"), num, &conn)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"isOk": false,
+		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"isOk":         1,
+		"isOk":         true,
 		"status":       http.StatusOK,
 		"resultDetail": resultDetail,
 	})

@@ -105,7 +105,8 @@ function Login() {
             } else if (r.status === 400) {
                 alert("계정 정보를 입력해주세요. ");
             } else if (r.status === 401) {
-                alert("계정 정보를 확인해주세요. ");
+                rObj = JSON.parse(r.responseText);
+                alert("계정 정보를 확인해주세요. \n남은 로그인 시도 가능 횟수 : " + (4 - rObj.loginCount));
             } else if (r.status === 402) {
                 alert("이메일, 비밀번호 형식이 잘못됐습니다. ");
             } else if (r.status === 403) {

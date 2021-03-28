@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"redteam/model"
 	"strconv"
@@ -45,11 +44,15 @@ func GetTemplateList(c *gin.Context) {
 	tmp, err := model.ReadAll(&conn, num)
 	if err != nil {
 		// 템플릿을 읽어오는데 오류가 발생한 경우 500에러를 반환한다.
-		log.Print("GetTemplate error occurred, account : ", c.Keys["email"])
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"tmpls": tmp, "email": c.Keys["email"]})
+	c.JSON(http.StatusOK, gin.H{
+		"isOk":  true,
+		"tmpls": tmp,
+	})
 }
 
 func TemplateDetail(c *gin.Context) {
@@ -67,12 +70,15 @@ func TemplateDetail(c *gin.Context) {
 
 	tmp, err := model.Detail(&conn, num, tmpNo)
 	if err != nil {
-		log.Println("Error fetching template details :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"tmpls": tmp})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk":  true,
+			"tmpls": tmp,
+		})
 	}
 }
 
@@ -89,11 +95,14 @@ func EditTemplate(c *gin.Context) {
 	c.ShouldBindJSON(&tmp)
 	err, errCode := tmp.Update(&conn, num)
 	if err != nil {
-		log.Print(err.Error())
-		c.JSON(errCode, gin.H{"error": err.Error()})
+		c.JSON(errCode, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
 	}
 }
 
@@ -111,7 +120,9 @@ func DelTml(c *gin.Context) {
 
 	err := tmp.Delete(&conn, num)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{"isOK": true})

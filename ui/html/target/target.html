@@ -213,18 +213,18 @@
                             </div>
                             <div class="modal__body">
                                 <div class="form-group label--floating"><input type="email"
-                                                                               id="target_email"><label>이메일</label>
+                                                                               id="target_email"><label>이메일 (필수)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_name"><label>이름</label></div>
+                                                                               id="target_name"><label>이름 (필수)</label></div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                onkeyup="inputPhoneNumber(this);"
                                                                                maxlength="13"
-                                                                               id="target_phone"><label>전화번호</label>
+                                                                               id="target_phone"><label>전화번호 (권장)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_organ"><label>소속</label></div>
-                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급</label>
+                                                                               id="target_organ"><label>소속 (권장)</label></div>
+                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급 (권장)</label>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_1">태그</label><select id="tag_selector_1">
@@ -390,12 +390,42 @@
                                 }
                             }
 
+                            var phone = "";
+
+                            if (rObj.targets[i].tg_phone.length < 10) {
+                                //case : 02-xxx-xxxx
+                                phone += rObj.targets[i].tg_phone.substr(0, 2);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(2, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(5, 4);
+                            } else if (rObj.targets[i].tg_phone.substr(1, 1) === "2" && rObj.targets[i].tg_phone.length === 10) {
+                                //case : 02-xxxx-xxxx
+                                phone += rObj.targets[i].tg_phone.substr(0, 2);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(2, 4);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(6, 4);
+                            } else if (rObj.targets[i].tg_phone.length === 10) {
+                                phone += rObj.targets[i].tg_phone.substr(0, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(3, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(6, 4);
+                            } else if (rObj.targets[i].tg_phone.length === 11) {
+                                phone += rObj.targets[i].tg_phone.substr(0, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(3, 4);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(7, 4);
+                            }
+
                             if (full_tag === '') {
                                 $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
                                     rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td></td></tr>');
                             } else {
@@ -403,7 +433,7 @@
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
                                     rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td>' + full_tag + '</td></tr>');
                             }
@@ -659,6 +689,7 @@
             };
             r.send(JSON.stringify({"tag_name": $('#tag_name').val()}));
         });
+
         $('#target_reg').click(function () {
 
             var phone = "";
@@ -683,7 +714,7 @@
                 phone += $('#target_phone').val().substr(9, 4);
             }
 
-            console.log(phone);
+            // console.log(phone);
 
             const tg_email = $('#target_email').val();
             const tg_name = $('#target_name').val();
@@ -895,12 +926,42 @@
                                 }
                             }
 
+                            var phone = "";
+
+                            if (rObj.targets[i].tg_phone.length < 10) {
+                                //case : 02-xxx-xxxx
+                                phone += rObj.targets[i].tg_phone.substr(0, 2);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(2, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(5, 4);
+                            } else if (rObj.targets[i].tg_phone.substr(1, 1) === "2" && rObj.targets[i].tg_phone.length === 10) {
+                                //case : 02-xxxx-xxxx
+                                phone += rObj.targets[i].tg_phone.substr(0, 2);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(2, 4);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(6, 4);
+                            } else if (rObj.targets[i].tg_phone.length === 10) {
+                                phone += rObj.targets[i].tg_phone.substr(0, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(3, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(6, 4);
+                            } else if (rObj.targets[i].tg_phone.length === 11) {
+                                phone += rObj.targets[i].tg_phone.substr(0, 3);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(3, 4);
+                                phone += "-"
+                                phone += rObj.targets[i].tg_phone.substr(7, 4);
+                            }
+
                             if (full_tag === '') {
                                 $('#targets > tbody:last').append('<tr>' + '<td id=' + rObj.targets[i].tg_no +
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
                                     rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td></td></tr>');
                             } else {
@@ -908,7 +969,7 @@
                                     '" style="visibility:hidden;position:absolute;">' + rObj.targets[i].tg_no + '</td><td><div class="pgn-checkbox"><input type="checkbox" name="">' +
                                     '<span></span></div></td><td>' + rObj.targets[i].fake_no + '</td><td>' +
                                     rObj.targets[i].tg_name + "(" +
-                                    rObj.targets[i].tg_email + ")" + '</td><td>' + rObj.targets[i].tg_phone + '</td><td>' + rObj.targets[i].tg_organize +
+                                    rObj.targets[i].tg_email + ")" + '</td><td>' + phone + '</td><td>' + rObj.targets[i].tg_organize +
                                     '</td><td>' + rObj.targets[i].tg_position + '</td><td>' + rObj.targets[i].created_t + '</td>' +
                                     '<td>' + full_tag + '</td></tr>');
                             }

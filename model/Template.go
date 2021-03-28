@@ -85,6 +85,7 @@ ORDER BY row_num;`
 
 	if err != nil {
 		// 템플릿을 DB 로부터 읽어오는데 오류가 발생.
+		SugarLogger.Error(err.Error())
 		return nil, fmt.Errorf("There was an error reading the template. ")
 	}
 
@@ -96,11 +97,12 @@ ORDER BY row_num;`
 
 		if err != nil {
 			// 읽어온 정보를 바인딩하는데 오류가 발생.
+			SugarLogger.Error(err.Error())
 			return nil, fmt.Errorf("Template scanning error : %v ", err)
 		}
 		tmp.CreatedTime = tmp.CreateRealTime.Format("2006-01-02")
 
-		// todo 프론트에서 해결하도록 변경완료
+		// 프론트에서 해결하도록 수정완료
 		//switch tmp.Division {
 		//case "1":
 		//	tmp.Division = "기본"
@@ -166,6 +168,7 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 										WHERE user_no = $1 OR (user_no = 0 and tmp_no > 0)
 										GROUP BY tmp_name;`, num)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return fmt.Errorf("%v", err), 500
 		}
 
@@ -193,17 +196,14 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 
 		// 위 조건들 전부 충족할 경우 태그 등록
 		query = `INSERT INTO template_info(tmp_division, tmp_kind, file_info, tmp_name,
- 	mail_title, mail_content, 
---                           sender_name,
-                          download_type, user_no)
+ 	mail_title, mail_content, download_type, user_no)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 		_, err = conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName, t.MailTitle,
-			t.Content,
-			//t.SenderName,
-			t.DownloadType, num)
+			t.Content, t.DownloadType, num)
 
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return fmt.Errorf("%v", err), 500
 			// 템플릿 업데이트 오류
 		}
@@ -224,6 +224,7 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 										WHERE user_no = $1 OR (user_no = 0 and tmp_no > 0)
 										GROUP BY tmp_name, tmp_no;`, num)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return fmt.Errorf("%v", err), 500
 		}
 
@@ -260,6 +261,7 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 			t.DownloadType, num, t.TmpNo)
 
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return fmt.Errorf("%v", err), 500
 			// 템플릿 업데이트 오류
 		}
@@ -297,7 +299,8 @@ func Detail(conn *sql.DB, userNo int, tmpNo int) (Template, error) {
 
 	if err != nil {
 		// 읽어온 정보를 바인딩하는데 오류가 발생.
-		return Template{}, fmt.Errorf("Template detail scanning error : %v ", err)
+		SugarLogger.Error(err.Error())
+		return Template{}, fmt.Errorf("%v ", err)
 	}
 
 	//Detail = append(Detail, tmp)
@@ -316,7 +319,7 @@ func (t *Template) Delete(conn *sql.DB, userNo int) error {
 	//Note 사용자번호(user_no)에 막혀서 기본 템플릿은 삭제가 되지 않는다. // 기본템플릿은 user_no가 0이기 때문.
 	_, err := conn.Exec("DELETE FROM template_info WHERE tmp_no = $1 and user_no = $2", t.TmpNo, userNo)
 	if err != nil {
-		fmt.Printf("Error deleting template: (%v)", err)
+		SugarLogger.Error(err.Error())
 		return fmt.Errorf("Error deleting template ")
 	}
 

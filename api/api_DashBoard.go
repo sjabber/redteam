@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"redteam/model"
 	"strconv"
@@ -14,11 +13,14 @@ import (
 var Account string
 
 func Dashboard(c *gin.Context) {
-
+	// 계정정보
 	Account = fmt.Sprintf("%v", c.Keys["email"])
 
 	// email, name 을 출력할 수 있도록 만든다.
-	c.JSON(http.StatusOK, gin.H{"email": c.Keys["email"], "name": c.Keys["name"]})
+	c.JSON(http.StatusOK, gin.H{
+		"email": c.Keys["email"],
+		"name": c.Keys["name"],
+	})
 
 	return
 }
@@ -34,7 +36,6 @@ func GetDashboardInfo1(c *gin.Context) {
 
 	Info1, err := model.GetDashboardInfo1(&conn, num)
 	if err != nil {
-		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk":   0,
@@ -64,7 +65,6 @@ func GetDashboardInfo2(c *gin.Context) {
 
 	Info2, err := model.GetDashboardInfo2(&conn, num, pnum)
 	if err != nil {
-		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk":   0,
@@ -90,7 +90,6 @@ func GetDashboardInfo3(c *gin.Context) {
 
 	Info3, err := model.GetDashboardInfo3(&conn, num)
 	if err != nil {
-		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": http.StatusInternalServerError,
 			"isOk":   0,

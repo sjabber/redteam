@@ -61,6 +61,7 @@ func GetDashboardInfo1(conn *sql.DB, num int) (PInfo1, error) {
 		pi1.Targets, pi1.Scheduled, pi1.Ongoing, pi1.Closed = 0, 0, 0 ,0
 		return pi1, nil
 	} else if err != nil {
+		SugarLogger.Error(err.Error())
 		return PInfo1{}, fmt.Errorf("%v", err)
 	}
 
@@ -131,6 +132,7 @@ GROUP BY ti.tmp_name, ti.mail_title, sender_email, p_name, to_char(p_start_date,
 					&pi2.TagArray[0], &pi2.TagArray[1], &pi2.TagArray[2], &pi2.Targets, &pi2.SendNo, &pi2.Reading,
 					&pi2.Connect, &pi2.Infection)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return PInfo2{}, fmt.Errorf("%v", err)
 	}
 
@@ -146,6 +148,7 @@ func GetDashboardInfo3(conn *sql.DB, num int) ([]PInfo3, error) {
 			  WHERE user_no = $1`
 	rows, err := conn.Query(query, num)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return nil, fmt.Errorf("%v", err)
 	}
 
@@ -154,6 +157,7 @@ func GetDashboardInfo3(conn *sql.DB, num int) ([]PInfo3, error) {
 	for rows.Next() {
 		err = rows.Scan(&pi3.PNo, &pi3.FakeNo, &pi3.PName, &pi3.PStatus, &pi3.EndDate)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return nil, fmt.Errorf("%v", err)
 		}
 

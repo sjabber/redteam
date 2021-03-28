@@ -24,16 +24,21 @@ func RegTarget(c *gin.Context) {
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
-	errcode, err := target.CreateTarget(&conn, num)
+	errCode, err := target.CreateTarget(&conn, num)
 	if err != nil {
-		//log.Println("RegTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(errcode, gin.H{"error": err.Error()})
+		if errCode == 500 {
+			model.SugarLogger.Errorf("%v", err.Error())
+		}
+
+		c.JSON(errCode, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
-		//errcode == status.Ok (200)
-		c.Status(errcode)
+		// errCode == status.Ok (200)
+		c.Status(errCode)
 	}
+	return
 }
 
 func GetTarget(c *gin.Context) {
@@ -49,9 +54,10 @@ func GetTarget(c *gin.Context) {
 
 	targets, total, pages, err := model.ReadTarget(&conn, num, page) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
-		log.Println("GetTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		model.SugarLogger.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
@@ -81,12 +87,14 @@ func DeleteTarget(c *gin.Context) {
 
 	err := target.DeleteTarget(&conn, num)
 	if err != nil {
-		log.Println("DeleteTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
 	}
 }
 
@@ -101,7 +109,7 @@ func DownloadExcel(c *gin.Context) {
 	destFile := "./Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
-		log.Println("DownloadExcel error occurred, account :", c.Keys["email"])
+		model.SugarLogger.Error(err.Error())
 		c.String(http.StatusInternalServerError, "%v", err)
 		return
 	}
@@ -115,7 +123,7 @@ func ImportTargets(c *gin.Context) {
 	// 단일 파일 전송
 	file, err := c.FormFile("file")
 	if err != nil {
-		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
+		model.SugarLogger.Error(err.Error())
 		c.String(http.StatusInternalServerError, fmt.Sprintf("get form error: %s", err.Error()))
 		return
 	}
@@ -156,25 +164,23 @@ func ImportTargets(c *gin.Context) {
 	c.ShouldBindJSON(&target)
 
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
-	errcode, err := target.ImportTargets(&conn, uploadPath, num)
+	errCode, err := target.ImportTargets(&conn, uploadPath, num)
 	if err != nil {
-		//log.Println("ImportTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(errcode, gin.H{"Batch registration error": err.Error()})
+		//model.SugarLogger.Info(err.Error())
+		c.JSON(errCode, gin.H{
+			"isOk": false,
+		})
 	} else {
-		c.JSON(errcode, gin.H{"Batch registration success": c.Keys["email"]})
+		c.JSON(errCode, gin.H{
+			"isOk": true,
+		})
 	}
 
 	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
 	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	//err2 := os.Remove("./Spreadsheet/" + str + "/bulk.txt")
-	//if err2 != nil {
-	//	fmt.Println(err2)
-	//	panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
-	//}
 	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
 	if err2 != nil {
-		panic(err2) //현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
+		model.SugarLogger.Errorf(err2.Error())
 	}
 	os.Clearenv()
 }
@@ -198,9 +204,10 @@ func ExportTarget(c *gin.Context) {
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
 	err := model.ExportTargets(&conn, num, tagNumber) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
-		log.Println("ExportTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error ": err.Error()})
+		//model.SugarLogger.Info(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk ": false,
+		})
 	}
 
 	str := strconv.Itoa(num)
@@ -236,10 +243,13 @@ func RegTag(c *gin.Context) {
 	c.ShouldBindJSON(&tag)
 	err, errCode := tag.CreateTag(&conn, num)
 	if err != nil {
-		log.Print(err.Error())
-		c.JSON(errCode, gin.H{"target_registration_error": err.Error()})
+		c.JSON(errCode, gin.H{
+			"isOk": false,
+		})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"registering_success, register_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
 	}
 
 }
@@ -256,11 +266,13 @@ func DeleteTag(c *gin.Context) {
 
 	err := tag.DeleteTag(&conn, num)
 	if err != nil {
-		log.Println("DeleteTag error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"tag_deleting_error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"delete_success, deleting_account": c.Keys["email"]})
+		c.JSON(http.StatusOK, gin.H{
+			"isOk": true,
+		})
 	}
 }
 
@@ -279,13 +291,13 @@ func Search(c *gin.Context) {
 
 	targets, total, pages, err := model.SearchTarget(&conn, num, page, searchDivision, searchText) //DB에 저장된 대상들을 읽어오는 메서드
 	if err != nil {
-		log.Println("GetTarget error occurred, account :", c.Keys["email"])
-		log.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"isOk": false,
+		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"isOk":    1,
+			"isOk":    true,
 			"status":  http.StatusOK,
 			"targets": targets,           // 대상 20개
 			"total":   total,             // 대상의 총 갯수

@@ -21,28 +21,6 @@ type Smtpinfo struct {
 	SmtpPwHashCheck string `json:"smtp_identity"` // smtp 비밀번호 해시값 체크
 }
 
-//func (sm *Smtpinfo) IdPwCheck(conn *sql.DB) error {
-//	sm.SmtpId = strings.ToLower(sm.SmtpId)
-//
-//	if sm.SmtpHost == "" || sm.SmtpPort == "" || sm.SmtpTimeout == "" || sm.SmtpId == "" || sm.SmtpPw == ""  {
-//		return fmt.Errorf("Please enter your Smtp information. ")
-//	}
-//
-//	row := conn.QueryRow(`SELECT smtp_pw FROM smtp_info WHERE smtp_id = $1`, sm.SmtpId)
-//	err := row.Scan(&sm.SmtpPwHashCheck)
-//	if err != nil {
-//		return fmt.Errorf("this account does not exist. ")
-//	}
-//
-//	err = bcrypt.CompareHashAndPassword([]byte(sm.SmtpPwHashCheck), []byte(sm.SmtpPw))
-//	if err != nil {
-//		return fmt.Errorf("This Password is incorrect. ")
-//	}
-//
-//	return nil
-//}
-
-
 func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
 
 	row := conn.QueryRow(`SELECT smtp_host, smtp_port, smtp_id, smtp_pw
@@ -50,13 +28,15 @@ func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
  								WHERE user_no = $1`, num)
 	err := row.Scan(&sm.SmtpHost, &sm.SmtpPort, &sm.SmtpId, &sm.SmtpPw)
 	if err != nil {
-		return fmt.Errorf("this account does not exist. ")
+		SugarLogger.Errorf("smtp account error : %v", err.Error())
+		return fmt.Errorf(err.Error())
 	}
 
 	// smtp 패스워드 복호화 작업 수행
-	block, err := aes.NewCipher([]byte(key))
+	block, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err.Error())
+		SugarLogger.Errorf("Decryption error : %v", err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	password, _ := base64.StdEncoding.DecodeString(sm.SmtpPw)
 	password = Decrypt(block, password)
@@ -67,7 +47,8 @@ func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
 	d := gomail.NewDialer(sm.SmtpHost, port, sm.SmtpId, sm.SmtpPw)
 	_, err = d.Dial()
 	if err != nil {
-		return fmt.Errorf("Smtp connecting failed. : %v ", err)
+		SugarLogger.Errorf("smtp connecting error : %v", err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	return nil
 }

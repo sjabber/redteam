@@ -46,9 +46,6 @@ func isValueIn(value string, list map[int]string) bool {
 
 func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 
-	// status 200 설정. 에러발생시 변경됨.
-	errcode := 200
-
 	t.TargetName = strings.Trim(t.TargetName, " ")
 	t.TargetEmail = strings.Trim(t.TargetEmail, " ")
 	t.TargetPhone = strings.Trim(t.TargetPhone, " ")
@@ -56,11 +53,9 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	t.TargetPosition = strings.Trim(t.TargetPosition, " ")
 
 	if len(t.TargetEmail) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf(" Target's E-mail is empty ")
+		return 400, fmt.Errorf("Target's E-mail is empty ")
 	} else if len(t.TargetName) < 1 {
-		errcode = 400
-		return errcode, fmt.Errorf("Target's name is empty ")
+		return 400, fmt.Errorf("Target's name is empty ")
 	}
 
 	//else if len(t.TargetPhone) < 1 {
@@ -81,25 +76,24 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 		"^[_A-Za-z0-9+-.]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$", t.TargetEmail)
 
 	if validEmail != true {
-		errcode = 402
-		return errcode, fmt.Errorf("Email format is incorrect. ")
+		return 402, fmt.Errorf("Email format is incorrect. ")
 	}
 
 	// 이름 형식검사 (한글, 영어 이름만 허용)
 	var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,30}$", t.TargetName)
 
 	if validName != true {
-		errcode = 402
-		return errcode, fmt.Errorf("Name format is incorrect. ")
+		return 402, fmt.Errorf("Name format is incorrect. ")
 	}
 
-	// 핸드폰 형식검사
-	var phoneNumber, _ = regexp.MatchString(
-		"^[0-9]{9,11}$", t.TargetPhone)
+	// 핸드폰 형식검사, 안넣거나 형식에 맞게 넣거나.
+	if len(t.TargetPhone) > 0 {
+		var phoneNumber, _ = regexp.MatchString(
+			"^[0-9]{9,11}$", t.TargetPhone)
 
-	if phoneNumber != true {
-		errcode = 402
-		return errcode, fmt.Errorf("Phone number format is incorrect. ")
+		if phoneNumber != true {
+			return 402, fmt.Errorf("Phone number format is incorrect. ")
+		}
 	}
 
 	// 등록된 대상자 수를 조회한다.
@@ -108,14 +102,12 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 								WHERE user_no = $1;`, num)
 	err := row.Scan(&t.TargetNo)
 	if err != nil {
-		errcode = 500
-		return errcode, fmt.Errorf("%v", err)
+		return 500, fmt.Errorf("%v", err)
 	}
 
 	// 등록된 대상자 수 검사 (405에러)
 	if t.TargetNo >= 300 {
-		errcode = 405
-		return errcode, fmt.Errorf(" The target is already full. ")
+		return 405, fmt.Errorf(" The target is already full. ")
 	}
 
 	// 태그 중복제거
@@ -149,15 +141,13 @@ func (t *Target) CreateTarget(conn *sql.DB, num int) (int, error) {
 	_, err = conn.Exec(query1, t.TargetName, t.TargetEmail, t.TargetPhone, t.TargetOrganize, t.TargetPosition,
 		t.TagArray[0], t.TagArray[1], t.TagArray[2], num)
 	if err != nil {
-		errcode = 500
 		fmt.Println(err)
-		return errcode, fmt.Errorf("Target create error. ")
+		return 500, fmt.Errorf("Target create error. ")
 	}
 
-	return errcode, nil
+	return 200, nil
 }
 
-// todo 보완필요!!! -> 현재 이름, 이메일, 태그 중 하나라도 값이 없으면 리스트목록에 뜨지않는 오류가 존재한다. 태그값이 없어도 표시되도록 해야함.
 func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	var pageNum int // 몇번째 페이지부터 가져올지 결정하는 변수
 	var pages int   // 총 페이지 수
@@ -213,8 +203,7 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 	// 조건에 맞는 데이터를 조회한다.
 	rows, err := conn.Query(query, num, pageNum)
 	if err != nil {
-		fmt.Println(err)
-		return nil, 0, 0, fmt.Errorf("Target's query Error. ")
+		return nil, 0, 0, fmt.Errorf(err.Error())
 	}
 
 	defer conn.Close()
@@ -227,44 +216,44 @@ func ReadTarget(conn *sql.DB, num int, page int) ([]Target, int, int, error) {
 		err = rows.Scan(&tg.FakeNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 			&tg.TargetPosition, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2], &tg.TargetCreateTime, &tg.TargetNo)
 		if err != nil {
-			fmt.Printf("%v", err)
+			SugarLogger.Error(err.Error())
 			continue
 		}
 
-		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
-		//  추후 프론트에서 이 과정이 수행되도록 수정하자..
-		var sub [3]string
-		phone := []rune(tg.TargetPhone)
-
-		if len(tg.TargetPhone) < 10 {
-			sub[0] = string(phone[0:2])
-			sub[1] = string(phone[2:5])
-			sub[2] = string(phone[5:9])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
-			sub[0] = string(phone[0:2])
-			sub[1] = string(phone[2:6])
-			sub[2] = string(phone[6:10])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if len(tg.TargetPhone) == 10 {
-			sub[0] = string(phone[0:3])
-			sub[1] = string(phone[3:6])
-			sub[2] = string(phone[6:10])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if len(tg.TargetPhone) == 11 {
-			sub[0] = string(phone[0:3])
-			sub[1] = string(phone[3:7])
-			sub[2] = string(phone[7:11])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		}
+		// 프론트단에서 처리하도록 수정 완료.
+		//var sub [3]string
+		//phone := []rune(tg.TargetPhone)
+		//
+		//if len(tg.TargetPhone) < 10 {
+		//	sub[0] = string(phone[0:2])
+		//	sub[1] = string(phone[2:5])
+		//	sub[2] = string(phone[5:9])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
+		//	sub[0] = string(phone[0:2])
+		//	sub[1] = string(phone[2:6])
+		//	sub[2] = string(phone[6:10])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if len(tg.TargetPhone) == 10 {
+		//	sub[0] = string(phone[0:3])
+		//	sub[1] = string(phone[3:6])
+		//	sub[2] = string(phone[6:10])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if len(tg.TargetPhone) == 11 {
+		//	sub[0] = string(phone[0:3])
+		//	sub[1] = string(phone[3:7])
+		//	sub[2] = string(phone[7:11])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//}
 
 		targets = append(targets, tg)
 
 		// 태그 이름 비워주기
-		tg.TargetTag[0] = ""
-		tg.TargetTag[1] = ""
-		tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
-	} // for문 끝.
+		// slice 로 변경되면 다른 방식으로 값을 비운다.
+		//tg.TargetTag[0] = ""
+		//tg.TargetTag[1] = ""
+		//tg.TargetTag[2] = ""
+	}
 
 	// 전체 타겟(훈련대상)의 수를 반환한다.
 	query = `
@@ -293,7 +282,8 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 		// target_info 테이블에서 대상을 지운다.
 		_, err := conn.Exec("DELETE FROM target_info WHERE user_no = $1 AND target_no = $2", num, number)
 		if err != nil {
-			return fmt.Errorf("Error deleting target ")
+			SugarLogger.Error(err.Error())
+			return fmt.Errorf("Error deleting target. ")
 		}
 	}
 
@@ -319,7 +309,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 	// str -> 일괄등록하기 위한 업로드 경로 + 파일 이름이 담기는 변수
 	f, err := excelize.OpenFile(uploadPath)
 	if err != nil {
-		fmt.Println(err)
+		SugarLogger.Error(err.Error())
 		return 400, nil
 	}
 
@@ -336,25 +326,27 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 								  WHERE user_no = $1
 								  ORDER BY tag_no ASC;`, num)
 	if err != nil {
-		return 500, fmt.Errorf("%v", err)
+		SugarLogger.Error(err.Error())
+		return 500, nil
 	}
 
+	// list 변수에 DB로 부터 조회한 태그 정보를 담아놓는다.
 	for rows.Next() {
-		var key int
+		var key1 int
 		var value string
 
-		err = rows.Scan(&key, &value)
+		err = rows.Scan(&key1, &value)
 		if err != nil {
-			fmt.Errorf("%v", err)
+			SugarLogger.Error(err.Error())
 		}
 
-		list[key] = value
+		list[key1] = value
 	}
 
 	i := 2 // 2행부터 값을 읽어온다.
 	for i <= 301 {
 		if count >= 301 {
-			return 405, fmt.Errorf("The target is already full. ")
+			return 405, fmt.Errorf("exceeded. ")
 		}
 
 		str := strconv.Itoa(i)
@@ -373,7 +365,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 		if validName != true || t.TargetName == "" {
 			break
 		} else if validEmail != true || t.TargetEmail == "" {
-			// todo 추후 이메일 중복도 체크해야한다.
+			// todo 추후 중복으로 입력된 이메일도 검사해주면 좋을 것 같다.
 			break
 		}
 
@@ -388,6 +380,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 			t.TargetPhone = ""
 		}
 
+		// slice 변수
 		var sub []string
 
 		// 여기부터는 선택정보.
@@ -428,9 +421,9 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 			// 엑셀 파일의 태그정보와 DB의 정보가 일치할 경우
 			if isValueIn(sub[k], list) {
 			Loop2:
-				for key, val := range list {
+				for key2, val := range list {
 					if val == sub[k] {
-						sub[k] = strconv.Itoa(key)
+						sub[k] = strconv.Itoa(key2)
 						break Loop2
 					}
 				}
@@ -459,7 +452,7 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 
 	_, err = conn.Exec(query)
 	if err != nil {
-		fmt.Println(err)
+		SugarLogger.Error(err.Error())
 	}
 
 	defer conn.Close()
@@ -472,7 +465,6 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
 func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
-	//var tags [3]int
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
 		query := `SELECT target_no,
@@ -508,7 +500,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf(err.Error())
 		}
 		index := f.NewSheet("Sheet1")
 
@@ -518,7 +510,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			err = rows.Scan(&tg.TargetNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 				&tg.TargetPosition, &tg.TargetCreateTime, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2])
 			if err != nil {
-				return fmt.Errorf("Target scanning error : %v ", err)
+				SugarLogger.Error(err.Error())
+				return fmt.Errorf(err.Error())
 			}
 
 			str := strconv.Itoa(i)
@@ -548,8 +541,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 파일 이름에 str변수 (
 		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err2 != nil {
-			fmt.Println(err2)
-			return fmt.Errorf("Registered Target downloading Error. ")
+			SugarLogger.Error(err2.Error())
+			return fmt.Errorf(err2.Error())
 		}
 
 		return nil
@@ -592,7 +585,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
 		result, err := conn.Query(query, num, tagNumber)
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			SugarLogger.Error(err.Error())
+			return fmt.Errorf(err.Error())
 		}
 
 		i := 2
@@ -601,7 +595,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			SugarLogger.Error(err.Error())
+			return fmt.Errorf(err.Error())
 		}
 
 		index := f.NewSheet("Sheet1")
@@ -614,7 +609,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 				&tg.TargetOrganize, &tg.TargetPosition, &tg.TargetCreateTime,
 				&tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2]) //조회한 값들을 하나하나 바인딩
 			if err != nil {
-				return fmt.Errorf("%v", err)
+				SugarLogger.Error(err.Error())
+				return fmt.Errorf(err.Error())
 			}
 
 			str := strconv.Itoa(i)
@@ -636,9 +632,9 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
 		// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정, api_Target.go 파일의 todo 3 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
-		// 파일 이름에 str변수 (
 		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err2 != nil {
-			return fmt.Errorf("%v", err2)
+			SugarLogger.Error(err2.Error())
+			return fmt.Errorf(err2.Error())
 		}
 	}
 
@@ -661,6 +657,7 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 									WHERE user_no = $1
 									GROUP BY tag_name;`, num)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return fmt.Errorf("%v", err), 500
 	}
 
@@ -689,6 +686,7 @@ func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
 	// 위 조건들 전부 충족할 경우 태그 등록
 	_, err = conn.Exec("INSERT INTO tag_info(tag_name, user_no) VALUES ($1, $2)", t.TagName, num)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return fmt.Errorf("%v", err), 500
 	}
 
@@ -701,12 +699,14 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 
 	_, err := conn.Exec("DELETE FROM tag_info WHERE tag_no = $1 AND user_no = $2", t.TagNo, num)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return fmt.Errorf("Error deleting tag on tag_info ")
 	}
 
 	// 해당 태그를 사용하는 프로젝트가 아무런 태그를 가지지 않게 될 경우 삭제한다.
 	_, err = conn.Exec("DELETE FROM project_info WHERE tag1 = 0 AND tag2 = 0 AND tag3 = 0")
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return fmt.Errorf("Error deleting tag on tag_info ")
 	}
 
@@ -727,6 +727,7 @@ func GetTag(conn *sql.DB, num int) ([]Tag, error) {
 `
 	tags, err := conn.Query(query, num)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return nil, fmt.Errorf("%v", err)
 	}
 
@@ -736,6 +737,7 @@ func GetTag(conn *sql.DB, num int) ([]Tag, error) {
 	for tags.Next() {
 		err = tags.Scan(&tg.TagNo, &tg.TagName, &tg.TagCreateTime)
 		if err != nil {
+			SugarLogger.Error(err.Error())
 			return nil, fmt.Errorf("%v", err)
 		}
 
@@ -798,6 +800,7 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 	searchText = "%" + searchText + "%"
 	rows, err := conn.Query(query, num, searchText, pageNum)
 	if err != nil {
+		SugarLogger.Error(err.Error())
 		return nil, 0, 0, fmt.Errorf("%v", err)
 	}
 
@@ -808,42 +811,43 @@ func SearchTarget(conn *sql.DB, num int, page int, searchDivision string, search
 		err = rows.Scan(&tg.FakeNo, &tg.TargetName, &tg.TargetEmail, &tg.TargetPhone, &tg.TargetOrganize,
 			&tg.TargetPosition, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2], &tg.TargetCreateTime, &tg.TargetNo)
 		if err != nil {
-			fmt.Printf("Targets scanning Error. : %v", err)
+			SugarLogger.Error(err.Error())
+			fmt.Printf("%v", err)
 			continue
 		}
 
-		// Note 전화번호에 하이픈(-)을 추가하여 사용자에게 보여준다.
-		//  추후 프론트에서 처리하도록 수정한다.
-		var sub [3]string
-		phone := []rune(tg.TargetPhone)
-
-		if len(tg.TargetPhone) < 10 {
-			sub[0] = string(phone[0:2])
-			sub[1] = string(phone[2:5])
-			sub[2] = string(phone[5:9])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
-			sub[0] = string(phone[0:2])
-			sub[1] = string(phone[2:6])
-			sub[2] = string(phone[6:10])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if len(tg.TargetPhone) == 10 {
-			sub[0] = string(phone[0:3])
-			sub[1] = string(phone[3:6])
-			sub[2] = string(phone[6:10])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		} else if len(tg.TargetPhone) == 11 {
-			sub[0] = string(phone[0:3])
-			sub[1] = string(phone[3:7])
-			sub[2] = string(phone[7:11])
-			tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
-		}
+		// 추후 프론트에서 처리하도록 수정함.
+		//var sub [3]string
+		//phone := []rune(tg.TargetPhone)
+		//
+		//if len(tg.TargetPhone) < 10 {
+		//	sub[0] = string(phone[0:2])
+		//	sub[1] = string(phone[2:5])
+		//	sub[2] = string(phone[5:9])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if string(phone[1:2]) == "2" && len(tg.TargetPhone) == 10 {
+		//	sub[0] = string(phone[0:2])
+		//	sub[1] = string(phone[2:6])
+		//	sub[2] = string(phone[6:10])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if len(tg.TargetPhone) == 10 {
+		//	sub[0] = string(phone[0:3])
+		//	sub[1] = string(phone[3:6])
+		//	sub[2] = string(phone[6:10])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//} else if len(tg.TargetPhone) == 11 {
+		//	sub[0] = string(phone[0:3])
+		//	sub[1] = string(phone[3:7])
+		//	sub[2] = string(phone[7:11])
+		//	tg.TargetPhone = sub[0] + "-" + sub[1] + "-" + sub[2]
+		//}
 
 		targets = append(targets, tg)
 
-		tg.TargetTag[0] = ""
-		tg.TargetTag[1] = ""
-		tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
+		// slice 로 변경되면 다른 방식으로 값을 비운다.
+		//tg.TargetTag[0] = ""
+		//tg.TargetTag[1] = ""
+		//tg.TargetTag[2] = ""
 	}
 
 	// 전체 타겟(훈련대상)의 수를 반환한다.
