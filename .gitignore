@@ -7,3 +7,5 @@ node_modules
 package-lock.json
 kafka
 Spreadsheet/Target_PL.xlsx
+springboot/logs/spring.log
+logfile.log
