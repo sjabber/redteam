@@ -83,5 +83,8 @@ where target_no = $4
 		SugarLogger.Error(err.Error())
 		return err
 	}
+
+	defer conn.Close()
+
 	return nil
 }

@@ -16,9 +16,9 @@ func InitLogger() {
 
 	// zapcore.NewTee => 여러 로그레벨(core 인터페이스)을 반환하려고 할 경우 사용.
 	coreError := zapcore.NewTee(
-		 zapcore.NewCore(encoder, writerSyncer, zapcore.ErrorLevel), // ErrorLevel 만 파일에 기록한다.
+		 //zapcore.NewCore(encoder, writerSyncer, zapcore.ErrorLevel),
 		 zapcore.NewCore(encoder, consoleErrors, zapcore.InfoLevel),
-		 zapcore.NewCore(encoder, writerSyncer, zapcore.DebugLevel),
+		 zapcore.NewCore(encoder, writerSyncer, zapcore.DebugLevel), // ErrorLevel, DebugLevel 만 파일에 기록한다.
 		 //zapcore.NewCore(encoder, consoleErrors, zapcore.DebugLevel),
 		)
 	errorLog := zap.New(coreError, zap.AddCaller())

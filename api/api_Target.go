@@ -4,13 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	cors "github.com/itsjamie/gin-cors"
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"redteam/model"
 	"strconv"
+	"time"
 )
 
 func RegTarget(c *gin.Context) {
@@ -121,52 +121,37 @@ func DownloadExcel(c *gin.Context) {
 // 업로드한 엑셀파일의 형식에 맞게 작성한 경우 DB에 일괄등록한다.
 func ImportTargets(c *gin.Context) {
 	// 단일 파일 전송
-	file, err := c.FormFile("file")
+	f, err := c.FormFile("file")
 	if err != nil {
 		model.SugarLogger.Error(err.Error())
 		c.String(http.StatusInternalServerError, fmt.Sprintf("get form error: %s", err.Error()))
 		return
 	}
 
+	// 읽을 수 있는 형태로 파일헤더를 가공한다.
+	file, err := f.Open()
+	if err != nil {
+		model.SugarLogger.Error(err.Error())
+		c.String(http.StatusInternalServerError, fmt.Sprintf("get form error: %s", err.Error()))
+		return
+	}
+	defer file.Close()
+
 	// num (계정번호) => 해당 계정에 속한 정보들만 추출할 수 있다.
 	num := c.Keys["number"].(int)
 
-	// num (int) -> str (string) 변환
-	str := strconv.Itoa(num)
-
-	// 업로드할 파일의 이름이 담기는 변수
-	filename := filepath.Base(file.Filename)
-
-	// 계정별로 업로드할 디렉토리를 다르게하여 동시 업로드시 충돌을 방지한다.
-	if _, err := os.Stat("./Spreadsheet/" + str); os.IsNotExist(err) {
-		os.Mkdir("./Spreadsheet/"+str, 777)
-	}
-
-	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트로부터 다운로드받을 파일을 하나 만든다.)
-	// 현재는 컴퓨터의 다운로드파일로 업로드 받는다.
-	// 파일을 구체적인 장소로 업로드한다. (서버에 파일을 저장할 경로, 파일이름)
-	uploadPath := "./Spreadsheet/" + str + "/" + filename
-	log.Println(filename)
-	if err := c.SaveUploadedFile(file, uploadPath); err != nil {
-		log.Println("ImportTarget error occurred, account :", c.Keys["email"])
-		c.String(http.StatusInternalServerError, fmt.Sprintf("upload file error: %s", err.Error()))
-		return
-	}
-	//else {
-	//	c.String(http.StatusOK, fmt.Sprintf("Status : Posted, File name : %s", filename))
-	//} // 파일 전송이 완료됨.
-
-	/////////////////아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.////////////////////////////
+	// 아래 코드들부터 전송받은 파일을 읽어 DB에 등록한다.
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
+	// 바인딩
 	target := model.Target{}
 	c.ShouldBindJSON(&target)
 
 	// ImportTargets 메세지로 해당 파일을 읽어서 DB에 저장한다.
-	errCode, err := target.ImportTargets(&conn, uploadPath, num)
+	errCode, err := target.ImportTargets(&conn, num, file)
 	if err != nil {
-		//model.SugarLogger.Info(err.Error())
+		model.SugarLogger.Info(err.Error())
 		c.JSON(errCode, gin.H{
 			"isOk": false,
 		})
@@ -176,13 +161,6 @@ func ImportTargets(c *gin.Context) {
 		})
 	}
 
-	// DB에 등록이 완료되어 필요없어진 파일을 삭제하는 코드
-	// todo 2 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 2는 전부 같은 경로로 수정)
-	err2 := os.Remove("./Spreadsheet/" + str + "/" + filename)
-	if err2 != nil {
-		model.SugarLogger.Errorf(err2.Error())
-	}
-	os.Clearenv()
 }
 
 //사용자가 등록한 대상들을 엑셀파일로 추출한다.
@@ -193,43 +171,25 @@ func ExportTarget(c *gin.Context) {
 	db, _ := c.Get("db")
 	conn := db.(sql.DB)
 
-	header := c.Writer.Header()
-	header["content-type"] = []string{"application/vnd.ms-excel"}
-	header["content-disposition"] = []string{"attachment; filename=" + "Registered_Targets.xlsx"}
-
 	// URL 에 포함된 tag 번호를 tagNumber 변수에 int 로 형변환 후 바인딩.
 	pg := c.Query("tag_no")
 	tagNumber, _ := strconv.Atoi(pg)
 
 	// 해당 계정으로 등록된 훈련대상들의 파일을 생성한다.
-	err := model.ExportTargets(&conn, num, tagNumber) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
+	buffer, err := model.ExportTargets(&conn, num, tagNumber) // 클라이언트에게 전달해줄 엑셀파일을 생성하여 아래 코드에서 사용한다.
 	if err != nil {
-		//model.SugarLogger.Info(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"isOk ": false,
 		})
-	}
-
-	str := strconv.Itoa(num)
-	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
-	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
-	destFile := "./Spreadsheet/" + str + "/Registered_Targets.xlsx"
-	file, err := os.Open(destFile)
-	if err != nil {
-		c.String(http.StatusOK, "%v", err)
 		return
 	}
-	io.Copy(c.Writer, file)
-	file.Close()
 
-	// 사용자가 파일을 다운로드받으면 생성한 파일은 다시 지운다.
-	// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정)
-	err3 := os.Remove("./Spreadsheet/" + str + "/Registered_Targets.xlsx")
-	if err3 != nil {
-		//현재 함수를 즉시 멈추고 현재 함수에 defer 함수들을 모두 실행한 후 즉시 리턴
-		panic(err3)
-	}
-	os.Clearenv()
+	// buffer 에 담긴 파일을 전송한다.
+	downloadName := time.Now().UTC().Format("Targets-20060102150405.xlsx")
+	c.Header("Content-Description", "File Transfer")
+	c.Header(cors.ExposeHeadersKey, "Content-Disposition")
+	c.Header("Content-Disposition", "attachment; filename="+downloadName)
+	c.Data(http.StatusOK, "application/octet-stream", buffer.Bytes())
 }
 
 func RegTag(c *gin.Context) {

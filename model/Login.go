@@ -48,7 +48,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 	u.Email = strings.ToLower(u.Email)
 
 	if u.Email == "" || u.Password == "" {
-		//SugarLogger.Info("login fail, Please enter your account information.")
+		SugarLogger.Info("login fail, Please enter your account information.")
 		return fmt.Errorf("login fail"), 400, loginCount
 	}
 
@@ -72,7 +72,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 							 where user_no = $1
 							 and login_count < 5
 							 returning login_count`, u.UserNo)
-		//SugarLogger.Info("login fail, The password is incorrect.")
+		SugarLogger.Error("login fail, The password is incorrect.")
 		return fmt.Errorf("login fail"), 401, loginCount
 	} else {
 		// 5회 안에 로그인 성공 시 login count 초기화

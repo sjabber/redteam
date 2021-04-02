@@ -1,9 +1,11 @@
 package model
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"mime/multipart"
 	"regexp"
 	"strconv"
 	"strings"
@@ -294,7 +296,7 @@ func (t *TargetNumber) DeleteTarget(conn *sql.DB, num int) error {
 
 // 반복해서 읽고 값을 넣는것을 메서드로 구현하고 API는 이걸 그냥 사용하기만 하면됨.
 // Excel 파일로부터 대상의 정보를 일괄적으로 읽어 DB에 등록한다.
-func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, error) {
+func (t *Target) ImportTargets(conn *sql.DB, num int, file multipart.File) (int, error) {
 
 	// 훈련대상자 수를 300명으로 제한하기 위해 조회한다.
 	var count int // 등록된 훈련대상자 수
@@ -306,11 +308,10 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 		return 405, fmt.Errorf("The target is already full. ")
 	}
 
-	// str -> 일괄등록하기 위한 업로드 경로 + 파일 이름이 담기는 변수
-	f, err := excelize.OpenFile(uploadPath)
+	f, err := excelize.OpenReader(file)
 	if err != nil {
-		SugarLogger.Error(err.Error())
-		return 400, nil
+		SugarLogger.Info(err.Error())
+		return 500, nil
 	}
 
 	user1 := strconv.Itoa(num) //int -> string
@@ -463,7 +464,9 @@ func (t *Target) ImportTargets(conn *sql.DB, uploadPath string, num int) (int, e
 }
 
 // DB에 저장된 값들을 읽어 엘셀파일에 일괄적으로 작성하여 저장한다.
-func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
+func ExportTargets(conn *sql.DB, num int, tagNumber int) (bytes.Buffer, error) {
+
+	var buffer bytes.Buffer
 
 	// tagNumber 가 0인 경우 (전체 선택)
 	if tagNumber == 0 {
@@ -492,7 +495,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
 		rows, err := conn.Query(query, num)
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			SugarLogger.Error(err.Error())
+			return buffer, fmt.Errorf("%v", err)
 		}
 
 		// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
@@ -500,9 +504,10 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			SugarLogger.Error(err.Error())
+			return buffer, fmt.Errorf(err.Error())
 		}
-		index := f.NewSheet("Sheet1")
+		//index := f.NewSheet("Sheet1")
 
 		i := 2
 		for rows.Next() {
@@ -511,7 +516,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 				&tg.TargetPosition, &tg.TargetCreateTime, &tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2])
 			if err != nil {
 				SugarLogger.Error(err.Error())
-				return fmt.Errorf(err.Error())
+				return buffer, fmt.Errorf(err.Error())
 			}
 
 			str := strconv.Itoa(i)
@@ -533,19 +538,13 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 			tg.TargetTag[2] = "" // slice 로 변경되면 다른 방식으로 값을 비운다.
 		}
 
-		f.SetActiveSheet(index)
-
-		str := strconv.Itoa(num) //int -> string
-
-		// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정, api_Target.go 파일의 todo 3 참고)
-		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
-		// 파일 이름에 str변수 (
-		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err2 != nil {
-			SugarLogger.Error(err2.Error())
-			return fmt.Errorf(err2.Error())
+		// 메모리에 엑셀 파일을 작성한다.
+		if err = f.Write(&buffer); err != nil {
+			SugarLogger.Error(err.Error())
+			return buffer, err
 		}
 
-		return nil
+		return buffer, nil
 
 		// todo -------------------아래부턴 특정 태그만 골라서 내보낼 경우에 해당함.-----------------------------------
 	} else {
@@ -586,7 +585,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		result, err := conn.Query(query, num, tagNumber)
 		if err != nil {
 			SugarLogger.Error(err.Error())
-			return fmt.Errorf(err.Error())
+			return buffer, fmt.Errorf(err.Error())
 		}
 
 		i := 2
@@ -596,10 +595,10 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
 		if err != nil {
 			SugarLogger.Error(err.Error())
-			return fmt.Errorf(err.Error())
+			return buffer, fmt.Errorf(err.Error())
 		}
 
-		index := f.NewSheet("Sheet1")
+		//index := f.NewSheet("Sheet1")
 
 		for result.Next() {
 			tg := Target{}
@@ -610,7 +609,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 				&tg.TargetTag[0], &tg.TargetTag[1], &tg.TargetTag[2]) //조회한 값들을 하나하나 바인딩
 			if err != nil {
 				SugarLogger.Error(err.Error())
-				return fmt.Errorf(err.Error())
+				return buffer, fmt.Errorf(err.Error())
 			}
 
 			str := strconv.Itoa(i)
@@ -626,21 +625,17 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) error {
 
 			i++
 		}
-		f.SetActiveSheet(index)
 
-		str := strconv.Itoa(num) //int -> string
-
-		// todo 3 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 3은 전부 같은 경로로 수정, api_Target.go 파일의 todo 3 참고)
-		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
-		if err2 := f.SaveAs("./Spreadsheet/" + str + "/Registered_Targets.xlsx"); err2 != nil {
-			SugarLogger.Error(err2.Error())
-			return fmt.Errorf(err2.Error())
+		// 메모리에 엑셀 파일을 작성한다.
+		if err = f.Write(&buffer); err != nil {
+			SugarLogger.Error(err.Error())
+			return buffer, err
 		}
 	}
 
 	defer conn.Close()
 
-	return nil
+	return buffer, nil
 }
 
 func (t *Tag) CreateTag(conn *sql.DB, num int) (error, int) {
@@ -718,6 +713,8 @@ func (t *Tag) DeleteTag(conn *sql.DB, num int) error {
 // todo 4 : tag_info 에서 사용자 번호로 태그정보를 가져온다.
 func GetTag(conn *sql.DB, num int) ([]Tag, error) {
 
+	defer conn.Close()
+
 	var query string
 
 	query = `SELECT tag_no, tag_name, to_char(modified_time, 'YYYY-MM-DD')
@@ -743,8 +740,6 @@ func GetTag(conn *sql.DB, num int) ([]Tag, error) {
 
 		tag = append(tag, tg)
 	}
-
-	defer conn.Close()
 
 	return tag, nil
 }

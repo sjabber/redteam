@@ -24,13 +24,18 @@ func ConnectDB() (*sql.DB, error) {
 		"user=" + dbUser + " password=" + dbPw + " dbname=" + dbName +
 			" host=" + dbHost + " sslmode=disable port=" + dbPort)
 
+	// 커넥션풀 생성, 최대 5개
+	db.SetMaxOpenConns(5)
+
 	if db != nil {
 		db.SetMaxOpenConns(100)
 		db.SetMaxIdleConns(10)
 	}
 	if err != nil {
-		SugarLogger.Error(err)
+		SugarLogger.Debug(err.Error())
 		return nil, err
 	}
+
+	//defer db.Close()
 	return db, err
 }
