@@ -6,6 +6,7 @@ import com.hanium.mer.service.SMTPService;
 import com.hanium.mer.vo.SmtpVo;
 import com.hanium.mer.vo.Smtp_setting;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 public class ApiSMTPController {
 
@@ -41,7 +43,6 @@ public class ApiSMTPController {
         return new ResponseEntity<Object>("error", HttpStatus.FORBIDDEN);
     }
 
-    //todo 비밀번호 암호화
     @PostMapping("/setting/smtpSetting")
     public ResponseEntity<Object> setSTMPSetting(HttpServletRequest request, @RequestBody SmtpVo newSmtp)
             throws UnsupportedEncodingException {
@@ -53,7 +54,7 @@ public class ApiSMTPController {
                 if ( !smtpService.setSMTP(Long.parseLong(claims.get("user_no").toString()), newSmtp)){
                     return new ResponseEntity<Object>("ID를 이메일 형식으로 입력해주세요.", HttpStatus.BAD_REQUEST);
                 }
-                System.out.println(newSmtp.toString());
+                log.info(newSmtp.toString());
                 return new ResponseEntity<Object>(newSmtp.toString(), HttpStatus.OK);
             }catch(Exception e){
                 e.printStackTrace();
@@ -66,7 +67,6 @@ public class ApiSMTPController {
         return new ResponseEntity<Object>("토큰을 확인해주세요", HttpStatus.FORBIDDEN);
     }
 
-    //todo 인증에러는 front 401은 connect에서, connect에서 auth 에러 시 아래 에러 정리하기
     @PostMapping("/setting/smtpConnectCheck")
     public ResponseEntity<Object> connectSTMPTest(@RequestBody SmtpVo smtp){
         try {

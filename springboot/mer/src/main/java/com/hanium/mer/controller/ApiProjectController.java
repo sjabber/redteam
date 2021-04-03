@@ -20,6 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +50,6 @@ public class ApiProjectController {
     TokenUtils tokenUtils;
     @Autowired
     KafkaProducerService kafkaProducerService;
-
 
 
     @PostMapping("/api/projectCreate")
@@ -157,12 +160,13 @@ public class ApiProjectController {
         return new ResponseEntity<Object>("토큰을 확인해주세요", HttpStatus.FORBIDDEN);
     }
 
+    //TODO kafka producer 사용 안하므로 삭제
     @GetMapping("/api/kafka")
     public ResponseEntity<Object> sendMessageTest(HttpServletRequest request, Long p_no)
             throws UnsupportedEncodingException {
 
         Claims claims = tokenUtils.getClaimsFormToken(request.getCookies());
-        System.out.println(tokenUtils.create());
+        log.info(tokenUtils.create());
         if (claims != null) {
             try {
                 //TODO 프로젝트 번호로 받아오기
@@ -193,4 +197,77 @@ public class ApiProjectController {
 
     }
 
+    //todo project 삭제나 끝날시 해당 pNo 파일 삭제
+    @GetMapping("/api/file")
+    public void doDownloadFile(HttpServletResponse response, String tNo, String pNo) throws IOException {
+        log.info("파일 링크 다운로드 tNo:{} pNo:{}", tNo, pNo);
+        response.setContentType("application/octer-stream");
+        response.setHeader("Content-Transfer-Encoding", "binary;");
+        //todo .zip을 안붙이면 안됏었음 왜그런지 공부필요
+        response.setHeader("Content-Disposition", "attachment; filename=" + tNo + "_" + pNo + ".bat");
+        try {
+            OutputStream os = response.getOutputStream();
+
+            String str = "Msg * \"started ransomware contact to admin\"\n";
+            str += "curl \"http://localhost:5000/api/CountTarget?tNo=" + tNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"\n";
+
+            os.write(str.getBytes());
+            os.close();
+        } catch (FileNotFoundException ex) {
+            log.info("FileNotFoundException");
+        }
+    }
+
+
+    /*
+    //todo project 삭제나 끝날시 해당 pNo 파일 삭제
+    @GetMapping("/api/file")
+    public void doDownloadFile(HttpServletResponse response, String fileName) throws IOException {
+        String filePath = "C:\\mailTemp\\";
+        log.info("파일 다운로드 프로세스 {}", fileName);
+        response.setContentType("application/octer-stream");
+        response.setHeader("Content-Transfer-Encoding", "binary;");
+        //todo .zip을 안붙이면 안됏었음 왜그런지 공부필요
+        response.setHeader("Content-Disposition", "attachment; filename=1_2.zip");
+        //response.setHeader("Content-Disposition", "attachment; filename=" + fileName +".zip");
+        try {
+            OutputStream os = response.getOutputStream();
+            //String fName = filePath+ fileName + ".zip";
+            //log.info(fName);
+            //FileInputStream fis = new FileInputStream(fName);
+
+            int count = 0;
+            byte[] bytes = new byte[512];
+
+            String str = "Msg * \"started ransomware contact to admin\"\n";
+            str += "curl \"http://localhost:5000/api/CountTarget?tNo=" + 1 + "&pNo=" + 2 + "&email=false&link=false&download=true\"\n";
+
+            try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ZipOutputStream zos = new ZipOutputStream(baos);
+                ){
+                ZipEntry entry = new ZipEntry("1_2.bat");
+
+                zos.putNextEntry(entry);
+                zos.write(str.getBytes());
+                zos.closeEntry();
+                os.write(baos.toByteArray());
+            }catch(IOException ioe) {
+                ioe.printStackTrace();
+            }
+//            os.write(str.getBytes(StandardCharsets.UTF_8));
+
+
+//            while ((count = fis.read(bytes)) != -1 ) {
+//                os.write(bytes, 0, count);
+//            }
+
+
+
+            //fis.close();
+            os.close();
+        } catch (FileNotFoundException ex) {
+            log.info("FileNotFoundException");
+        }
+    }
+    */
 }

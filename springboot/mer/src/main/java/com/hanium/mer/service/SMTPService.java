@@ -31,7 +31,7 @@ public class SMTPService {
     public Optional<SmtpVo> getSMTP(Long user_no){
         Optional<SmtpVo> smtp =  smtpRepository.findByUserNo(user_no);
         try {
-            log.info(aesService.decAES(smtp.get().getSmtpPw()));//log
+            aesService.decAES(smtp.get().getSmtpPw());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -52,9 +52,9 @@ public class SMTPService {
         }
         smtp.setSmtpId(newSmtp.getSmtpId());
         smtp.setSmtpPw(aesService.encAES(newSmtp.getSmtpPw()));
-        log.debug(smtp.getSmtpPw());
         smtp.setModify(LocalDateTime.now());
-        System.out.println(smtpRepository.save(smtp));
+        log.debug(smtp.toString());
+        smtpRepository.save(smtp);
         return true;
     }
 
@@ -91,6 +91,9 @@ public class SMTPService {
     }
 
     public String sendMail(SmtpVo smtp_info, TargetVo target, TemplateVO template) throws Exception {
+
+        log.info("smtp info {} ", smtp_info.toString());
+
         //TODO checkConect와 중복제거
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(smtp_info.getSmtpHost());
@@ -99,6 +102,7 @@ public class SMTPService {
         mailSender.setUsername(smtp_info.getSmtpId());
         //비번 초기 아이디 생성시, smtp 가 자동 생성되며 비밀번호에 BCrypt 문자가 생성
         // => Illegal base64 character 24 예외
+
         //TODO 예외 잡을지 말지
         mailSender.setPassword(aesService.decAES(smtp_info.getSmtpPw()));
 
@@ -115,7 +119,6 @@ public class SMTPService {
             props.put("mail.smtp.socketFactory.fallback", "false");
         }
 
-        log.info("smtp info {}", smtp_info);
         //메세지 보내기: html 형태(검색시 금방 나옴), 파일도 보낼 수 있다.
         //여러 사람에게 보내기 List InternetAddress 형태? 검색필요
         //InternetAddress를 배열로 받아서 후에 프로젝트에서 target의 메일들을 받아보내면 됨

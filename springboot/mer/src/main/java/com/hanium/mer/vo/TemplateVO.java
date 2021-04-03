@@ -40,9 +40,11 @@ public class TemplateVO {
     @JsonProperty(value = "mail_title")
     private String mailTitle;
 
+    /*
     @Column(name = "sender_name")
     @JsonProperty(value = "sender_name")
     private String senderName;
+    */
 
     @Column(name = "download_type")
     @JsonProperty(value = "download_type")
