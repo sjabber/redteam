@@ -520,7 +520,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
 
                     $('#PI_1').text(rObj.info1.targets);
                     $('#PI_2').text(rObj.info1.scheduled);
@@ -550,7 +550,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText)
+                    // console.log(r.responseText)
 
                     if (rObj.project_detail != null) {
                         // table 비워주기
@@ -844,7 +844,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText)
+                    // console.log(r.responseText)
 
                     if (rObj.project_list != null) {
                         // table 비워주기
@@ -916,7 +916,7 @@
 
     function GetResult(p_no) {
         //    todo GetResult api 구현해야함
-        console.log('GetResult : p_no -> ' + p_no)
+        // console.log('GetResult : p_no -> ' + p_no)
         const r = new XMLHttpRequest();
         r.open('GET', 'http://localhost:5000/api/resultDetail?p_no=' + p_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -927,7 +927,7 @@
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
                     if (rObj.resultDetail != null) {
-                        console.log(r.responseText)
+                        // console.log(r.responseText)
                         emptyTable();
 
                         fullTag = ''

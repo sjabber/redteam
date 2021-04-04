@@ -181,7 +181,7 @@
             let responseObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
                     responseObj = JSON.parse(r.responseText);
                     $('#hostname').val(responseObj.smtp_setting.smtp_host);
                     $('#smtp_port').val(responseObj.smtp_setting.smtp_port);

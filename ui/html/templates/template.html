@@ -264,7 +264,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
 
                     if (rObj.tmpls.length > 0) {
                         // table 비워주기
@@ -379,7 +379,7 @@
             let rObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
                     rObj = JSON.parse(r.responseText);
                     // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
                     // todo 김태호 멘티 자체적으로 포멧 추가..
@@ -432,7 +432,7 @@
             content: content,
             download_type: download_type
         };
-        console.log(JSON.stringify(formData));
+        // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
@@ -459,7 +459,7 @@
                 }
             }
         };
-        console.log(formData);
+        // console.log(formData);
         r.send(JSON.stringify(formData));
 
     }
