@@ -18,7 +18,6 @@ public class TokenUtils {
     private static final int NULL = 3;
 
     public int isValidToken(String token) throws UnsupportedEncodingException, ExpiredJwtException, JwtException, NullPointerException  {
-        System.out.println("jwt token java :" + KEY);
         Claims claims = Jwts.parser().setSigningKey(KEY.getBytes("UTF-8")).parseClaimsJws(token).getBody();
 
         //System.out.println("expireTime :" + claims.getExpiration());
