@@ -107,7 +107,6 @@ app.get('/help/template', function (req, res) {
 app.get('/setting')
 
 
-// 맨아래 둬야하는건가? 쉣인데?
 app.use(function (req, res, next) {
     res.status(404);
     fs.createReadStream("./error.html").pipe(res);
@@ -115,5 +114,5 @@ app.use(function (req, res, next) {
 
 
 server.listen(8888, function () {
-    // console.log('Express server listening on port ' + server.address().port);
+    console.log('Express server listening on port ' + server.address().port);
 })
