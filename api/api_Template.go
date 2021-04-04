@@ -94,7 +94,7 @@ func EditTemplate(c *gin.Context) {
 	tmp := model.Template{}
 	c.ShouldBindJSON(&tmp)
 	err, errCode := tmp.Update(&conn, num)
-	if err != nil {
+	if err != nil && errCode != 200 {
 		c.JSON(errCode, gin.H{
 			"isOk": false,
 		})

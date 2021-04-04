@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/redteam.wiki" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/springboot/mer0402" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/springboot/mer_consumer0402" vcs="Git" />
   </component>
 </project>
