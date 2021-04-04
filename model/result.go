@@ -214,8 +214,6 @@ group by p_no
 		return err
 	}
 
-	defer conn.Close()
-
 	return nil
 }
 
@@ -331,7 +329,6 @@ group by target_organize
 			float64(rd.ProjectSummary.ResultPerClassification.COrgan.TotalCount)) * 100
 	}
 
-	defer conn.Close()
 
 	return nil
 }
@@ -460,7 +457,6 @@ where ti.user_no = $1
 	// 가장 rate 가 높은 태그 정보
 	rd.ProjectSummary.ResultPerClassification.CTag = maxTag
 
-	defer conn.Close()
 
 	return nil
 }

@@ -56,7 +56,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 		"SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
 	if err != nil || u.UserNo == 0 || u.Name == "" {
-		//SugarLogger.Info("login fail, this account does not exist.")
+		SugarLogger.Info(err.Error())
 		return fmt.Errorf("login fail"), 403, loginCount
 	}
 

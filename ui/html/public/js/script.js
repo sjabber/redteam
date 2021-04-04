@@ -139,9 +139,16 @@ function GetDashBoard() {
                 user_name.innerHTML = responseObj.name
                 // user_id.text(responseObj.email);
                 // user_name.text(responseObj.name);
+            } else if (r.status === 401) {
+                document.location.href = '/';
+
             } else if (r.status === 403) {
-                Refresh();
-                GetDashBoard();
+                if (Verify()) {
+                    Refresh();
+                    GetDashBoard();
+                } else {
+                    document.location.href = '/';
+                }
             } else {
                 document.location.href = '/';
             }
@@ -184,7 +191,7 @@ function Register() {
 function getRoot() {
     const r = new XMLHttpRequest();
     r.open('GET', '/', true);
-    r.send()
+    r.send();
 }
 
 function Refresh() {
@@ -197,14 +204,31 @@ function Refresh() {
             if (r.status === 200) {
                 console.log(r.responseText);
                 // alert("인증 토큰 갱신 성공했습니다.");
-                return true;
             } else {
-                //alert("인증 토큰 갱신 실패했습니다.");
-                // document.location.href = "/";
-                return false;
+                alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                document.location.href = "/";
             }
         }
     };
     const formData = $('form').serializeObject();
     r.send(JSON.stringify(formData));
+}
+
+function Verify() {
+    const r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:5000/api/RefreshTokenVerify', false);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    r.withCredentials = true;
+    r.onreadystatechange = function () {
+        if (r.readyState === 4) {
+            if (r.status === 200) {
+                return true;
+            } else if (r.status === 401) {
+                return false;
+            } else {
+                return false;
+            }
+        }
+    };
+    r.send();
 }
