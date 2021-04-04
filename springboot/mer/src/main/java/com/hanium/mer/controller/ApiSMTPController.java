@@ -79,7 +79,7 @@ public class ApiSMTPController {
             return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
-            return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.CONFLICT);
         }catch (MessagingException e){
             e.printStackTrace();
             return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);

@@ -84,13 +84,13 @@ public class ApiUserSettingController {
 
             //새로운 비밀번호 유효하지 않거나 check와 같지 않을 때
             if(!newUserInfo.getPassword().equals(newUserInfo.getPassword_check())){
-                return new ResponseEntity<Object>( "new password or new password check error", HttpStatus.UNAUTHORIZED); //401
+                return new ResponseEntity<Object>( "new password or new password check error", HttpStatus.CONFLICT); //409
             }
 
             if(checkPassword(newUserInfo.getPassword()) == BLANK_ERROR){
-                return new ResponseEntity<Object>("공백문자가 포함되어 있습니다.", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Object>("공백문자가 포함되어 있습니다.", HttpStatus.CONFLICT);
             }else if(checkPassword(newUserInfo.getPassword()) == NO_REGULAR){
-                return new ResponseEntity<Object>("숫자, 영문자, 특수문자 하나씩 포함해주세요.", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Object>("숫자, 영문자, 특수문자 하나씩 포함해주세요.", HttpStatus.CONFLICT);
             }
 
             userService.changeUserInfo(Long.parseLong(claims.get("user_no").toString()), newUserInfo);

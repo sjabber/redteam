@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -107,8 +106,8 @@ public class SMTPService {
 
 
             FileSystemResource resource = new FileSystemResource(sb.toString());
-            //messageHelper.addAttachment(sb.toString(), resource);
-            messageHelper.addAttachment(sb.toString(), new ByteArrayResource(makeAttachment(target.getTargetNo(), pNo)));
+            messageHelper.addAttachment(sb.toString(), resource);
+            //messageHelper.addAttachment(sb.toString(), new ByteArrayResource(makeAttachment(target.getTargetNo(), pNo)));
 
         }
 

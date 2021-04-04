@@ -74,10 +74,6 @@ public class ProjectVo {
     @JsonProperty(value = "p_status")
     private int pStatus;
 
-    @Column(name = "un_send_no")
-    @JsonProperty(value = "un_send_no")
-    private int unSendNo;
-
     @Column(name = "sender_email")
     @JsonProperty(value = "sender_email")
     private String senderEmail;
