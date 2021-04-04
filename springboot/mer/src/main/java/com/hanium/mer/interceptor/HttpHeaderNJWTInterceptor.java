@@ -3,6 +3,7 @@ package com.hanium.mer.interceptor;
 import com.hanium.mer.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,14 +17,15 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j
 @Component
-public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
+public class HttpHeaderNJWTInterceptor implements HandlerInterceptor{
 
     @Autowired
     TokenUtils tokenUtils;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         response = setHeader(response);
 
@@ -34,13 +36,12 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
-        //System.out.println("cookie num: "+ cookies.length);
+
         if (cookies != null) {
             for (Cookie c : cookies) {
 
                 try{
                     if (c.getName().equals("access-token")) {
-                        System.out.println(c.getValue());
                         tokenUtils.isValidToken(c.getValue());
                         return true;
                     }
@@ -48,7 +49,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(403, "token expired");
-                        System.out.println("토큰 익스파이어");
+                        log.info("token Expired");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -59,7 +60,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
                     try {
                         response.sendError(405, "token tempered");
                         e.printStackTrace();
-                        System.out.println("토큰 파괴");
+                        log.info("token tempered");
                         return true;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -69,7 +70,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(405, "token null");
-                        System.out.println("토큰 없음");
+                        log.info("toekn null");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -79,7 +80,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
 
                     try {
                         response.sendError(405, "unsupportedEncoding");
-                        System.out.println("토큰 인코딩에러");
+                        log.info("unsupportedEncoding");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -88,7 +89,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
                 }catch(NoSuchMethodError e){
                     try {
                         response.sendError(403, "토큰을 확인해주세요");
-                        System.out.println("nosuchMetodh");
+                        log.info("no such Method");
                         return false;
                     }catch(IOException ex){
                         ex.printStackTrace();
@@ -101,7 +102,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor {
         try {
 
             response.sendError(403, "null cookies");
-            System.out.println("쿠키없음");
+            log.info("null cookies");
             return false;
         }catch(IOException ex){
             ex.printStackTrace();
