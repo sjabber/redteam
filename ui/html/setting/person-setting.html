@@ -163,7 +163,7 @@
             let responseObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
                     responseObj = JSON.parse(r.responseText);
                     $('#dropdown_id').text(responseObj.user_info.email);
                     $('#dropdown_name').text(responseObj.user_info.name);
@@ -224,7 +224,7 @@
                 }
             }
         };
-        console.log(formData);
+        // console.log(formData);
         r.send(JSON.stringify(formData));
     }
 

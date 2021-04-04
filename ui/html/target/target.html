@@ -358,7 +358,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
 
                     if (rObj.targets != null) {
                         // table 비워주기
@@ -495,7 +495,7 @@
                                 "                        </tr>");
                             if (j === 0) {
                                 // const option = ;
-                                console.log(rObj.tags[j].tag_no);
+                                // console.log(rObj.tags[j].tag_no);
                                 $('#tag_selector_1').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
                                 $('#tag_selector_2').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
                                 $('#tag_selector_3').append("<option value='" + "" + "' selected>" + "선택안함" + "</option>");
@@ -557,7 +557,7 @@
             }
         };
 
-        console.log(tagNo);
+        // console.log(tagNo);
         r.send(JSON.stringify({"tag_no": tagNo}));
     }
 
@@ -565,13 +565,13 @@
         const dataPerPage = 20;
         const pageCount = 5;
 
-        console.log("currentPage : " + currentPage);
-        console.log("totalData : " + totalData);
+        // console.log("currentPage : " + currentPage);
+        // console.log("totalData : " + totalData);
         const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
 
-        console.log("pageGroup : " + pageGroup);
-        console.log("totalPage : " + totalPage);
+        // console.log("pageGroup : " + pageGroup);
+        // console.log("totalPage : " + totalPage);
 
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
         if (last > totalPage)
@@ -580,10 +580,10 @@
         const next = last + 1;
         const prev = first - 1;
 
-        console.log("last : " + last);
-        console.log("first : " + first);
-        console.log("next : " + next);
-        console.log("prev : " + prev);
+        // console.log("last : " + last);
+        // console.log("first : " + first);
+        // console.log("next : " + next);
+        // console.log("prev : " + prev);
 
         if (totalPage < 1) {
             first = last;
@@ -650,8 +650,8 @@
                             }
                         }
                     };
-                    console.log({target_list: tdArr})
-                    console.log(tdArr[0])
+                    // console.log({target_list: tdArr})
+                    // console.log(tdArr[0])
                     r.send(JSON.stringify({target_list: tdArr}))
                 } else {
                     alert("삭제할 대상을 선택해주세요.");
@@ -758,7 +758,7 @@
                 tg_position: tg_position,
                 tag_no: tag_array
             };
-            console.log(formData);
+            // console.log(formData);
 
             const r = new XMLHttpRequest();
             r.open('POST', 'http://localhost:5000/api/target/regTarget', true);
@@ -812,7 +812,7 @@
                             fileName = "Registered_Targets.xlsx";
                         }
 
-                        console.log(fileName);
+                        // console.log(fileName);
                         const link = document.createElement('a');
                         link.href = window.URL.createObjectURL(blob);
                         link.download = fileName;
@@ -848,7 +848,7 @@
                         } else {
                             fileName = "Target.xlsx";
                         }
-                        console.log(fileName);
+                        // console.log(fileName);
                         const link = document.createElement('a'); // a라는 html 객체를 생성하고
                         link.href = window.URL.createObjectURL(blob); //그 안에다 다운로드할 파일의 내용을 집어넣는다.
                         link.download = fileName;
@@ -887,7 +887,7 @@
                         withCredentials: true
                     },
                     success: function (result) {
-                        console.log("SUCCESS : ", result.data);
+                        // console.log("SUCCESS : ", result.data);
                         alert('전송이 완료되었습니다.');
                         location.reload();
                     },
@@ -906,7 +906,7 @@
                         } else {
                             alert('파일을 확인해주세요');
                         }
-                        console.log("ERROR : ", result.status);
+                        // console.log("ERROR : ", result.status);
                     }
                 });
             }
@@ -1026,13 +1026,13 @@
         const dataPerPage = 20;
         const pageCount = 5;
 
-        console.log("currentPage : " + currentPage);
-        console.log("totalData : " + totalData);
+        // console.log("currentPage : " + currentPage);
+        // console.log("totalData : " + totalData);
         const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
 
-        console.log("pageGroup : " + pageGroup);
-        console.log("totalPage : " + totalPage);
+        // console.log("pageGroup : " + pageGroup);
+        // console.log("totalPage : " + totalPage);
 
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
 
@@ -1042,15 +1042,15 @@
         const next = last + 1;
         const prev = first - 1;
 
-        console.log("last : " + last);
-        console.log("first : " + first);
-        console.log("next : " + next);
-        console.log("prev : " + prev);
+        // console.log("last : " + last);
+        // console.log("first : " + first);
+        // console.log("next : " + next);
+        // console.log("prev : " + prev);
 
         const division = $('#search_division').val();
         const text = $('#search_text').val();
 
-        console.log(text);
+        // console.log(text);
 
         if (totalPage < 1) {
             first = last;

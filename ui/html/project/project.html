@@ -279,7 +279,7 @@
 
 
                                                 const FormattedDate = yy + '-' + mm + '-' + dd;
-                                                console.log(FormattedDate);
+                                                // console.log(FormattedDate);
 
                                                 sDate.datepicker({
                                                     maxDate: new Date(FormattedDate)
@@ -314,7 +314,7 @@
 
 
                                                 const FormattedDate2 = yy + '-' + mm + '-' + dd;
-                                                console.log(FormattedDate2);
+                                                // console.log(FormattedDate2);
 
                                                 eDate.datepicker({
                                                     minDate: new Date(FormattedDate2)
@@ -512,7 +512,7 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
 
                     // let date = new Date();
                     // let today = date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
@@ -691,7 +691,7 @@
             tmp_no: tmp_no,
             tag_no: tag_array
         };
-        console.log(JSON.stringify(formData));
+        // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/api/projectCreate', true);
@@ -720,7 +720,7 @@
                 }
             }
         };
-        console.log(formData);
+        // console.log(formData);
         r.send(JSON.stringify(formData));
     }
 
@@ -770,7 +770,7 @@
             alert("취소되었습니다.");
         }
 
-        console.log(p_no);
+        // console.log(p_no);
         r.send(JSON.stringify({"p_no": p_no}));
     }
 
@@ -800,7 +800,7 @@
             alert("취소되었습니다.");
         }
 
-        console.log(p_no);
+        // console.log(p_no);
         r.send(JSON.stringify({"p_no": p_no}));
     }
 
@@ -828,7 +828,7 @@
                     if (r.status === 200) {
                         // alert("프로젝트 종료일이 변경되었습니다.");
                         // location.reload()
-                        // console.log('프로젝트 종료일 변경')
+                        // // console.log('프로젝트 종료일 변경')
                     } else if (r.status === 403) {
                         if (Verify()) {
                             Refresh();
@@ -845,7 +845,7 @@
                     }
                 }
             };
-            console.log(formData);
+            // console.log(formData);
             r.send(JSON.stringify(formData));
         }
     }
@@ -893,8 +893,8 @@
                             }
                         }
                     };
-                    console.log({project_list: tdArr})
-                    console.log(tdArr[0])
+                    // console.log({project_list: tdArr})
+                    // console.log(tdArr[0])
                     r.send(JSON.stringify({project_list: tdArr}))
                 } else {
                     alert("삭제할 대상을 선택해주세요.");
@@ -946,7 +946,7 @@
             let rObj;
             if (r.readyState === 4) {
                 if (r.status === 200) {
-                    console.log(r.responseText);
+                    // console.log(r.responseText);
                     rObj = JSON.parse(r.responseText);
                     // todo 파싱 해야함 .. 데이터 포멧 보고 하자.
                     // todo 김태호 멘티 자체적으로 포멧 추가..
@@ -998,7 +998,7 @@
             content: content,
             download_type: download_type
         };
-        console.log(JSON.stringify(formData));
+        // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
@@ -1019,7 +1019,7 @@
                 }
             }
         };
-        console.log(formData);
+        // console.log(formData);
         r.send(JSON.stringify(formData));
 
     }

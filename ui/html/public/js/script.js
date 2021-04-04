@@ -10,7 +10,7 @@ function Logout() {
                 alert("로그아웃 되었습니다.");
                 document.location.href = '/';
             } else {
-                console.log("로그아웃 실패");
+                // console.log("로그아웃 실패");
             }
         }
     };
@@ -49,7 +49,7 @@ function CheckLoginInLoginPage() {
         // let responseObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
-                console.log("checkLogin 정상");
+                // console.log("checkLogin 정상");
                 // responseObj = JSON.parse(r.responseText);
                 // $('#dropdown_id').text(responseObj.user_info.email);
                 // $('#dropdown_name').text(responseObj.user_info.name);
@@ -82,7 +82,7 @@ function Tg_total() {
                 const tokenResult = Refresh();
                 if (tokenResult) {
                     Tg_total();
-                    console.log("true")
+                    // console.log("true")
                 }
             } else {
                 document.location.href = '/';
@@ -133,7 +133,7 @@ function GetDashBoard() {
         let responseObj;
         if (r.readyState === 4) {
             if (r.status === 200) {
-                console.log(r.responseText);
+                // console.log(r.responseText);
                 responseObj = JSON.parse(r.responseText);
                 user_id.innerHTML = responseObj.email
                 user_name.innerHTML = responseObj.name
@@ -202,7 +202,7 @@ function Refresh() {
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
-                console.log(r.responseText);
+                // console.log(r.responseText);
                 // alert("인증 토큰 갱신 성공했습니다.");
             } else {
                 alert("세션이 만료되었습니다. 로그아웃 됩니다.");

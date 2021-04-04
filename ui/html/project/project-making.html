@@ -175,7 +175,7 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        console.log("true")
+                        // console.log("true")
                     }
                 } else {
                     document.location.href = '/';
@@ -214,7 +214,7 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        console.log("true")
+                        // console.log("true")
                     }
                 } else {
                     document.location.href = '/';
@@ -268,7 +268,7 @@
             tmp_no: tmp_no,
             tag_no: tag_array
         };
-        console.log(JSON.stringify(formData));
+        // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
         r.open('POST', 'http://localhost:5000/api/projectCreate', true);
@@ -282,14 +282,14 @@
                 } else if (r.status === 403) {
                     const tokenResult = Refresh();
                     if (tokenResult) {
-                        console.log("true")
+                        // console.log("true")
                     }
                 } else if (r.status === 400) {
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았습니다.");
                 }
             }
         };
-        console.log(formData);
+        // console.log(formData);
         r.send(JSON.stringify(formData));
     }
     GetDashBoard();
