@@ -28,6 +28,7 @@ func RegisterRoute(r *gin.Engine) {
 
 		apiV1.POST("/createUser", api.CreateUser)
 		apiV1.GET("/RefreshToken", api.RefreshToken)
+		apiV1.GET("/RefreshTokenVerify", api.Verify)
 		apiV1.GET("/CountTarget", api.CountTarget)
 	}
 

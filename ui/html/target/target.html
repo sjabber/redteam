@@ -19,7 +19,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -216,15 +217,19 @@
                                                                                id="target_email"><label>이메일 (필수)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_name"><label>이름 (필수)</label></div>
+                                                                               id="target_name"><label>이름 (필수)</label>
+                                </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                onkeyup="inputPhoneNumber(this);"
                                                                                maxlength="13"
-                                                                               id="target_phone"><label>전화번호 (권장)</label>
+                                                                               id="target_phone"><label>전화번호
+                                    (권장)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_organ"><label>소속 (권장)</label></div>
-                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급 (권장)</label>
+                                                                               id="target_organ"><label>소속 (권장)</label>
+                                </div>
+                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급
+                                    (권장)</label>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_1">태그</label><select id="tag_selector_1">
@@ -450,10 +455,11 @@
                     paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        GetTarget(page)
-                        // console.log("true")
+                    if (Verify()) {
+                        Refresh();
+                        GetTarget(page);
+                    } else {
+                        document.location.href = '/';
                     }
                 } else {
                     document.location.href = '/';
@@ -511,9 +517,11 @@
                             '                </div></tr></td>');
                     }
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        console.log("true")
+                    if (Verify()) {
+                        Refresh();
+                        getTagForTargetInfo();
+                    } else {
+                        document.location.href = '/';
                     }
                 } else {
                     document.location.href = '/';
@@ -536,9 +544,12 @@
 
                     $('#tag_' + tagNo).remove();
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
-                        console.log("true")
+                    if (Verify()) {
+                        Refresh();
+                        //Note 추후 자기 자신을 다시 호출하도록 개선
+                        //deleteTag(tagNo);
+                    } else {
+                        document.location.href = '/';
                     }
                 } else {
                     document.location.href = '/';
@@ -628,9 +639,12 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                Refresh();
-                                alert("세션 만료, 다시 삭제해 주세요.");
-                                // Note 위의 알림없이 메서드가 다시 작동하여 삭제되도록 개선 필요.
+                                if (Verify()) {
+                                    Refresh();
+                                    //Note 추후 자기 자신을 다시 호출하도록 개선
+                                } else {
+                                    document.location.href = '/';
+                                }
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -671,10 +685,11 @@
                     } else if (r.status === 400) {
                         alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)');
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            // GetTarget(page)
-                            console.log("true")
+                        if (Verify()) {
+                            Refresh();
+                            //Note 추후 자기 자신을 다시 호출하도록 개선
+                        } else {
+                            document.location.href = '/';
                         }
                     } else if (r.status === 405) {
                         alert('태그는 최대 5개까지만 등록이 가능합니다.');
@@ -760,10 +775,11 @@
                     } else if (r.status === 402) {
                         alert("이름이나 이메일, 전화번호 입력 형식이 잘못됐습니다. ");
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            // GetTarget(page)
-                            console.log("true")
+                        if (Verify()) {
+                            Refresh();
+                            //Note 추후 자기 자신을 다시 호출하도록 개선
+                        } else {
+                            document.location.href = '/';
                         }
                     } else if (r.status === 405) {
                         alert("훈련대상은 최대 300명 까지만 등록이 가능합니다. ");
@@ -802,18 +818,19 @@
                         link.download = fileName;
                         link.click();
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            // GetTarget(page)
-                            console.log("true")
+                        if (Verify()) {
+                            Refresh();
+                            //Note 추후 자기 자신을 다시 호출하도록 개선
+                        } else {
+                            document.location.href = '/';
                         }
                     }
                 }
             };
             //console.log(tag_no);
             r.send();
-
         });
+
         $('#excelDownload').click(function () {
             const r = new XMLHttpRequest();
             r.open('GET', 'http://localhost:5000/api/target/downloadExcel', true);
@@ -837,10 +854,11 @@
                         link.download = fileName;
                         link.click();
                     } else if (r.status === 403) {
-                        const tokenResult = Refresh();
-                        if (tokenResult) {
-                            // GetTarget(page)
-                            console.log("true")
+                        if (Verify()) {
+                            Refresh();
+                            //Note 추후 자기 자신을 다시 호출하도록 개선
+                        } else {
+                            document.location.href = '/';
                         }
                     }
                 }
@@ -877,7 +895,12 @@
                         if (result.status === 500) {
                             alert('서버에러');
                         } else if (result.status === 403) {
-                            Refresh()
+                            if (Verify()) {
+                                Refresh();
+                                //Note 추후 자기 자신을 다시 호출하도록 개선
+                            } else {
+                                document.location.href = '/';
+                            }
                         } else if (result.status === 405) {
                             alert("훈련대상은 최대 300명 까지만 등록이 가능합니다. ");
                         } else {
@@ -913,15 +936,15 @@
                                 if (rObj.targets[i].tg_tag[j] !== "") {
 
                                     if (tg_total[0] === rObj.targets[i].tg_tag[j]) {
-                                        full_tag += '<label id="label1">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                        full_tag += '<div id="label1" style="">' + rObj.targets[i].tg_tag[j] + '</div>'
                                     } else if (tg_total[1] === rObj.targets[i].tg_tag[j]) {
-                                        full_tag += '<label id="label2">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                        full_tag += '<div id="label2">' + rObj.targets[i].tg_tag[j] + '</div>'
                                     } else if (tg_total[2] === rObj.targets[i].tg_tag[j]) {
-                                        full_tag += '<label id="label3">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                        full_tag += '<div id="label3">' + rObj.targets[i].tg_tag[j] + '</div>'
                                     } else if (tg_total[3] === rObj.targets[i].tg_tag[j]) {
-                                        full_tag += '<label id="label4">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                        full_tag += '<div id="label4">' + rObj.targets[i].tg_tag[j] + '</div>'
                                     } else if (tg_total[4] === rObj.targets[i].tg_tag[j]) {
-                                        full_tag += '<label id="label5">' + rObj.targets[i].tg_tag[j] + '</label>'
+                                        full_tag += '<div id="label5">' + rObj.targets[i].tg_tag[j] + '</div>'
                                     }
                                 }
                             }
@@ -985,10 +1008,11 @@
                     search_paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    const tokenResult = Refresh();
-                    if (tokenResult) {
+                    if (Verify()) {
+                        Refresh();
                         Search(search_division, search_text, page);
-                        // console.log("true")
+                    } else {
+                        document.location.href = '/';
                     }
                 } else {
                     document.location.href = '/';

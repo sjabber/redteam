@@ -50,5 +50,8 @@ func (sm *Smtpinfo) SmtpConnectionCheck(conn *sql.DB, num int) error {
 		SugarLogger.Errorf("smtp connecting error : %v", err.Error())
 		return fmt.Errorf(err.Error())
 	}
+
+	defer conn.Close()
+
 	return nil
 }

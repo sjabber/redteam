@@ -17,7 +17,7 @@ func Logout(c *gin.Context) {
 		return
 	} else {
 		//로그아웃에 오류가 발생할경우 500에러를 반환한다.
-		model.SugarLogger.Errorf("logout error, account : %v", Account)
+		model.SugarLogger.Errorf("account : %v, error : %v", Account, err.Error())
 		c.AbortWithStatus(http.StatusInternalServerError) //500에러
 		return
 	}

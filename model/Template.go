@@ -55,6 +55,8 @@ type Template struct {
 // 사용자들을 위해 http status를 정의한다.
 func ReadAll(conn *sql.DB, num int) ([]Template, error) {
 
+	defer conn.Close()
+
 	query := `SELECT
 	   row_num,
 	   tmp_no,
@@ -140,8 +142,6 @@ ORDER BY row_num;`
 		templates = append(templates, tmp)
 		// 읽어들인 값들을 전부 template 배열에 넣은 후에 반환하여 보여준다.
 	}
-
-	defer conn.Close()
 
 	return templates, nil
 }

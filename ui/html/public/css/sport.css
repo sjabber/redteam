@@ -2290,10 +2290,12 @@ table {
     text-align: right; } }
 
 #label1 {
+  text-align: center;
+  float: left;
   border: 1px solid #00a6a0;
   line-height: 19px;
   font-size: 12px;
-  padding: 5px 12px;
+  padding: 3px 6px;
   border-radius: 16px;
   margin: 3px 4px 2px 0;
   box-shadow: none!important;
@@ -2301,10 +2303,12 @@ table {
   color:#00a6a0;
 }
 #label2 {
+  text-align: center;
+  float: left;
   border: 1px solid #ff2f6c;
   line-height: 19px;
   font-size: 12px;
-  padding: 5px 12px;
+  padding: 3px 6px;
   border-radius: 16px;
   margin: 3px 4px 2px 0;
   box-shadow: none!important;
@@ -2312,10 +2316,12 @@ table {
   color:#ff2f6c;
 }
 #label3 {
+  text-align: center;
+  float: left;
   border: 1px solid #4fa4f3;
   line-height: 19px;
   font-size: 12px;
-  padding: 5px 12px;
+  padding: 3px 6px;
   border-radius: 16px;
   margin: 3px 4px 2px 0;
   box-shadow: none!important;
@@ -2323,10 +2329,12 @@ table {
   color:#4fa4f3;
 }
 #label4 {
+  text-align: center;
+  float: left;
   border: 1px solid #3ab02c;
   line-height: 19px;
   font-size: 12px;
-  padding: 5px 12px;
+  padding: 3px 6px;
   border-radius: 16px;
   margin: 3px 4px 2px 0;
   box-shadow: none!important;
@@ -2334,10 +2342,12 @@ table {
   color:#3ab02c;
 }
 #label5 {
+  text-align: center;
+  float: left;
   border: 1px solid #b13deb;
   line-height: 19px;
   font-size: 12px;
-  padding: 5px 12px;
+  padding: 3px 6px;
   border-radius: 16px;
   margin: 3px 4px 2px 0;
   box-shadow: none!important;

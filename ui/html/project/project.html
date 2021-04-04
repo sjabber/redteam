@@ -8,7 +8,7 @@
     <title>REDTEAM | 프로젝트 관리</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito|Roboto">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
-    <link rel="stylesheet" href="/css/sport.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/sport.css" type="text/css">
     <link rel="stylesheet" href="/css/choices.min.css" type="text/css">
     <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.css">-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -22,7 +22,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -451,8 +452,12 @@
                         $('#tag').append("<option value=''>등록된 대상자가 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetTag();
+                    if (Verify()) {
+                        Refresh();
+                        GetTag();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -483,8 +488,12 @@
                         $('#template').append("<option value=''>등록된 템플릿이 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetTmpl();
+                    if (Verify()) {
+                        Refresh();
+                        GetTmpl();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -527,15 +536,15 @@
                                 // console.log(rObj.project_list
                                 if (rObj.project_list[i].tag_no[j] !== "") {
                                     if (tg_total[0] === rObj.project_list[i].tag_no[j]) {
-                                        full_tag += '<label id="label1">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                        full_tag += '<div id="label1">' + rObj.project_list[i].tag_no[j] + '</div>'
                                     } else if (tg_total[1] === rObj.project_list[i].tag_no[j]) {
-                                        full_tag += '<label id="label2">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                        full_tag += '<div id="label2">' + rObj.project_list[i].tag_no[j] + '</div>'
                                     } else if (tg_total[2] === rObj.project_list[i].tag_no[j]) {
-                                        full_tag += '<label id="label3">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                        full_tag += '<div id="label3">' + rObj.project_list[i].tag_no[j] + '</div>'
                                     } else if (tg_total[3] === rObj.project_list[i].tag_no[j]) {
-                                        full_tag += '<label id="label4">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                        full_tag += '<div id="label4">' + rObj.project_list[i].tag_no[j] + '</div>'
                                     } else if (tg_total[4] === rObj.project_list[i].tag_no[j]) {
-                                        full_tag += '<label id="label5">' + rObj.project_list[i].tag_no[j] + '</label>'
+                                        full_tag += '<div id="label5">' + rObj.project_list[i].tag_no[j] + '</div>'
                                     }
                                 }
                             }
@@ -643,8 +652,12 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetProject();
+                    if (Verify()) {
+                        Refresh();
+                        GetProject();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };
@@ -690,8 +703,12 @@
                     alert("프로젝트 생성이 완료되었습니다.");
                     location.reload();
                 } else if (r.status === 403) {
-                    Refresh();
-                    CreateProject();
+                    if (Verify()) {
+                        Refresh();
+                        CreateProject();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else if (r.status === 400) {
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
                 } else if (r.status === 402) {
@@ -738,8 +755,12 @@
                         alert('해당 프로젝트가 종료되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        Refresh();
-                        ProjectEnd(p_no);
+                        if (Verify()) {
+                            Refresh();
+                            ProjectEnd(p_no);
+                        } else {
+                            document.location.href = '/';
+                        }
                     } else {
                         document.location.href = '/';
                     }
@@ -766,8 +787,12 @@
                         alert('프로젝트가 시작되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        Refresh();
-                        ProjectStart(p_no);
+                        if (Verify()) {
+                            Refresh();
+                            ProjectStart(p_no);
+                        } else {
+                            document.location.href = '/';
+                        }
                     }
                 }
             };
@@ -805,8 +830,12 @@
                         // location.reload()
                         // console.log('프로젝트 종료일 변경')
                     } else if (r.status === 403) {
-                        Refresh();
-                        modifyEndDate(p_no);
+                        if (Verify()) {
+                            Refresh();
+                            modifyEndDate(p_no);
+                        } else {
+                            document.location.href = '/';
+                        }
                     } else if (r.status === 400) {
                         rObj = JSON.parse(r.responseText);
                         if (rObj.dateCompare === true) {
@@ -852,9 +881,13 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                Refresh();
-                                alert("세션 만료, 다시 삭제해 주세요.");
-                                // Note 위의 알림없이 메서드가 다시 작동하여 삭제되도록 개선 필요.
+                                if (Verify()) {
+                                    Refresh();
+                                    alert("세션 만료, 다시 삭제해 주세요.");
+                                    // Note 위의 알림없이 메서드가 다시 작동하여 삭제되도록 개선 필요.
+                                } else {
+                                    document.location.href = '/';
+                                }
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -931,8 +964,12 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetTmlDetailPrjMgr(tml_no, p_no);
+                    if (Verify()) {
+                        Refresh();
+                        GetTmlDetailPrjMgr(tml_no, p_no);
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };
@@ -973,8 +1010,12 @@
                     alert("템플릿 수정 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403) {
-                    Refresh();
-                    editTml();
+                    if (Verify()) {
+                        Refresh();
+                        editTml();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };

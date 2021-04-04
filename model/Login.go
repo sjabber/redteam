@@ -48,7 +48,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 	u.Email = strings.ToLower(u.Email)
 
 	if u.Email == "" || u.Password == "" {
-		//SugarLogger.Info("login fail, Please enter your account information.")
+		SugarLogger.Info("login fail, Please enter your account information.")
 		return fmt.Errorf("login fail"), 400, loginCount
 	}
 
@@ -56,7 +56,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 		"SELECT user_no, user_name, user_pw_hash FROM user_info WHERE user_email = $1", u.Email)
 	err := row.Scan(&u.UserNo, &u.Name, &u.PasswordHash)
 	if err != nil || u.UserNo == 0 || u.Name == "" {
-		//SugarLogger.Info("login fail, this account does not exist.")
+		SugarLogger.Info(err.Error())
 		return fmt.Errorf("login fail"), 403, loginCount
 	}
 
@@ -64,7 +64,7 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 	if err != nil {
 		conn.QueryRow(`select login_count from user_info where user_no = $1`, u.UserNo).Scan(&loginCount)
 		if loginCount >= 5 {
-			SugarLogger.Error("login fail, Exceeded number of login attempts.")
+			SugarLogger.Info("login fail, Exceeded number of login attempts.")
 			return fmt.Errorf("login fail"), 408, loginCount
 		}
 		conn.QueryRow(`update user_info
@@ -72,8 +72,8 @@ func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 							 where user_no = $1
 							 and login_count < 5
 							 returning login_count`, u.UserNo)
-		//SugarLogger.Info("login fail, The password is incorrect.")
-		return fmt.Errorf("login fail"), 401, loginCount
+		SugarLogger.Info("login fail, The password is incorrect.")
+		return fmt.Errorf("login fail"), 409, loginCount
 	} else {
 		// 5회 안에 로그인 성공 시 login count 초기화
 		conn.Exec(`update user_info

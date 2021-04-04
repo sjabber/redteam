@@ -70,18 +70,21 @@ values ($1, $2, $3, $4, $5)
 			cm.LinkClickStatus = true
 		}
 		_, err = conn.Exec(`
-update count_info
-set email_read_status = $1,
-    link_click_status = $2,
-    download_status = $3,
-    modified_time = now()
-where target_no = $4
-  and project_no = $5
+						update count_info
+						set email_read_status = $1,
+							link_click_status = $2,
+							download_status = $3,
+							modified_time = now()
+						where target_no = $4
+						  and project_no = $5
 `, cm.EmailReadStatus, cm.LinkClickStatus, cm.DownloadStatus, cm.TargetNo, cm.ProjectNo)
 	}
 	if err != nil {
 		SugarLogger.Error(err.Error())
 		return err
 	}
+
+	defer conn.Close()
+
 	return nil
 }

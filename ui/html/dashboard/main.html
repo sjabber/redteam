@@ -17,7 +17,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -212,9 +213,6 @@
                                 <tr>
                                     <td width="200">훈련 대상자 태그</td>
                                     <td class="font-weight-normal">
-                                        <!--                                        <label class="badge badge-green">삼성전자</label>-->
-                                        <!--                                        <label class="badge badge-red">엘지전자</label>-->
-                                        <!--                                        <label class="badge badge-blue"></label></td>-->
                                 </tr>
                                 <tr>
                                     <td width="200">훈련 대상자 수</td>
@@ -397,9 +395,6 @@
                                 <p align="center" id="NoProject"><span style="border: 1px; font-size:15px;
                                          font-style: italic; font-weight: 100;">진행중인 프로젝트가 없습니다.</span></p>
                                 <div class="row p-2" style="height: 100%; width: 100%; overflow-y: auto;">
-                                    <!--                                <div class="row p-2" style="text-align: center">-->
-                                    <!--                                    style="height: 100%; overflow-y: auto"-->
-                                    <!--                                    <div class="pgn-modal-wrapper" style="height: 100%; overflow-y: auto">-->
                                     <div class="canvas-wrapper" style="margin: 0 auto">
                                         <canvas class="pie-chart" id="pie-chart-category"></canvas>
                                     </div>
@@ -445,9 +440,6 @@
                                 <tr>
                                     <td width="200">훈련 대상자 태그</td>
                                     <td class="font-weight-bold">
-                                        <!--                                        <label class="badge badge-green"></label>-->
-                                        <!--                                        <label class="badge badge-red"></label>-->
-                                        <!--                                        <label class="badge badge-blue"></label></td>-->
                                 </tr>
                                 <tr>
                                     <td width="200">훈련 대상자 수</td>
@@ -473,9 +465,6 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                            <!--                            <div class="canvas-wrapper">-->
-                            <!--                                <canvas class="pie-chart" id="under"></canvas>-->
-                            <!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -507,7 +496,6 @@
                 </div>
             </div>
         </div>
-
         <!--        <div class="footer"><span><b>Pugna</b> - Admin Template by <a href="https://github.com/aljazari-studio/pugna"-->
         <!--                                                                      target="_blank">Al Jazari Studio</a></span></div>-->
     </div>
@@ -540,8 +528,12 @@
                     $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetDashBoard_Info1();
+                    if (Verify()) {
+                        Refresh();
+                        GetDashBoard_Info1();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };
@@ -830,8 +822,12 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetDashBoard_Info3();
+                    if (Verify()) {
+                        Refresh();
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };
@@ -897,8 +893,12 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetDashBoard_Info3();
+                    if (Verify()) {
+                        Refresh();
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };
@@ -1088,8 +1088,12 @@
                     }
 
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetDashBoard_Info3();
+                    if (Verify()) {
+                        Refresh();
+                        GetDashBoard_Info3();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };

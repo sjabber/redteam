@@ -20,7 +20,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -150,7 +151,7 @@
 
                                 <div class="form-group w-50">
                                     <label for="file_info">첨부파일 정보</label><select id="file_info">
-                                    <option selected value="">첨부파일 없음</option>
+                                    <option selected value="0">첨부파일 없음</option>
                                     <option value="1">EXE</option>
                                     <option value="2">HTML</option>
                                     <option value="3">Excel</option>
@@ -294,6 +295,9 @@
                             }
 
                             switch (rObj.tmpls[i].file_info) {
+                                case "0":
+                                    rObj.tmpls[i].file_info = "첨부파일 없음";
+                                    break;
                                 case "1":
                                     rObj.tmpls[i].file_info = "EXE";
                                     break;
@@ -352,8 +356,12 @@
                     // paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetTemplates();
+                    if (Verify()) {
+                        Refresh();
+                        GetTemplates();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -388,8 +396,12 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    Refresh();
-                    GetTmlDetail(tml_no);
+                    if (Verify()) {
+                        Refresh();
+                        GetTmlDetail(tml_no);
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -436,8 +448,12 @@
                 } else if (r.status === 405) {
                     alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
-                    Refresh();
-                    editTml();
+                    if (Verify()) {
+                        Refresh();
+                        editTml();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else if (r.status === 500) {
                     alert("서버에러");
                 }
@@ -469,8 +485,12 @@
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403 || r.status === 500) {
-                    Refresh();
-                    delTml();
+                    if (Verify()) {
+                        Refresh();
+                        delTml();
+                    } else {
+                        document.location.href = '/';
+                    }
                 }
             }
         };

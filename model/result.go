@@ -115,6 +115,9 @@ func GetResultDetail(no string, userNo int, conn *sql.DB) (ResultDetail, error) 
 		SugarLogger.Error(err.Error())
 		return rd, err
 	}
+
+	defer conn.Close()
+
 	return rd, nil
 }
 
@@ -326,6 +329,7 @@ group by target_organize
 			float64(rd.ProjectSummary.ResultPerClassification.COrgan.TotalCount)) * 100
 	}
 
+
 	return nil
 }
 
@@ -452,6 +456,7 @@ where ti.user_no = $1
 	}
 	// 가장 rate 가 높은 태그 정보
 	rd.ProjectSummary.ResultPerClassification.CTag = maxTag
+
 
 	return nil
 }

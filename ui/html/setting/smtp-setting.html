@@ -18,7 +18,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -189,9 +190,13 @@
                     $('#timeout').val(responseObj.smtp_setting.smtp_timeout);
                     // console.log($('#protocol option:selected').val());
                     // console.log($('#tls_protocol option:selected').val());
-                } else if(r.status === 403) {
-                    Refresh();
-                    GetSmtpSetting();
+                } else if (r.status === 403) {
+                    if (Verify()) {
+                        Refresh();
+                        GetSmtpSetting();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     document.location.href = '/';
                 }
@@ -229,11 +234,15 @@
                     location.reload();
                 } else if (r.status === 400) {
                     alert("SMTP 정보를 확인해주세요.");
-                } else if (r.status === 401) {
-                    alert("비밀번호를 확인해주세요.");
                 } else if (r.status === 403) {
-                    Refresh();
-                    SetSmtpSetting();
+                    if (Verify()) {
+                        Refresh();
+                        SetSmtpSetting();
+                    } else {
+                        document.location.href = '/';
+                    }
+                } else if (r.status === 409) {
+                    alert("비밀번호를 확인해주세요.");
                 }
             }
         };
@@ -268,8 +277,12 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
                 } else if (r.status === 403) {
-                    Refresh();
-                    SmtpConnectionTest();
+                    if (Verify()) {
+                        Refresh();
+                        SmtpConnectionTest();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     responseObj = r.responseText;
                     alert(responseObj)
@@ -308,9 +321,13 @@
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
-                } else if(r.status === 403) {
-                    Refresh();
-                    SmtpSendMailTest();
+                } else if (r.status === 403) {
+                    if (Verify()) {
+                        Refresh();
+                        SmtpSendMailTest();
+                    } else {
+                        document.location.href = '/';
+                    }
                 } else {
                     responseObj = JSON.parse(r.responseText);
                     alert("SMTP 정보를 확인해주세요.\n"+responseObj.error.Msg);

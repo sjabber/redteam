@@ -14,7 +14,7 @@ func Login(c *gin.Context) {
 	user := model.User{}
 	err := c.BindJSON(&user)
 	if err != nil {
-		log.Println(err.Error())
+		model.SugarLogger.Error(err.Error())
 		// 입력값이 제대로 바인딩 되지 않은경우 400 에러를 반환한다.
 		c.JSON(http.StatusBadRequest, gin.H{
 			"isOk": false,
@@ -37,8 +37,8 @@ func Login(c *gin.Context) {
 	}
 
 	accessToken, refreshToken, err := user.GetAuthToken()
-	if err == nil { //여기서 토큰을 쿠키에 붙인다.
-		c.SetCookie("access-token", accessToken, 86400, "", "", true, true)
+	if err == nil { //여기서 토큰을 쿠키에 붙인다. // 각 1시간, 1주일
+		c.SetCookie("access-token", accessToken, 3600, "", "", true, true)
 		c.SetCookie("refresh-token", refreshToken, 604800, "", "", true, true)
 		// https 사용시 refresh-token 의 secure -> true 로 변경한다.
 		// (maxAge) 1800 -> 30분
