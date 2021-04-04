@@ -71,10 +71,10 @@ func (u *User) CreateUsers() (int, error) {
 	}
 
 	// 비밀번호와 비밀번호 확인이 일치하지 않는지 검사
-	// 401에러 : 비밀번호와 비밀번호 확인이 일치하지 않을 경우
+	// 409에러 : 비밀번호와 비밀번호 확인이 일치하지 않을 경우
 	if u.Password != u.PasswordCheck {
 		// 비밀번호가 일치하지 않습니다.
-		return 401, fmt.Errorf("Passwords do not match. ")
+		return 409, fmt.Errorf("Passwords do not match. ")
 	}
 
 	//사용자가 보낸 이메일을 모두 소문자로 변경한다.

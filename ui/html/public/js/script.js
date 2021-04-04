@@ -104,9 +104,6 @@ function Login() {
                 document.location.href = './dashboard/total'
             } else if (r.status === 400) {
                 alert("계정 정보를 입력해주세요. ");
-            } else if (r.status === 401) {
-                rObj = JSON.parse(r.responseText);
-                alert("계정 정보를 확인해주세요. \n남은 로그인 시도 가능 횟수 : " + (4 - rObj.loginCount));
             } else if (r.status === 402) {
                 alert("이메일, 비밀번호 형식이 잘못됐습니다. ");
             } else if (r.status === 403) {
@@ -115,6 +112,9 @@ function Login() {
                 alert("서버에러");
             } else if (r.status === 408) {
                 alert("로그인 실패 횟수를 초과했습니다(5회)\n관리자에게 연락해주세요.")
+            } else if (r.status === 409) {
+                rObj = JSON.parse(r.responseText);
+                alert("계정 정보를 확인해주세요. \n남은 로그인 시도 가능 횟수 : " + (4 - rObj.loginCount));
             }
         }
     };
@@ -172,12 +172,12 @@ function Register() {
                 document.location.href = '/'
             } else if (r.status === 400) {
                 alert("회원정보를 입력해주세요. ");
-            } else if (r.status === 401) {
-                alert("비밀번호를 확인해 주세요.");
             } else if (r.status === 402) {
                 alert("이메일, 비밀번호 형식을 확인해 주세요. ");
             } else if (r.status === 403) {
                 alert("이미 존재하는 계정입니다. ");
+            } else if (r.status === 409) {
+                alert("비밀번호를 확인해 주세요.");
             } else if (r.status === 500) {
                 alert("서버에러")
             }

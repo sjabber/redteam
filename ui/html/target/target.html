@@ -19,7 +19,8 @@
 <!--네이게이터-->
 <div class="sidebar">
     <div class="sidebar-header"><a href="#">
-        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;">
+        <img src="/image/intro_icon.png" style="max-width: 80%; height: auto;"
+             onClick="location.href='/dashboard/total'"/>
     </a>
         <div class="sidebar-control"><i class="la la-navicon"></i></div>
     </div>
@@ -216,15 +217,19 @@
                                                                                id="target_email"><label>이메일 (필수)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_name"><label>이름 (필수)</label></div>
+                                                                               id="target_name"><label>이름 (필수)</label>
+                                </div>
                                 <div class="form-group label--floating"><input type="text"
                                                                                onkeyup="inputPhoneNumber(this);"
                                                                                maxlength="13"
-                                                                               id="target_phone"><label>전화번호 (권장)</label>
+                                                                               id="target_phone"><label>전화번호
+                                    (권장)</label>
                                 </div>
                                 <div class="form-group label--floating"><input type="text"
-                                                                               id="target_organ"><label>소속 (권장)</label></div>
-                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급 (권장)</label>
+                                                                               id="target_organ"><label>소속 (권장)</label>
+                                </div>
+                                <div class="form-group label--floating"><input type="text" id="target_position"><label>직급
+                                    (권장)</label>
                                 </div>
                                 <div class="form-group w-50">
                                     <label for="tag_selector_1">태그</label><select id="tag_selector_1">
@@ -538,7 +543,7 @@
                     document.location.reload();
 
                     $('#tag_' + tagNo).remove();
-                }  else if (r.status === 403) {
+                } else if (r.status === 403) {
                     if (Verify()) {
                         Refresh();
                         //Note 추후 자기 자신을 다시 호출하도록 개선

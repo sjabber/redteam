@@ -49,11 +49,11 @@ func RefreshToken(c *gin.Context) {
 			//model.SugarLogger.Info("token refresh")
 			return
 		} else {
-			// access 토큰이 발급되지 않은 경우 401에러를 반환한다.
-			c.JSON(http.StatusUnauthorized, gin.H{
+			// access 토큰이 발급되지 않은 경우 500에러를 반환한다.
+			c.JSON(http.StatusInternalServerError, gin.H{
 				"isOk": false,
 			})
-			model.SugarLogger.Infof("%v", err.Error())
+			model.SugarLogger.Errorf("%v", err.Error())
 			return
 		}
 	}
