@@ -472,7 +472,7 @@
                             <div id="find-password" class="btn-line">
                                 <a href="#" class="text-btn">비밀번호를 잊으셨나요?</a>
                             </div>
-                            <a  id="infection_link_1" href="http://localhost:8888/warn/warning2">
+                            <a  id="infection_link_1" href="http://localhost:8080/warn/warning2">
                                 <div id="second-next" class="next-btn notice-practice">다음</div>
                             </a>
                         </div>
@@ -512,7 +512,7 @@
                             <div id="other-way" class="btn-line">
                                 <a href="https://accounts.google.com/signin/v2/challenge/ipe?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&amp;osid=1&amp;service=mail&amp;ss=1&amp;ltmpl=default&amp;rm=false&amp;flowName=GlifWebSignIn&amp;flowEntry=AddSession&amp;cid=3&amp;TL=AHnYQLx3HxzdyBva4WncRmRcEoy-2HtPc1pWdQx8o1e2xzcqe9iHoviRtfUW1akfbsqL5QELUy17GhjeyNdhAEUvcxc4IeKTWza7yl_ZHGQCaEChpmhNCS30CWLj_VX7kKsewXjs_DNvuNJgbnxj1c09ULhwYxN_uXheeFDQTDx6c1l7SwFlhwc&amp;navigationDirection=forward" class="text-btn">다른방법 시도</a>
                             </div>
-                            <a id="infection_link_2" href="http://localhost:8888/warn/warning">
+                            <a id="infection_link_2" href="http://localhost:8080/warn/warning">
                                 <div id="third-next" class="next-btn notice-practice">다음</div>
                             </a>
                         </div>
@@ -844,8 +844,8 @@
     var infection_link = infection(connection_link);
     // console.log(infection_link);
 
-    $('#infection_link_1').attr('href', "http://localhost:8888/warn/warning2?" + infection_link);
-    $('#infection_link_2').attr('href', "http://localhost:8888/warn/warning2?" + infection_link);
+    $('#infection_link_1').attr('href', "http://localhost:8080/warn/warning2?" + infection_link);
+    $('#infection_link_2').attr('href', "http://localhost:8080/warn/warning2?" + infection_link);
 </script>
 
 </body></html>
