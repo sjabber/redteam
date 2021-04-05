@@ -3,7 +3,6 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"regexp"
 	"time"
 )
 
@@ -157,10 +156,10 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 		//Note 템플릿 생성
 
 		// 템플릿 이름 검사 (400 에러)
-		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TmpName)
-		if validName != true {
-			return fmt.Errorf(" Template Name is not correct. "), 400
-		}
+		//var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$", t.TmpName)
+		//if validName != true {
+		//	return fmt.Errorf(" Template Name is not correct. "), 400
+		//}
 
 		// 템플릿 중복여부와 개수를 검사한다.
 		rows, err := conn.Query(`SELECT tmp_name
@@ -213,10 +212,10 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 		//Note 템플릿 수정
 
 		// 템플릿 이름 검사 (400 에러)
-		var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$",t.TmpName)
-		if validName != true {
-			return fmt.Errorf(" Template Name is not correct. "), 400
-		}
+		//var validName, _ = regexp.MatchString("^[가-힣A-Za-z0-9\\s]{1,20}$", t.TmpName)
+		//if validName != true {
+		//	return fmt.Errorf(" Template Name is not correct. "), 400
+		//}
 
 		// 템플릿 중복여부를 검사한다.
 		rows, err := conn.Query(`SELECT tmp_name, tmp_no
@@ -228,7 +227,7 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 			return fmt.Errorf("%v", err), 500
 		}
 
-		var tmpNo	 int
+		var tmpNo int
 		var tmpName1 []string
 		var tmpName2 string
 
@@ -250,13 +249,10 @@ func (t *Template) Update(conn *sql.DB, num int) (error, int) {
 
 		// 바뀐 태그 이름이 중복되지 않는경우 수정을 허용한다.
 		query = `UPDATE template_info SET tmp_division = $1, tmp_kind = $2, file_info = $3, tmp_name = $4,
---                         sender_name = $5,
-                         mail_title = $6,
-                         mail_content = $7, 
-                         download_type = $8 WHERE user_no = $9 AND tmp_no = $10;`
+                         mail_title = $5, mail_content = $6, download_type = $7
+				 WHERE user_no = $8 AND tmp_no = $9;`
 
 		_, err = conn.Exec(query, 2, t.Kind, t.FileInfo, t.TmpName,
-			//t.SenderName,
 			t.MailTitle, t.Content,
 			t.DownloadType, num, t.TmpNo)
 

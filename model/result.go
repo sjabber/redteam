@@ -207,7 +207,6 @@ group by p_no
 		&rd.ProjectInfo.Download)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			SugarLogger.Error(err.Error())
 			return nil
 		}
 		SugarLogger.Error(err.Error())

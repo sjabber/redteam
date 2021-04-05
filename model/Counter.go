@@ -80,6 +80,9 @@ values ($1, $2, $3, $4, $5)
 `, cm.EmailReadStatus, cm.LinkClickStatus, cm.DownloadStatus, cm.TargetNo, cm.ProjectNo)
 	}
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
 		SugarLogger.Error(err.Error())
 		return err
 	}
