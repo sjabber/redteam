@@ -24,7 +24,7 @@ func SetHeader(c *gin.Context) {
 	// c.Header(cors.AllowOriginKey, "http://localhost:8888") 여기에 지정된것만 접근이 가능하도록 되어있다. -> 신뢰된 사이트
 	// 지정되어 있지 않은 주소가 접근하면 CORS (Cross Origin Resource Sharing 문제를 야기한다.)
 	// CSRF, XSS 등의 공격을 막기 위함.
-	c.Header(cors.AllowOriginKey, "http://localhost:8888")
+	c.Header(cors.AllowOriginKey, "http://localhost:8080")
 	c.Header(cors.AllowCredentialsKey, "true")
 	c.Header(cors.AllowMethodsKey, "GET, POST, PUT, OPTIONS, DELETE")
 	c.Header("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0")
