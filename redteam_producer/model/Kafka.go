@@ -13,7 +13,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -69,8 +68,8 @@ var (
 // 작동되는 시간 언제로 할지 논리적으로 따져서 결정하기.
 //cron(스케쥴링)을 활용하여 매일 특정 시간에 프로젝트들의 진행상황을 체크한다.
 func AutoStartProject() {
-	wg := &sync.WaitGroup{}
-	wg.Add(1) // WaitGroup 의 고루틴 개수 1개 증가
+	//wg := &sync.WaitGroup{}
+	//wg.Add(1) // WaitGroup 의 고루틴 개수 1개 증가
 
 	kor, _ := time.LoadLocation("Asia/Seoul")
 	c := cron.New(cron.WithLocation(kor))
@@ -80,7 +79,7 @@ func AutoStartProject() {
 	c.AddFunc("09-10 14 * * *", Auto) // 매일 오후 2시 9-10분 마다 실행할 프로젝트를 검토한다.
 	c.AddFunc("58-59 23 * * *", Auto) //하루 끝에 최종적으로 한번더 검토한다.
 	c.Start()
-	wg.Wait()
+	//wg.Wait()
 }
 
 func Auto() {
