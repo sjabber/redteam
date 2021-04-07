@@ -128,7 +128,7 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor{
         //만약 preHandler에서 true라면 붙어서 cors헤더가 붙어서 올것이다.
         response.setHeader("Access-Control-Allow-Credentials", "true");
         //TODO 환경설정시 cors 포트 변경
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8888");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
