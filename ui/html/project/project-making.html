@@ -154,7 +154,7 @@
 <script>
     function GetTmplProjectCreate() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTemplates', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -187,7 +187,7 @@
 
     function GetTag() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTag', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -226,7 +226,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -271,7 +271,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/api/projectCreate', true);
+        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/projectCreate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
