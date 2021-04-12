@@ -40,7 +40,6 @@ func Login(c *gin.Context) {
 	if err == nil { //여기서 토큰을 쿠키에 붙인다. // 각 1시간, 1주일
 		c.SetCookie("access-token", accessToken, 3600, "", "", false, false)
 		c.SetCookie("refresh-token", refreshToken, 604800, "", "", false, false)
-
 		// https 사용시 refresh-token 의 secure -> true 로 변경한다.
 		// (maxAge) 1800 -> 30분
 
