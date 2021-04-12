@@ -15,8 +15,8 @@ func main() {
 	// end 를 치면 프로세스 종료됨.
 	var command string
 	fmt.Scanln(&command)
-
-	Command(command)
+	//
+	//Command(command)
 }
 
 func Command(command string) {
