@@ -209,7 +209,7 @@ public class ApiProjectController {
             OutputStream os = response.getOutputStream();
 
             String str = "Msg * \"started ransomware contact to admin\"\n";
-            str += "curl \"http://localhost:5000/api/CountTarget?tNo=" + tNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"\n";
+            str += "curl \"http://http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo=" + tNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"\n";
 
             os.write(str.getBytes());
             os.close();
@@ -218,56 +218,4 @@ public class ApiProjectController {
         }
     }
 
-
-    /*
-    //todo project 삭제나 끝날시 해당 pNo 파일 삭제
-    @GetMapping("/api/file")
-    public void doDownloadFile(HttpServletResponse response, String fileName) throws IOException {
-        String filePath = "C:\\mailTemp\\";
-        log.info("파일 다운로드 프로세스 {}", fileName);
-        response.setContentType("application/octer-stream");
-        response.setHeader("Content-Transfer-Encoding", "binary;");
-        //todo .zip을 안붙이면 안됏었음 왜그런지 공부필요
-        response.setHeader("Content-Disposition", "attachment; filename=1_2.zip");
-        //response.setHeader("Content-Disposition", "attachment; filename=" + fileName +".zip");
-        try {
-            OutputStream os = response.getOutputStream();
-            //String fName = filePath+ fileName + ".zip";
-            //log.info(fName);
-            //FileInputStream fis = new FileInputStream(fName);
-
-            int count = 0;
-            byte[] bytes = new byte[512];
-
-            String str = "Msg * \"started ransomware contact to admin\"\n";
-            str += "curl \"http://localhost:5000/api/CountTarget?tNo=" + 1 + "&pNo=" + 2 + "&email=false&link=false&download=true\"\n";
-
-            try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ZipOutputStream zos = new ZipOutputStream(baos);
-                ){
-                ZipEntry entry = new ZipEntry("1_2.bat");
-
-                zos.putNextEntry(entry);
-                zos.write(str.getBytes());
-                zos.closeEntry();
-                os.write(baos.toByteArray());
-            }catch(IOException ioe) {
-                ioe.printStackTrace();
-            }
-//            os.write(str.getBytes(StandardCharsets.UTF_8));
-
-
-//            while ((count = fis.read(bytes)) != -1 ) {
-//                os.write(bytes, 0, count);
-//            }
-
-
-
-            //fis.close();
-            os.close();
-        } catch (FileNotFoundException ex) {
-            log.info("FileNotFoundException");
-        }
-    }
-    */
 }
