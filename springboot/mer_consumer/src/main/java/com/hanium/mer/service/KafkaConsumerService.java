@@ -43,7 +43,7 @@ public class KafkaConsumerService {
                 mailContent = mailContent.replace("{{target_position}}", target.get().getTargetPosition());
                 mailContent = mailContent.replace("{{target_organize}}", target.get().getTargetOrganize());
                 mailContent = mailContent.replace("{{target_phone}}", target.get().getTargetPhone());
-                mailContent = mailContent.replace("{{link_ip}}", "<a href='http://http://mert.koreacentral.cloudapp.azure.com:5001/warning?tNo="+message.getTarget_no()+"&pNo="+message.getP_no()+"'>홈으로</a>");
+                mailContent = mailContent.replace("{{link_ip}}", "<a href='http://mert.koreacentral.cloudapp.azure.com:5001/warning?tNo="+message.getTarget_no()+"&pNo="+message.getP_no()+"'>홈으로</a>");
                 mailContent = mailContent.replace("{{count_ip}}", "<img src='"+COUNT_ADDRESS + "tNo="+target.get().getTargetNo()+
                         "&pNo="+message.getP_no()+"&email=true&link=false&download=false'"+" style='height: 0px; width: 0px'>");
                 mailContent = mailContent.replace("{{fishing_ip}}", "tNo="+target.get().getTargetNo()+
