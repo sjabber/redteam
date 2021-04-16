@@ -209,7 +209,7 @@ public class ApiProjectController {
             OutputStream os = response.getOutputStream();
 
             String str = "Msg * \"started ransomware contact to admin\"\n";
-            str += "curl \"http://http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo=" + tNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"\n";
+            str += "curl \"http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo=" + tNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"\n";
 
             os.write(str.getBytes());
             os.close();
