@@ -52,7 +52,7 @@ public class KafkaConsumerService {
 
             if(template.get().getDownloadType() == 2){
                 mailContent += "<a href=http://mert.koreacentral.cloudapp.azure.com:5001/api/file?tNo=" +
-                        message.getTarget_no() + "&pNo=" + message.getP_no() + "'>파일 다운로드</a>";
+                        message.getTarget_no() + "&pNo=" + message.getP_no() + ">파일 다운로드</a>";
             }
 
             template.get().setMailContent(mailContent);
