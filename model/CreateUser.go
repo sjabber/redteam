@@ -59,12 +59,11 @@ func (u *User) CreateUsers() (int, error) {
 
 	// 403에러 : 회원가입시 이미 존재하는 계정이 있는경우
 	userLookup := Email{}
-	err = row.Scan(&userLookup)
+	err = row.Scan(&userLookup.Email)
 	if userLookup.Email != ""  {
 		// 이미 존재하는 이메일입니다.
 		return 403, fmt.Errorf("This account already exists. ")
 	}
-
 
 	// 비밀번호 길이 16자 미만
 	if len(u.Password) > 17 || len(u.PasswordCheck) > 17 {
