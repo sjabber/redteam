@@ -256,7 +256,7 @@
 <script>
     function GetTemplates() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTemplates', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -372,7 +372,7 @@
 
     function GetTmlDetail(tml_no) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/TemplateDetail?template_no=' + tml_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -435,7 +435,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
+        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/EditTemplate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -476,7 +476,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/delTmp', true);
+        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/delTmp', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {

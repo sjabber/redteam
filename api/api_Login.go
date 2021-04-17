@@ -30,7 +30,7 @@ func Login(c *gin.Context) {
 	err, num, loginCount := user.IsAuthenticated(&conn) // 비밀번호 확인
 	if err != nil {
 		c.JSON(num, gin.H{
-			"isOk":false,
+			"isOk":       false,
 			"loginCount": loginCount,
 		})
 		return
@@ -38,8 +38,8 @@ func Login(c *gin.Context) {
 
 	accessToken, refreshToken, err := user.GetAuthToken()
 	if err == nil { //여기서 토큰을 쿠키에 붙인다. // 각 1시간, 1주일
-		c.SetCookie("access-token", accessToken, 3600, "", "", true, true)
-		c.SetCookie("refresh-token", refreshToken, 604800, "", "", true, true)
+		c.SetCookie("access-token", accessToken, 604800, "", "", false, true)
+		c.SetCookie("refresh-token", refreshToken, 604800, "", "", false, true)
 		// https 사용시 refresh-token 의 secure -> true 로 변경한다.
 		// (maxAge) 1800 -> 30분
 
