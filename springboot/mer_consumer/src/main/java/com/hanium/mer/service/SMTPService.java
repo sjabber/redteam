@@ -38,7 +38,7 @@ public class SMTPService {
         try {
             //log.info(aesService.decAES(smtp.get().getSmtpPw()));//log
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return smtp;
     }
@@ -128,7 +128,7 @@ public class SMTPService {
                 deleteFile(sb.toString());
             }
         }catch (Exception e){
-            e.printStackTrace();//log.info("mail fail {}", e.printStackTrace());
+            log.error(e.getMessage());
             return "fail";
         }
 
@@ -184,7 +184,7 @@ public class SMTPService {
 
             zos.close();
         }catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }finally {
             if (zos != null) {
                 zos.close();
@@ -242,7 +242,7 @@ public class SMTPService {
 
             return baos2.toByteArray();
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            log.error(ioe.getMessage());
         }
         return null;
     }

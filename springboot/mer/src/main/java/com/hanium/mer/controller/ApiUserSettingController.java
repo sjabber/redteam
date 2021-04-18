@@ -44,7 +44,7 @@ public class ApiUserSettingController {
         try {
             claims = tokenUtils.getClaimsFormToken(request.getCookies());
         }catch(ExpiredJwtException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("error", HttpStatus.FORBIDDEN);
         }
         if(claims != null){
@@ -66,7 +66,7 @@ public class ApiUserSettingController {
         try {
             claims = tokenUtils.getClaimsFormToken(request.getCookies());
         }catch(ExpiredJwtException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("token expired", HttpStatus.FORBIDDEN);
         }
         if(claims != null){
@@ -94,7 +94,7 @@ public class ApiUserSettingController {
             }
 
             userService.changeUserInfo(Long.parseLong(claims.get("user_no").toString()), newUserInfo);
-            System.out.println(newUserInfo.toString());
+
             return new ResponseEntity<Object>("success", HttpStatus.OK); //200
         }
 

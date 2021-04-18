@@ -57,7 +57,7 @@ public class ApiSMTPController {
                 log.info(newSmtp.toString());
                 return new ResponseEntity<Object>(newSmtp.toString(), HttpStatus.OK);
             }catch(Exception e){
-                e.printStackTrace();
+                log.error(e.getMessage());
                 //에러 400-> smtp 정보확인
                 //401 비밀번호확인 제대로 설정하기
                 return new ResponseEntity<Object>("smtp 정보를 확인해주세요.", HttpStatus.BAD_REQUEST);
@@ -75,16 +75,16 @@ public class ApiSMTPController {
                 return new ResponseEntity<Object>("ID는 이메일 형식으로 입력해주세요.", HttpStatus.UNAUTHORIZED);
             }
         }catch (IllegalStateException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
         } catch(AuthenticationFailedException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.CONFLICT);
         }catch (MessagingException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }
 
@@ -107,16 +107,16 @@ public class ApiSMTPController {
             smtp.get().setSmtpPw(aesService.decAES(smtp.get().getSmtpPw()));
             smtpService.connectCheck(smtp.get());
         }catch (IllegalStateException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("이미 연결이 되어있습니다.", HttpStatus.BAD_REQUEST);
         } catch(AuthenticationFailedException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("로그인 정보가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED);
         }catch (MessagingException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return new ResponseEntity<Object>("SMTP 설정을 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }
 

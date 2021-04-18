@@ -52,28 +52,30 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor{
                         log.info("token Expired");
                         return false;
                     }catch(IOException ex){
-                        ex.printStackTrace();
+                        log.error(e.getMessage());
+                        log.error(ex.getMessage());
                         return false;
                     }
                 } catch (JwtException e) {
 
                     try {
                         response.sendError(405, "token tempered");
-                        e.printStackTrace();
+                        log.error(e.getMessage());
                         log.info("token tempered");
                         return true;
                     }catch(IOException ex){
-                        ex.printStackTrace();
+                        log.error(ex.getMessage());
                         return false;
                     }
                 } catch (NullPointerException e) {
 
                     try {
                         response.sendError(405, "token null");
+                        log.error(e.getMessage());
                         log.info("toekn null");
                         return false;
                     }catch(IOException ex){
-                        ex.printStackTrace();
+                        log.error(ex.getMessage());
                         return false;
                     }
                 } catch(UnsupportedEncodingException e){
@@ -81,18 +83,20 @@ public class HttpHeaderNJWTInterceptor implements HandlerInterceptor{
                     try {
                         response.sendError(405, "unsupportedEncoding");
                         log.info("unsupportedEncoding");
+                        log.error(e.getMessage());
                         return false;
                     }catch(IOException ex){
-                        ex.printStackTrace();
+                        log.error(ex.getMessage());
                         return false;
                     }
                 }catch(NoSuchMethodError e){
                     try {
                         response.sendError(403, "토큰을 확인해주세요");
                         log.info("no such Method");
+                        log.error(e.getMessage());
                         return false;
                     }catch(IOException ex){
-                        ex.printStackTrace();
+                        log.error(ex.getMessage());
                         return false;
                     }
                 }

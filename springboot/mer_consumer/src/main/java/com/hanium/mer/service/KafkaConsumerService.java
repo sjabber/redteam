@@ -65,7 +65,7 @@ public class KafkaConsumerService {
             //TODO sendTo업데이트 하기
             projectService.updateSendNo(projectService.getProject(message.getP_no(), message.getUser_no()).get());
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
