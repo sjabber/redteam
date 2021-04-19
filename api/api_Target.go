@@ -106,7 +106,8 @@ func DownloadExcel(c *gin.Context) {
 
 	// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (클라이언트에게 줄 엑셀파일을 보관해둘 디렉토리 경로로 수정)
 	// 현재는 프로젝트파일의 Spreadsheet 폴더에 보관해둔다.
-	destFile := "./Spreadsheet/sample.xlsx"
+	//destFile := "./Spreadsheet/sample.xlsx"
+	destFile := "../../root/redteam/Spreadsheet/sample.xlsx"
 	file, err := os.Open(destFile)
 	if err != nil {
 		model.SugarLogger.Error(err.Error())

@@ -17,11 +17,10 @@ public class warningController {
         BufferedReader in = null;
 
         try {
-            URL obj = new URL("http://localhost:5000/api/CountTarget?tNo="+tNo+"&pNo="+pNo+"&email=false&link=true&download=false"); // 호출할 url
+            URL obj = new URL("http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo="+tNo+"&pNo="+pNo+"&email=false&link=true&download=false"); // 호출할 url
             HttpURLConnection con = (HttpURLConnection)obj.openConnection();
 
             con.setRequestMethod("GET");
-            //con.setRequestProperty("Cookie","access-token="+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MTk5OTk5OTksInVzZXJfZW1haWwiOiJnYzUyMTVAbmF0ZS5jb20iLCJ1c2VyX25hbWUiOiLquYDqtJHssYQiLCJ1c2VyX25vIjoyfQ.Dyh2Fgn_uh92s3Bv3HMV0b5fMSKBr0xfWE_h6ZBI8NA");
             in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 
             String line;
@@ -34,6 +33,6 @@ public class warningController {
             if(in != null) try { in.close(); } catch(Exception e) { e.printStackTrace(); }
         }
 
-        return "redirect:http://localhost:8888/warn/warning2";
+        return "redirect:http://mert.koreacentral.cloudapp.azure.com:8080/warn/warning2";
     }
 }

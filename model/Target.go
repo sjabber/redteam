@@ -502,7 +502,9 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) (bytes.Buffer, error) {
 		// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
-		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
+
+		//f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
+		f, err := excelize.OpenFile("../../root/redteam/Spreadsheet/sample.xlsx")
 		if err != nil {
 			SugarLogger.Error(err.Error())
 			return buffer, fmt.Errorf(err.Error())
@@ -592,7 +594,8 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) (bytes.Buffer, error) {
 		// todo 1 : 추후 서버에 업로드할 때 경로를 바꿔주어야 한다. (todo 1은 전부 같은 경로로 수정, api_Target.go 파일의 todo 1 참고)
 		// 현재는 프로젝트파일의 Spreadsheet 파일에 보관해둔다.
 		// 서버에 있는 sample 파일에 내용을 작성한 다음 다른 이름의 파일로 클라이언트에게 전송한다.
-		f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
+		//f, err := excelize.OpenFile("./Spreadsheet/sample.xlsx")
+		f, err := excelize.OpenFile("../../root/redteam/Spreadsheet/sample.xlsx")
 		if err != nil {
 			SugarLogger.Error(err.Error())
 			return buffer, fmt.Errorf(err.Error())
