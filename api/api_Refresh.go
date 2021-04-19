@@ -41,8 +41,8 @@ func RefreshToken(c *gin.Context) {
 		accessToken, refreshToken, err := user.GetNewToken()
 		if err == nil {
 			// 각 1시간, 1주일
-			c.SetCookie("access-token", accessToken, 3600, "", "", true, true)
-			c.SetCookie("refresh-token", refreshToken, 604800, "", "", true, true)
+			c.SetCookie("access-token", accessToken, 3600, "", "", false, true)
+			c.SetCookie("refresh-token", refreshToken, 604800, "", "", false, true)
 			c.JSON(http.StatusOK, gin.H{
 				"isOk": true,
 			})
