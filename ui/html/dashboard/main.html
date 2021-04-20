@@ -528,12 +528,8 @@
                     $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetDashBoard_Info1();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetDashBoard_Info1();
                 }
             }
         };
@@ -822,12 +818,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetDashBoard_Info2(number);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetDashBoard_Info2(number);
                 }
             }
         };
@@ -893,12 +885,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetDashBoard_Info3();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetDashBoard_Info3();
                 }
             }
         };
@@ -1086,12 +1074,8 @@
                     }
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetResult(p_no);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetResult(p_no);
                 }
             }
         };

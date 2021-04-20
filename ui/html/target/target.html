@@ -455,12 +455,8 @@
                     paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTarget(page);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTarget(page);
                 } else {
                     document.location.href = '/';
                 }
@@ -517,12 +513,8 @@
                             '                </div></tr></td>');
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        getTagForTargetInfo();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    getTagForTargetInfo();
                 } else {
                     document.location.href = '/';
                 }
@@ -544,12 +536,8 @@
 
                     $('#tag_' + tagNo).remove();
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        alert("세션이 갱신, 다시 삭제해 주세요.");
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    alert("세션이 갱신, 다시 삭제해 주세요.");
                 } else {
                     document.location.href = '/';
                 }
@@ -638,12 +626,8 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                if(Refresh()) {
-                                    alert("세션 갱신, 다시 삭제해 주세요.");
-                                } else {
-                                    alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                                    document.location.href = "/";
-                                }
+                                Refresh();
+                                alert("세션 갱신, 다시 삭제해 주세요.");
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -684,12 +668,8 @@
                     } else if (r.status === 400) {
                         alert('해당 태그가 이미 존재하거나 형식이 올바르지 않습니다. \n(특수문자 사용불가)');
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            alert("세션 갱신, 다시 등록해 주세요.");
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        alert("세션 갱신, 다시 등록해 주세요.");
                     } else if (r.status === 405) {
                         alert('태그는 최대 5개까지만 등록이 가능합니다.');
                     } else if (r.status === 500) {
@@ -774,12 +754,8 @@
                     } else if (r.status === 402) {
                         alert("이름이나 이메일, 전화번호 입력 형식이 잘못됐습니다. ");
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            alert("세션 갱신, 다시 등록해 주세요.");
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        alert("세션 갱신, 다시 등록해 주세요.");
                     } else if (r.status === 405) {
                         alert("훈련대상은 최대 300명 까지만 등록이 가능합니다. ");
                     } else if (r.status === 500) {
@@ -817,12 +793,8 @@
                         link.download = fileName;
                         link.click();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            alert("세션 갱신, 다시 클릭해 주세요.");
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        alert("세션 갱신, 다시 클릭해 주세요.");
                     }
                 }
             };
@@ -853,12 +825,8 @@
                         link.download = fileName;
                         link.click();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            alert("세션 갱신, 다시 클릭해 주세요.");
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        alert("세션 갱신, 다시 클릭해 주세요.");
                     }
                 }
             };
@@ -894,12 +862,8 @@
                         if (result.status === 500) {
                             alert('서버에러');
                         } else if (r.status === 403) {
-                            if(Refresh()) {
-                                alert("세션 갱신, 다시 클릭해 주세요.");
-                            } else {
-                                alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                                document.location.href = "/";
-                            }
+                            Refresh();
+                            alert("세션 갱신, 다시 클릭해 주세요.");
                         } else if (result.status === 405) {
                             alert("훈련대상은 최대 300명 까지만 등록이 가능합니다. ");
                         } else {
@@ -1007,12 +971,8 @@
                     search_paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        Search(search_division, search_text, page);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    Search(search_division, search_text, page);
                 } else {
                     document.location.href = '/';
                 }

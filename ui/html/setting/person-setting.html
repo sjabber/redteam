@@ -170,12 +170,8 @@
                     $('#email').val(responseObj.user_info.email);
                     $('#name').val(responseObj.user_info.name);
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetUserSetting();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetUserSetting();
                 } else {
                     document.location.href = '/';
                 }
@@ -213,12 +209,8 @@
                 } else if (r.status === 400) {
                     alert("계정 정보를 확인해주세요.");
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        SetUserSetting();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    SetUserSetting();
                 }  else if (r.status === 409) {
                     alert("비밀번호를 확인해주세요.");
                 }
@@ -243,12 +235,8 @@
                     alert("정상적으로 계정이 삭제되었습니다.");
                     Logout();
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        deleteAccount();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    deleteAccount();
                 } else {
                     alert("계정 삭제 실패했습니다.")
                 }

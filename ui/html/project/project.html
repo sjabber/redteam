@@ -452,12 +452,8 @@
                         $('#tag').append("<option value=''>등록된 대상자가 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTag();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTag();
                 } else {
                     document.location.href = '/';
                 }
@@ -488,12 +484,8 @@
                         $('#template').append("<option value=''>등록된 템플릿이 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTmpl();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTmpl();
                 } else {
                     document.location.href = '/';
                 }
@@ -652,12 +644,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetProject();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetProject();
                 } else {
                     document.location.href = "/";
                 }
@@ -705,12 +693,8 @@
                     alert("프로젝트 생성이 완료되었습니다.");
                     location.reload();
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetDashBoard_Info1();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    CreateProject();
                 } else if (r.status === 400) {
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
                 } else if (r.status === 402) {
@@ -757,12 +741,8 @@
                         alert('해당 프로젝트가 종료되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            ProjectEnd(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        ProjectEnd(p_no);
                     } else {
                         document.location.href = '/';
                     }
@@ -789,12 +769,8 @@
                         alert('프로젝트가 시작되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            ProjectStart(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        ProjectStart(p_no);
                     }
                 }
             };
@@ -832,12 +808,8 @@
                         // location.reload()
                         // // console.log('프로젝트 종료일 변경')
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            modifyEndDate(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        modifyEndDate(p_no);
                     } else if (r.status === 400) {
                         rObj = JSON.parse(r.responseText);
                         if (rObj.dateCompare === true) {
@@ -883,12 +855,8 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                if(Refresh()) {
-                                    alert("세션 갱신, 다시 삭제해 주세요.");
-                                } else {
-                                    alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                                    document.location.href = "/";
-                                }
+                                Refresh();
+                                alert("세션 갱신, 다시 삭제해 주세요.");
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -965,12 +933,8 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTmlDetailPrjMgr(tml_no, p_no);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTmlDetailPrjMgr(tml_no, p_no);
                 }
             }
         };
@@ -1011,12 +975,8 @@
                     alert("템플릿 수정 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        editTml();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    editTml();
                 }
             }
         };
