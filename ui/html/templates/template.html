@@ -256,7 +256,7 @@
 <script>
     function GetTemplates() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTemplates', true);
+        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -356,11 +356,11 @@
                     // paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetTemplates();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     document.location.href = '/';
@@ -372,7 +372,7 @@
 
     function GetTmlDetail(tml_no) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/TemplateDetail?template_no=' + tml_no, true);
+        r.open('GET', 'http://localhost:5000/setting/TemplateDetail?template_no=' + tml_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -396,11 +396,11 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetTmlDetail(tml_no);
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     document.location.href = '/';
@@ -435,7 +435,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/EditTemplate', true);
+        r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -448,11 +448,11 @@
                 } else if (r.status === 405) {
                     alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         editTml();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else if (r.status === 500) {
                     alert("서버에러");
@@ -476,7 +476,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/delTmp', true);
+        r.open('POST', 'http://localhost:5000/setting/delTmp', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -485,11 +485,11 @@
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403 || r.status === 500) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         delTml();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }

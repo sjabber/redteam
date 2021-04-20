@@ -174,7 +174,7 @@
 <script type="text/javascript">
     function GetSmtpSetting() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5001/setting/smtpSetting', true);
+        r.open('GET', 'http://localhost:5001/setting/smtpSetting', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -191,11 +191,11 @@
                     // console.log($('#protocol option:selected').val());
                     // console.log($('#tls_protocol option:selected').val());
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetSmtpSetting();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     document.location.href = '/';
@@ -224,7 +224,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5001/setting/smtpSetting', true);
+        r.open('POST', 'http://localhost:5001/setting/smtpSetting', true);
         r.setRequestHeader("Content-Type", "application/json");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -234,14 +234,14 @@
                     location.reload();
                 } else if (r.status === 400) {
                     alert("SMTP 정보를 확인해주세요.");
-                } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
-                        SetSmtpSetting();
-                    } else {
-                        document.location.href = '/';
-                    }
-                } else if (r.status === 409) {
+                else if (r.status === 403) {
+                        if(Refresh()) {
+                            SetSmtpSetting();
+                        } else {
+                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                            document.location.href = "/";
+                        }
+                    } else if (r.status === 409) {
                     alert("비밀번호를 확인해주세요.");
                 }
             }
@@ -269,7 +269,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5001/setting/smtpConnectCheck', true);
+        r.open('POST', 'http://localhost:5001/setting/smtpConnectCheck', true);
         r.setRequestHeader("Content-Type", "application/json");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -277,11 +277,11 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         SmtpConnectionTest();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     responseObj = r.responseText;
@@ -314,7 +314,7 @@
         };
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5001/setting/smtpSendTest', true);
+        r.open('POST', 'http://localhost:5001/setting/smtpSendTest', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -322,11 +322,11 @@
                 if (r.status === 200) {
                     alert("SMTP 연결 완료");
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         SmtpSendMailTest();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     responseObj = JSON.parse(r.responseText);
