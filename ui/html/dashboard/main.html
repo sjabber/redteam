@@ -528,11 +528,11 @@
                     $('#PI_4').text(rObj.info1.closed);
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetDashBoard_Info1();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }
@@ -822,11 +822,11 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
-                        GetDashBoard_Info3();
+                    if(Refresh()) {
+                        GetDashBoard_Info2(number);
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }
@@ -893,11 +893,11 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetDashBoard_Info3();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }
@@ -1083,16 +1083,14 @@
                                 '</tr>'
                             )
                         }
-
-
                     }
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
-                        GetDashBoard_Info3();
+                    if(Refresh()) {
+                        GetResult(p_no);
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }

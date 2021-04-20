@@ -356,11 +356,11 @@
                     // paging(rObj.total, page);
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetTemplates();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     document.location.href = '/';
@@ -396,11 +396,11 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         GetTmlDetail(tml_no);
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else {
                     document.location.href = '/';
@@ -448,11 +448,11 @@
                 } else if (r.status === 405) {
                     alert("사용자 템플릿은 최대 10개까지만 등록이 가능합니다.");
                 } else if (r.status === 403) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         editTml();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 } else if (r.status === 500) {
                     alert("서버에러");
@@ -485,11 +485,11 @@
                     alert("템플릿 삭제 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403 || r.status === 500) {
-                    if (Verify()) {
-                        Refresh();
+                    if(Refresh()) {
                         delTml();
                     } else {
-                        document.location.href = '/';
+                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
+                        document.location.href = "/";
                     }
                 }
             }
