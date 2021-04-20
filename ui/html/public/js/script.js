@@ -211,22 +211,3 @@ function Refresh() {
     const formData = $('form').serializeObject();
     r.send(JSON.stringify(formData));
 }
-
-// function Verify() {
-//     const r = new XMLHttpRequest();
-//     r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/RefreshTokenVerify', false);
-//     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-//     r.withCredentials = true;
-//     r.onreadystatechange = function () {
-//         if (r.readyState === 4) {
-//             if (r.status === 200) {
-//                 return true;
-//             } else if (r.status === 401) {
-//                 return false;
-//             } else {
-//                 return false;
-//             }
-//         }
-//     };
-//     r.send();
-// }

@@ -58,30 +58,3 @@ func RefreshToken(c *gin.Context) {
 		}
 	}
 }
-
-func Verify(c *gin.Context) {
-	// refresh-token 쿠키를 요청한다.
-	bearer, err := c.Request.Cookie("refresh-token")
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"isOk" : false,
-		})
-		model.SugarLogger.Errorf("cookie error : %v", err.Error())
-		c.Abort() // 이후의 핸들러 호출하지 않도록.
-		return
-	}
-
-	isValid, _ := model.RefreshTokenValid(bearer.Value)
-	if isValid == false {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"isOk" : false,
-		})
-		c.Abort() // 이후의 핸들러 호출하지 않도록.
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"isOk": true,
-		})
-		//model.SugarLogger.Info("token refresh")
-		return
-	}
-}
