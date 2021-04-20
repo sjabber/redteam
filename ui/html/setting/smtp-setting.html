@@ -231,8 +231,7 @@
                     location.reload();
                 } else if (r.status === 400) {
                     alert("SMTP 정보를 확인해주세요.");
-                else
-                    if (r.status === 403) {
+                } else if (r.status === 403) {
                         Refresh();
                         SetSmtpSetting();
                     } else if (r.status === 409) {
@@ -326,7 +325,6 @@
 
         GetDashBoard();
         GetSmtpSetting();
-}
 </script>
 </body>
 
