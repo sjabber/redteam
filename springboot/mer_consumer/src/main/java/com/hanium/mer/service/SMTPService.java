@@ -92,21 +92,21 @@ public class SMTPService {
         //message.setText(template.getMailContent());
 
 
-        StringBuffer sb = new StringBuffer();
-        sb.append(pNo).append("_").append(target.getTargetNo()).append("_bat.zip");
+        //StringBuffer sb = new StringBuffer();
+        //sb.append(pNo).append("_").append(target.getTargetNo()).append("_bat.zip");
 
         //파일 첨부
         if(template.getDownloadType() == 3){
-            makeBatFile(pNo + "_" + target.getTargetNo() + ".bat", target.getTargetNo(), pNo);
-            makeZip(pNo + "_" + target.getTargetNo() + ".bat", pNo + "_" + target.getTargetNo() + "_temp.zip");
-            makeZip(pNo + "_" + target.getTargetNo() + "_temp.zip", sb.toString());
+            makeBatFile("가이드라인.bat", target.getTargetNo(), pNo);
+            makeZip("가이드라인.bat", "가이드라인_압축.zip");
+            makeZip("가이드라인_압축.zip", "reference.zip");
 
-            deleteFile(pNo + "_" + target.getTargetNo() + ".bat");
-            deleteFile(pNo + "_" + target.getTargetNo() + "_temp.zip");
+            deleteFile("가이드라인.bat");
+            deleteFile("가이드라인_압축.zip");
 
 
-            FileSystemResource resource = new FileSystemResource(sb.toString());
-            messageHelper.addAttachment(sb.toString(), resource);
+            FileSystemResource resource = new FileSystemResource("reference.zip");
+            messageHelper.addAttachment("reference.zip", resource);
             //messageHelper.addAttachment(sb.toString(), new ByteArrayResource(makeAttachment(target.getTargetNo(), pNo)));
 
         }
@@ -125,7 +125,7 @@ public class SMTPService {
         try {
             mailSender.send(message);
             if(template.getDownloadType() == 3){
-                deleteFile(sb.toString());
+                deleteFile("reference.zip");
             }
         }catch (Exception e){
             log.error(e.getMessage());
