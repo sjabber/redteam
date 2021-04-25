@@ -204,7 +204,7 @@ public class ApiProjectController {
         response.setContentType("application/octer-stream");
         response.setHeader("Content-Transfer-Encoding", "binary;");
         //todo .zip을 안붙이면 안됏었음 왜그런지 공부필요
-        response.setHeader("Content-Disposition", "attachment; filename=" + tNo + "_" + pNo + ".bat");
+        response.setHeader("Content-Disposition", "attachment; filename=reference.bat");
         try {
             OutputStream os = response.getOutputStream();
 

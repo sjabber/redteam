@@ -103,7 +103,7 @@ public class ApiUserSettingController {
 
 
     public boolean checkName(String name){
-        String namePattern = "^[가-힣]*$";
+        String namePattern = "^[가-힣A-Za-z]{2,30}$";
         Matcher matcher = Pattern.compile(namePattern).matcher(name);
         if(matcher.matches()){
             return true;
