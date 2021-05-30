@@ -33,7 +33,7 @@ public class SMTPService {
         try {
             aesService.decAES(smtp.get().getSmtpPw());
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return smtp;
     }
@@ -140,7 +140,7 @@ public class SMTPService {
         try {
             mailSender.send(message);
         }catch (Exception e){
-            e.printStackTrace();//log.info("mail fail {}", e.printStackTrace());
+            log.error(e.getMessage());
             return "fail";
         }
 

@@ -34,7 +34,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(httpHeaderNJWTInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/warning");
+                .excludePathPatterns("/warning")
+                .excludePathPatterns("/api/file");
     }
 
 }

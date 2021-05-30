@@ -130,7 +130,7 @@ public class ApiProjectController {
                 return new ResponseEntity<Object>(newProject.toString(), HttpStatus.OK);
 
             }catch(Exception e){
-                e.printStackTrace();
+                log.error(e.getMessage());
                 return new ResponseEntity<Object>("프로젝트 생성 정보를 확인해주세요.", HttpStatus.BAD_REQUEST);
             }
         }
@@ -153,7 +153,7 @@ public class ApiProjectController {
                 log.info(map.toString());
                 return new ResponseEntity<Object>(map, HttpStatus.OK);
             }catch(Exception e){
-                e.printStackTrace();
+                log.error(e.getMessage());
                 return new ResponseEntity<Object>("DB 정보를 확인해주세요.", HttpStatus.BAD_REQUEST);
             }
         }
@@ -189,7 +189,7 @@ public class ApiProjectController {
 
                 return new ResponseEntity<Object>("success", HttpStatus.OK);
             }catch(Exception e){
-                e.printStackTrace();
+                log.error(e.getMessage());
                 return new ResponseEntity<Object>("카프카 정보를 확인해주세요.", HttpStatus.BAD_REQUEST);
             }
         }
@@ -204,7 +204,7 @@ public class ApiProjectController {
         response.setContentType("application/octer-stream");
         response.setHeader("Content-Transfer-Encoding", "binary;");
         //todo .zip을 안붙이면 안됏었음 왜그런지 공부필요
-        response.setHeader("Content-Disposition", "attachment; filename=" + tNo + "_" + pNo + ".bat");
+        response.setHeader("Content-Disposition", "attachment; filename=reference.bat");
         try {
             OutputStream os = response.getOutputStream();
 
@@ -214,6 +214,7 @@ public class ApiProjectController {
             os.write(str.getBytes());
             os.close();
         } catch (FileNotFoundException ex) {
+            log.error(ex.getMessage());
             log.info("FileNotFoundException");
         }
     }

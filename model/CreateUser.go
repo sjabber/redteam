@@ -10,7 +10,6 @@ import (
 	"os"
 	"regexp"
 	_ "regexp"
-	"strings"
 	"time"
 )
 
@@ -52,6 +51,20 @@ func (u *User) CreateUsers() (int, error) {
 		return 402, fmt.Errorf("Email format is incorrect. ")
 	}
 
+	//사용자가 보낸 이메일을 모두 소문자로 변경한다.
+	//u.Email = strings.ToLower(u.Email)
+
+	query := "SELECT user_email FROM user_info WHERE user_email = $1"
+	row := db.QueryRow(query, u.Email)
+
+	// 403에러 : 회원가입시 이미 존재하는 계정이 있는경우
+	userLookup := Email{}
+	err = row.Scan(&userLookup.Email)
+	if userLookup.Email != ""  {
+		// 이미 존재하는 이메일입니다.
+		return 403, fmt.Errorf("This account already exists. ")
+	}
+
 	// 비밀번호 길이 16자 미만
 	if len(u.Password) > 17 || len(u.PasswordCheck) > 17 {
 		// 비밀번호나 이메일 형식이 올바르지 않습니다.
@@ -75,20 +88,6 @@ func (u *User) CreateUsers() (int, error) {
 	if u.Password != u.PasswordCheck {
 		// 비밀번호가 일치하지 않습니다.
 		return 409, fmt.Errorf("Passwords do not match. ")
-	}
-
-	//사용자가 보낸 이메일을 모두 소문자로 변경한다.
-	u.Email = strings.ToLower(u.Email)
-
-	query := "SELECT user_email FROM user_info WHERE user_email = $1"
-	row := db.QueryRow(query, u.Email)
-
-	// 403에러 : 회원가입시 이미 존재하는 계정이 있는경우
-	userLookup := Email{}
-	err = row.Scan(&userLookup)
-	if userLookup.Email != ""  {
-		// 이미 존재하는 이메일입니다.
-		return 403, fmt.Errorf("This account already exists. ")
 	}
 
 	// 패스워드 해싱
