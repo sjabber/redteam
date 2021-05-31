@@ -422,7 +422,7 @@
 
     function GetTag() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTag', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -452,12 +452,8 @@
                         $('#tag').append("<option value=''>등록된 대상자가 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTag();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTag();
                 } else {
                     document.location.href = '/';
                 }
@@ -468,11 +464,13 @@
 
     function GetTmpl() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTemplates', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
             let rObj;
+            var tmp_kind_message;
+            var download_type;
             if (r.readyState === 4) {
                 if (r.status === 200) {
                     rObj = JSON.parse(r.responseText);
@@ -482,18 +480,36 @@
                         // No ,tmp_no , division, kind, file_info, tmp_name, mail_title, sender_name, download_type, created_t
                         $('#template').append("<option value=''>훈련 템플릿 선택하기</option>");
                         for (let i = 0; i < rObj.tmpls.length; i++) {
-                            $('#template').append("<option value='" + rObj.tmpls[i].tmp_no + "'>" + rObj.tmpls[i].tmp_name + "</option>");
+                            // <option value="1" selected>경고 안내</option>
+                            // <option value="2">피싱 유도</option>
+                            // <option value="3">실태 조사</option>
+                            // <option selected value="0">첨부파일 없음</option>
+                            // <option value="1">EXE</option>
+                            // <option value="2">HTML</option>
+                            // <option value="3">Excel</option>
+                            tmp_kind_message = "경고 안내"
+                            if (rObj.tmpls[i].tmp_kind === "2") {
+                                tmp_kind_message = "피싱 유도"
+                            } else if (rObj.tmpls[i].tmp_kind === "3") {
+                                tmp_kind_message = "실태 조사"
+                            }
+                            download_type = "첨부파일 없음"
+                            if (rObj.tmpls[i].file_info==="1") {
+                                download_type = "EXE"
+                            } else if (rObj.tmpls[i].file_info==="2"){
+                                download_type = "HTML"
+                            }else if (rObj.tmpls[i].file_info==="3"){
+                                download_type = "Excel"
+                            }
+                            $('#template').append("<option value='" + rObj.tmpls[i].tmp_no + "'>" +
+                                rObj.tmpls[i].tmp_name + "/" + tmp_kind_message + "/" + download_type + "</option>");
                         }
                     } else {
                         $('#template').append("<option value=''>등록된 템플릿이 없습니다.</option>");
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTmpl();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTmpl();
                 } else {
                     document.location.href = '/';
                 }
@@ -504,7 +520,7 @@
 
     function GetProject() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/getProject', false);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/getProject', false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -652,12 +668,8 @@
                             '</div></td></tr>');
                     }
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetProject();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetProject();
                 } else {
                     document.location.href = "/";
                 }
@@ -696,7 +708,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/api/projectCreate', true);
+        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/projectCreate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -705,12 +717,8 @@
                     alert("프로젝트 생성이 완료되었습니다.");
                     location.reload();
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetDashBoard_Info1();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    CreateProject();
                 } else if (r.status === 400) {
                     alert("프로젝트 생성에 필요한 정보들이 전부 입력되지 않았거나 \n형식이 올바르지 않습니다.");
                 } else if (r.status === 402) {
@@ -728,7 +736,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/api/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5001/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -748,7 +756,7 @@
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 종료하시겠습니까?");
         if (verify === true) {
-            r.open('POST', 'http://localhost:5000/api/endProjectList', true);
+            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/endProjectList', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -757,12 +765,8 @@
                         alert('해당 프로젝트가 종료되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            ProjectEnd(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        ProjectEnd(p_no);
                     } else {
                         document.location.href = '/';
                     }
@@ -780,7 +784,7 @@
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 실행하시겠습니까?");
         if (verify === true) {
-            r.open('POST', 'http://localhost:5000/api/startProjectList', true);
+            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/startProjectList', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -789,12 +793,8 @@
                         alert('프로젝트가 시작되었습니다.');
                         document.location.reload();
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            ProjectStart(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        ProjectStart(p_no);
                     }
                 }
             };
@@ -822,7 +822,7 @@
             };
 
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://localhost:5000/api/projectModify', true);
+            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/projectModify', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -832,12 +832,8 @@
                         // location.reload()
                         // // console.log('프로젝트 종료일 변경')
                     } else if (r.status === 403) {
-                        if(Refresh()) {
-                            modifyEndDate(p_no);
-                        } else {
-                            alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                            document.location.href = "/";
-                        }
+                        Refresh();
+                        modifyEndDate(p_no);
                     } else if (r.status === 400) {
                         rObj = JSON.parse(r.responseText);
                         if (rObj.dateCompare === true) {
@@ -874,7 +870,7 @@
             if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
                 if (tdArr.length !== 0) {
                     const r = new XMLHttpRequest();
-                    r.open('POST', 'http://localhost:5000/api/delProject', true);
+                    r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/delProject', true);
                     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     r.withCredentials = true;
                     r.onreadystatechange = function () {
@@ -883,12 +879,8 @@
                                 alert("삭제가 완료되었습니다.");
                                 location.reload();
                             } else if (r.status === 403) {
-                                if(Refresh()) {
-                                    alert("세션 갱신, 다시 삭제해 주세요.");
-                                } else {
-                                    alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                                    document.location.href = "/";
-                                }
+                                Refresh();
+                                alert("세션 갱신, 다시 삭제해 주세요.");
                             } else {
                                 alert("삭제 실패했습니다.");
                             }
@@ -940,7 +932,7 @@
 
     function GetTmlDetailPrjMgr(tml_no, p_no) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://localhost:5000/setting/ProjectDetail?template_no=' + tml_no + '&project_no=' + p_no, true);
+        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/ProjectDetail?template_no=' + tml_no + '&project_no=' + p_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -965,12 +957,8 @@
                     $('#download_type').val(rObj.tmpls.download_type);
 
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        GetTmlDetailPrjMgr(tml_no, p_no);
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    GetTmlDetailPrjMgr(tml_no, p_no);
                 }
             }
         };
@@ -1002,7 +990,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
+        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/EditTemplate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -1011,12 +999,8 @@
                     alert("템플릿 수정 완료했습니다.")
                     location.reload()
                 } else if (r.status === 403) {
-                    if(Refresh()) {
-                        editTml();
-                    } else {
-                        alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                        document.location.href = "/";
-                    }
+                    Refresh();
+                    editTml();
                 }
             }
         };

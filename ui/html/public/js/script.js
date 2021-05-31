@@ -1,6 +1,6 @@
 function Logout() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/Logout', true);
+    r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/Logout', true);
     // r.setRequestHeader("Content-Type", "application/json");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -21,7 +21,7 @@ function Logout() {
 
 // function CheckLogin() {
 //     const r = new XMLHttpRequest();
-//     r.open('GET', 'http://localhost:5000/api/CheckLogin', true);
+//     r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/CheckLogin', true);
 //     r.withCredentials = true;
 //     r.onreadystatechange = function () {
 //         let responseObj;
@@ -43,7 +43,7 @@ function Logout() {
 
 function CheckLoginInLoginPage() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/checklogin', false);
+    r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/checklogin', false);
     r.withCredentials = true;
     r.onreadystatechange = function () {
         // let responseObj;
@@ -65,7 +65,7 @@ function CheckLoginInLoginPage() {
 
 function Tg_total() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/setting/getTag', false);
+    r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTag', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -94,7 +94,7 @@ function Tg_total() {
 
 function Login() {
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/api/Login', true);
+    r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/Login', true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -126,7 +126,7 @@ function GetDashBoard() {
     const user_id = document.getElementById("dropdown_id");
     const user_name = document.getElementById("dropdown_name");
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/dashboard', false);
+    r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/dashboard', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
@@ -164,7 +164,7 @@ function Register() {
         return;
     }
     const r = new XMLHttpRequest();
-    r.open('POST', 'http://localhost:5000/api/createUser', true);
+    r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/createUser', true);
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
@@ -196,38 +196,18 @@ function getRoot() {
 
 function Refresh() {
     const r = new XMLHttpRequest();
-    r.open('GET', 'http://localhost:5000/api/RefreshToken', false);
+    r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/RefreshToken', false);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     r.withCredentials = true;
     r.onreadystatechange = function () {
         if (r.readyState === 4) {
             if (r.status === 200) {
-                console.log(r.responseText);
+                return true;
             } else {
-                alert("세션이 만료되었습니다. 로그아웃 됩니다.");
-                document.location.href = "/";
+                return false;
             }
         }
     };
     const formData = $('form').serializeObject();
     r.send(JSON.stringify(formData));
 }
-
-// function Verify() {
-//     const r = new XMLHttpRequest();
-//     r.open('GET', 'http://localhost:5000/api/RefreshTokenVerify', false);
-//     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-//     r.withCredentials = true;
-//     r.onreadystatechange = function () {
-//         if (r.readyState === 4) {
-//             if (r.status === 200) {
-//                 return true;
-//             } else if (r.status === 401) {
-//                 return false;
-//             } else {
-//                 return false;
-//             }
-//         }
-//     };
-//     r.send();
-// }

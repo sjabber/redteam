@@ -328,6 +328,7 @@ group by target_organize
 			float64(rd.ProjectSummary.ResultPerClassification.COrgan.TotalCount)) * 100
 	}
 
+
 	return nil
 }
 
@@ -336,13 +337,11 @@ func (rd *ResultDetail) getResultPerStatistic(userNo int, conn *sql.DB) error {
 	perOrganTotalQuery := `
 select target_organize, count(*)
 from target_info ti
-         left join project_info pi on ti.user_no = pi.user_no
-         left join count_info ci on ci.target_no = pi.p_no
-where ti.user_no = $1
-  and pi.p_no = $2
+         left join count_info ci on ti.target_no = ci.target_no
+where project_no = $1
 group by target_organize
 `
-	pOTQ, err := conn.Query(perOrganTotalQuery, userNo, rd.ProjectInfo.PNo)
+	pOTQ, err := conn.Query(perOrganTotalQuery, rd.ProjectInfo.PNo)
 	if err != nil {
 		SugarLogger.Error(err.Error())
 		return err
@@ -380,13 +379,11 @@ order by count desc
 	perPositionTotalQuery := `
 select target_position, count(*)
 from target_info ti
-         left join project_info pi on ti.user_no = pi.user_no
-         left join count_info ci on ci.target_no = pi.p_no
-where ti.user_no = $1
-  and pi.p_no = $2
+         left join count_info ci on ti.target_no = ci.target_no
+where project_no = $1
 group by target_position
 `
-	pPTQ, err := conn.Query(perPositionTotalQuery, userNo, rd.ProjectInfo.PNo)
+	pPTQ, err := conn.Query(perPositionTotalQuery, rd.ProjectInfo.PNo)
 	if err != nil {
 		SugarLogger.Error(err.Error())
 		return err
@@ -458,6 +455,7 @@ where ti.user_no = $1
 	}
 	// 가장 rate 가 높은 태그 정보
 	rd.ProjectSummary.ResultPerClassification.CTag = maxTag
+
 
 	return nil
 }
