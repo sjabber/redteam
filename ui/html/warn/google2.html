@@ -837,8 +837,12 @@
     document.body.appendChild(newDIV);
 
     function infection(connection_link) {
-        var url = connection_link.replace('false', 'true');
+        var url = replaceAll(connection_link, "false", "true");
         return url
+    }
+
+    function replaceAll(str, searchStr, replaceStr) {
+        return str.split(searchStr).join(replaceStr);
     }
 
     var infection_link = infection(connection_link);
