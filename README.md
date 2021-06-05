@@ -8,7 +8,7 @@
 
 
 #### 시스템 구성도
-![image](https://user-images.githubusercontent.com/46473153/120894258-840d1580-c652-11eb-9163-ec253bcc0e9a.png)
+![image](https://user-images.githubusercontent.com/46473153/120894301-a99a1f00-c652-11eb-9fbb-8286b63f0a94.png)
 
 <!-- ![image](https://user-images.githubusercontent.com/46473153/111221494-e7704400-861d-11eb-9db8-893311c6f144.png) -->
 
