@@ -8,7 +8,9 @@
 
 
 #### 시스템 구성도
-![image](https://user-images.githubusercontent.com/46473153/111221494-e7704400-861d-11eb-9db8-893311c6f144.png)
+![image](https://user-images.githubusercontent.com/46473153/120894258-840d1580-c652-11eb-9163-ec253bcc0e9a.png)
+
+<!-- ![image](https://user-images.githubusercontent.com/46473153/111221494-e7704400-861d-11eb-9db8-893311c6f144.png) -->
 
 #### 시스템 개요도
 ![image](https://user-images.githubusercontent.com/46473153/111221598-0cfd4d80-861e-11eb-85dc-908e7276eaf4.png)
