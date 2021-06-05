@@ -476,7 +476,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) (bytes.Buffer, error) {
 						   target_phone,
 						   target_organize,
 						   target_position,
-						   to_char(modified_time, 'YYYY-MM-YY HH24:MI'),
+						   to_char(modified_time, 'YYYY-MM-DD HH24:MI'),
 						   COALESCE(tag_name1, '') as tag_name1,
 						   COALESCE(tag_name2, '') as tag_name2,
 						   COALESCE(tag_name3, '') as tag_name3
@@ -556,7 +556,7 @@ func ExportTargets(conn *sql.DB, num int, tagNumber int) (bytes.Buffer, error) {
 						   target_phone,
 						   target_organize,
 						   target_position,
-						   to_char(modified_time, 'YYYY-MM-YY HH24:MI'),
+						   to_char(modified_time, 'YYYY-MM-DD HH24:MI'),
 						   COALESCE(tag_name1, '') as tag_name1,
 						   COALESCE(tag_name2, '') as tag_name2,
 						   COALESCE(tag_name3, '') as tag_name3
