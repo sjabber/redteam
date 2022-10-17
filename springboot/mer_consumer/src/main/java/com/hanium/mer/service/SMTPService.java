@@ -147,7 +147,7 @@ public class SMTPService {
         {
             bw.write("Msg * \"started ransomware contact to admin\"");
             bw.newLine();
-            String countApiStr = "curl \"http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo=" + targetNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"";
+            String countApiStr = "curl \"http://localhost:5000/api/CountTarget?tNo=" + targetNo + "&pNo=" + pNo + "&email=false&link=false&download=true\"";
             bw.write(countApiStr);
             bw.flush(); //버퍼의 내용을 파일에 쓰기
         }catch ( IOException e ) {
@@ -219,7 +219,7 @@ public class SMTPService {
     public byte[] makeAttachment(int tNo, Long pNo){
 
         String s = "Msg * \"started ransomware contact to admin\"\n";
-        s += "curl \"http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo=" + tNo + "&pNo="+ pNo + "&email=false&link=false&download=true\"\n";
+        s += "curl \"http://localhost:5000/api/CountTarget?tNo=" + tNo + "&pNo="+ pNo + "&email=false&link=false&download=true\"\n";
 
 
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -512,7 +512,7 @@
 
     function GetDashBoard_Info1() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/getDashBoard_Info1', true);
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info1', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -538,7 +538,7 @@
 
     function GetDashBoard_Info2(number) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/getDashBoard_Info2?p_num=' + number, true);
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info2?p_num=' + number, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -828,7 +828,7 @@
 
     function GetDashBoard_Info3() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/getDashBoard_Info3', true);
+        r.open('GET', 'http://localhost:5000/api/getDashBoard_Info3', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -906,7 +906,7 @@
         //    todo GetResult api 구현해야함
         // console.log('GetResult : p_no -> ' + p_no)
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/resultDetail?p_no=' + p_no, true);
+        r.open('GET', 'http://localhost:5000/api/resultDetail?p_no=' + p_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {

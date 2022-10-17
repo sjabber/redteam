@@ -422,7 +422,7 @@
 
     function GetTag() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTag', true);
+        r.open('GET', 'http://localhost:5000/setting/getTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -464,7 +464,7 @@
 
     function GetTmpl() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTemplates', true);
+        r.open('GET', 'http://localhost:5000/setting/getTemplates', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -520,7 +520,7 @@
 
     function GetProject() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/getProject', false);
+        r.open('GET', 'http://localhost:5000/api/getProject', false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -708,7 +708,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/projectCreate', true);
+        r.open('POST', 'http://localhost:5000/api/projectCreate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -736,7 +736,7 @@
 
     function SmtpSimpleTest() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5001/api/smtpConnectSimpleCheck', true);
+        r.open('GET', 'http://localhost:5001/api/smtpConnectSimpleCheck', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -756,7 +756,7 @@
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 종료하시겠습니까?");
         if (verify === true) {
-            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/endProjectList', true);
+            r.open('POST', 'http://localhost:5000/api/endProjectList', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -784,7 +784,7 @@
         const r = new XMLHttpRequest();
         const verify = confirm("해당 프로젝트를 실행하시겠습니까?");
         if (verify === true) {
-            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/startProjectList', true);
+            r.open('POST', 'http://localhost:5000/api/startProjectList', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -822,7 +822,7 @@
             };
 
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/projectModify', true);
+            r.open('POST', 'http://localhost:5000/api/projectModify', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -870,7 +870,7 @@
             if (confirm("선택된 프로젝트를 삭제하시겠습니까 ?") === true) {
                 if (tdArr.length !== 0) {
                     const r = new XMLHttpRequest();
-                    r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/delProject', true);
+                    r.open('POST', 'http://localhost:5000/api/delProject', true);
                     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     r.withCredentials = true;
                     r.onreadystatechange = function () {
@@ -932,7 +932,7 @@
 
     function GetTmlDetailPrjMgr(tml_no, p_no) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/ProjectDetail?template_no=' + tml_no + '&project_no=' + p_no, true);
+        r.open('GET', 'http://localhost:5000/setting/ProjectDetail?template_no=' + tml_no + '&project_no=' + p_no, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -990,7 +990,7 @@
         // console.log(JSON.stringify(formData));
 
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/EditTemplate', true);
+        r.open('POST', 'http://localhost:5000/setting/EditTemplate', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {

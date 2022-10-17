@@ -350,7 +350,7 @@
 
     function GetTarget(page) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/getTarget?page=' + page, false);
+        r.open('GET', 'http://localhost:5000/api/target/getTarget?page=' + page, false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -467,7 +467,7 @@
 
     function getTagForTargetInfo() {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/setting/getTag', false);
+        r.open('GET', 'http://localhost:5000/setting/getTag', false);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -525,7 +525,7 @@
 
     function deleteTag(tagNo) {
         const r = new XMLHttpRequest();
-        r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/delTag', true);
+        r.open('POST', 'http://localhost:5000/api/target/delTag', true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;
         r.onreadystatechange = function () {
@@ -617,7 +617,7 @@
             if (confirm("선택된 대상자를 삭제하시겠습니까 ?") === true) {
                 if (tdArr.length !== 0) {
                     const r = new XMLHttpRequest();
-                    r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/delTarget', true);
+                    r.open('POST', 'http://localhost:5000/api/target/delTarget', true);
                     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     r.withCredentials = true;
                     r.onreadystatechange = function () {
@@ -645,7 +645,7 @@
 
         $('#tag_reg').click(function () {
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/regTag', true);
+            r.open('POST', 'http://localhost:5000/api/target/regTag', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -740,7 +740,7 @@
             // console.log(formData);
 
             const r = new XMLHttpRequest();
-            r.open('POST', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/regTarget', true);
+            r.open('POST', 'http://localhost:5000/api/target/regTarget', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.withCredentials = true;
             r.onreadystatechange = function () {
@@ -771,7 +771,7 @@
         $('#btn_export').click(function () {
             const tag_no = $('#tag_selector2').val();
             const r = new XMLHttpRequest();
-            r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/exportTarget?tag_no=' + tag_no, true);
+            r.open('GET', 'http://localhost:5000/api/target/exportTarget?tag_no=' + tag_no, true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             let fileName = null; //if you have the fileName header available
             r.withCredentials = true;
@@ -804,7 +804,7 @@
 
         $('#excelDownload').click(function () {
             const r = new XMLHttpRequest();
-            r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/downloadExcel', true);
+            r.open('GET', 'http://localhost:5000/api/target/downloadExcel', true);
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             let fileName = null; //if you have the fileName header available
             r.withCredentials = true;
@@ -843,7 +843,7 @@
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: "http://mert.koreacentral.cloudapp.azure.com:5000/api/target/importTargets",
+                    url: "http://localhost:5000/api/target/importTargets",
                     data: data,
                     processData: false,
                     contentType: false,
@@ -878,7 +878,7 @@
 
     function Search(search_division, search_text, page) {
         const r = new XMLHttpRequest();
-        r.open('GET', 'http://mert.koreacentral.cloudapp.azure.com:5000/api/target/search?search_division=' + search_division +
+        r.open('GET', 'http://localhost:5000/api/target/search?search_division=' + search_division +
             '&search_text=' + search_text + '&page=' + page, true);
         r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         r.withCredentials = true;

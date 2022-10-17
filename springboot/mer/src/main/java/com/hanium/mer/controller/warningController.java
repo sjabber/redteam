@@ -19,7 +19,7 @@ public class warningController {
         BufferedReader in = null;
 
         try {
-            URL obj = new URL("http://mert.koreacentral.cloudapp.azure.com:5000/api/CountTarget?tNo="+tNo+"&pNo="+pNo+"&email=false&link=true&download=false"); // 호출할 url
+            URL obj = new URL("http://localhost:5000/api/CountTarget?tNo="+tNo+"&pNo="+pNo+"&email=false&link=true&download=false"); // 호출할 url
             HttpURLConnection con = (HttpURLConnection)obj.openConnection();
 
             con.setRequestMethod("GET");
@@ -35,6 +35,6 @@ public class warningController {
             if(in != null) try { in.close(); } catch(Exception e) { e.printStackTrace(); }
         }
 
-        return "redirect:http://mert.koreacentral.cloudapp.azure.com:8080/warn/warning2";
+        return "redirect:http://localhost:8088/warn/warning2";
     }
 }

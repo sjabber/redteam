@@ -1,0 +1,1036 @@
+INFO  2022-09-29 13:45:54[restartedMain] [StartupInfoLogger.java - logStarting] [MerApplication:55] - Starting MerApplication on DESKTOP-AE75KI3 with PID 18236 (C:\Users\Taeho\go\src\redteam\springboot\mer_consumer\build\classes\java\main started by TaeHo in C:\Users\Taeho\go\src\redteam\springboot\mer_consumer)
+INFO  2022-09-29 13:45:54[restartedMain] [SpringApplication.java - logStartupProfileInfo] [MerApplication:651] - No active profile set, falling back to default profiles: default
+INFO  2022-09-29 13:45:54[restartedMain] [DeferredLog.java - logTo] [DevToolsPropertyDefaultsPostProcessor:225] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  2022-09-29 13:45:55[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:127] - Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+INFO  2022-09-29 13:45:55[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:187] - Finished Spring Data repository scanning in 110ms. Found 5 JPA repository interfaces.
+INFO  2022-09-29 13:45:56[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 13:45:56[restartedMain] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+ERROR 2022-09-29 13:46:07[restartedMain] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:158)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:116)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:79)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:324)
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:133)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:136)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:102)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:94)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:132)
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:133)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:650)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:635)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1336)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1176)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:556)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1109)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:869)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:551)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 53 common frames omitted
+INFO  2022-09-29 13:46:07[task-1] [LogHelper.java - logPersistenceUnitInformation] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  2022-09-29 13:46:07[task-1] [Version.java - logVersion] [Version:44] - HHH000412: Hibernate ORM core version 5.4.21.Final
+INFO  2022-09-29 13:46:07[task-1] [JavaReflectionManager.java - <clinit>] [Version:49] - HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+INFO  2022-09-29 13:46:07[restartedMain] [OptionalLiveReloadServer.java - startServer] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  2022-09-29 13:46:07[task-1] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+INFO  2022-09-29 13:46:07[restartedMain] [AbstractConfig.java - logAll] [ConsumerConfig:347] - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = latest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = default
+	client.id = 
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = RedTeam
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2]
+	ssl.endpoint.identification.algorithm = https
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.2
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+WARN  2022-09-29 13:46:08[restartedMain] [AbstractConfig.java - logUnused] [ConsumerConfig:355] - The configuration 'spring.json.trusted.packages' was supplied but isn't a known config.
+INFO  2022-09-29 13:46:08[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:117] - Kafka version: 2.5.1
+INFO  2022-09-29 13:46:08[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:118] - Kafka commitId: 0efa8fb0f4c73d92
+INFO  2022-09-29 13:46:08[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:119] - Kafka startTimeMs: 1664426768001
+INFO  2022-09-29 13:46:08[restartedMain] [KafkaConsumer.java - subscribe] [KafkaConsumer:974] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Subscribed to topic(s): redteam
+INFO  2022-09-29 13:46:08[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskScheduler:181] - Initializing ExecutorService
+INFO  2022-09-29 13:46:08[restartedMain] [DeferredRepositoryInitializationListener.java - onApplicationEvent] [DeferredRepositoryInitializationListener:49] - Triggering deferred initialization of Spring Data repositories…
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [Metadata.java - update] [Metadata:277] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Cluster ID: CPAyjttoQpSWQB86UIIDaw
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:797] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Discovered group coordinator DESKTOP-AE75KI3.mshome.net:9092 (id: 2147483647 rack: null)
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - joinGroupIfNeeded] [AbstractCoordinator:455] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Join group failed with org.apache.kafka.common.errors.MemberIdRequiredException: The group member needs to have a valid member id before actually entering a consumer group
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - performAssignment] [ConsumerCoordinator:611] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Finished assignment for group at generation 1: {consumer-RedTeam-1-2812765c-a4fb-4735-8cd1-a028da0ddabf=Assignment(partitions=[redteam-0])}
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:503] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Successfully joined group with generation 1
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - invokePartitionsAssigned] [ConsumerCoordinator:273] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Adding newly assigned partitions: redteam-0
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - handle] [ConsumerCoordinator:1306] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Found no committed offset for partition redteam-0
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - handle] [ConsumerCoordinator:1306] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Found no committed offset for partition redteam-0
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SubscriptionState.java - maybeSeekUnvalidated] [SubscriptionState:397] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Resetting offset for partition redteam-0 to offset 0.
+INFO  2022-09-29 13:46:08[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [LogAccessor.java - info] [KafkaMessageListenerContainer:292] - RedTeam: partitions assigned: [redteam-0]
+ERROR 2022-09-29 13:46:18[task-1] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:180)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 35 common frames omitted
+WARN  2022-09-29 13:46:18[task-1] [JdbcEnvironmentInitiator.java - initiateService] [JdbcEnvironmentInitiator:132] - HHH000342: Could not obtain connection to query metadata : The connection attempt failed.
+WARN  2022-09-29 13:46:18[restartedMain] [AbstractApplicationContext.java - refresh] [AnnotationConfigApplicationContext:559] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'templateRepository' defined in com.hanium.mer.repogitory.TemplateRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 13:46:18[restartedMain] [AbstractEntityManagerFactoryBean.java - destroy] [LocalContainerEntityManagerFactoryBean:598] - Closing JPA EntityManagerFactory for persistence unit 'default'
+WARN  2022-09-29 13:46:18[restartedMain] [DisposableBeanAdapter.java - destroy] [DisposableBeanAdapter:267] - Invocation of destroy method failed on bean with name 'entityManagerFactory': org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 13:46:18[restartedMain] [ExecutorConfigurationSupport.java - shutdown] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 13:46:18[restartedMain] [ConditionEvaluationReportLoggingListener.java - logMessage] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+ERROR 2022-09-29 13:46:18[restartedMain] [SpringApplication.java - reportFailure] [SpringApplication:837] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'templateRepository' defined in com.hanium.mer.repogitory.TemplateRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:342)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:113)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1697)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1442)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:624)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:612)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:51)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:36)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:404)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:361)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:898)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:554)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1794)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:594)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:330)
+	... 30 common frames omitted
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:275)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100)
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:137)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	... 17 common frames omitted
+INFO  2022-09-29 14:32:43[restartedMain] [StartupInfoLogger.java - logStarting] [MerApplication:55] - Starting MerApplication on DESKTOP-AE75KI3 with PID 7780 (C:\Users\Taeho\go\src\redteam\springboot\mer_consumer\build\classes\java\main started by TaeHo in C:\Users\Taeho\go\src\redteam\springboot\mer_consumer)
+INFO  2022-09-29 14:32:43[restartedMain] [SpringApplication.java - logStartupProfileInfo] [MerApplication:651] - No active profile set, falling back to default profiles: default
+INFO  2022-09-29 14:32:43[restartedMain] [DeferredLog.java - logTo] [DevToolsPropertyDefaultsPostProcessor:225] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  2022-09-29 14:32:43[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:127] - Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+INFO  2022-09-29 14:32:43[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:187] - Finished Spring Data repository scanning in 58ms. Found 5 JPA repository interfaces.
+INFO  2022-09-29 14:32:44[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 14:32:44[restartedMain] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+ERROR 2022-09-29 14:32:55[restartedMain] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:158)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:116)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:79)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:324)
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:133)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:136)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:102)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:94)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:132)
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:133)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:650)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:635)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1336)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1176)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:556)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1109)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:869)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:551)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 53 common frames omitted
+INFO  2022-09-29 14:32:55[task-1] [LogHelper.java - logPersistenceUnitInformation] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  2022-09-29 14:32:55[task-1] [Version.java - logVersion] [Version:44] - HHH000412: Hibernate ORM core version 5.4.21.Final
+INFO  2022-09-29 14:32:55[task-1] [JavaReflectionManager.java - <clinit>] [Version:49] - HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+INFO  2022-09-29 14:32:55[restartedMain] [OptionalLiveReloadServer.java - startServer] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  2022-09-29 14:32:55[task-1] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+INFO  2022-09-29 14:32:55[restartedMain] [AbstractConfig.java - logAll] [ConsumerConfig:347] - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = latest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = default
+	client.id = 
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = RedTeam
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2]
+	ssl.endpoint.identification.algorithm = https
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.2
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+WARN  2022-09-29 14:32:55[restartedMain] [AbstractConfig.java - logUnused] [ConsumerConfig:355] - The configuration 'spring.json.trusted.packages' was supplied but isn't a known config.
+INFO  2022-09-29 14:32:55[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:117] - Kafka version: 2.5.1
+INFO  2022-09-29 14:32:55[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:118] - Kafka commitId: 0efa8fb0f4c73d92
+INFO  2022-09-29 14:32:55[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:119] - Kafka startTimeMs: 1664429575746
+INFO  2022-09-29 14:32:55[restartedMain] [KafkaConsumer.java - subscribe] [KafkaConsumer:974] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Subscribed to topic(s): redteam
+INFO  2022-09-29 14:32:55[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskScheduler:181] - Initializing ExecutorService
+INFO  2022-09-29 14:32:55[restartedMain] [DeferredRepositoryInitializationListener.java - onApplicationEvent] [DeferredRepositoryInitializationListener:49] - Triggering deferred initialization of Spring Data repositories…
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [Metadata.java - update] [Metadata:277] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Cluster ID: CPAyjttoQpSWQB86UIIDaw
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:797] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Discovered group coordinator DESKTOP-AE75KI3.mshome.net:9092 (id: 2147483647 rack: null)
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - joinGroupIfNeeded] [AbstractCoordinator:455] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Join group failed with org.apache.kafka.common.errors.MemberIdRequiredException: The group member needs to have a valid member id before actually entering a consumer group
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - performAssignment] [ConsumerCoordinator:611] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Finished assignment for group at generation 3: {consumer-RedTeam-1-628c2412-152a-496d-9221-bb53d9d81c2c=Assignment(partitions=[redteam-0])}
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:503] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Successfully joined group with generation 3
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - invokePartitionsAssigned] [ConsumerCoordinator:273] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Adding newly assigned partitions: redteam-0
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - refreshCommittedOffsetsIfNeeded] [ConsumerCoordinator:799] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Setting offset for partition redteam-0 to the committed offset FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[DESKTOP-AE75KI3.mshome.net:9092 (id: 0 rack: null)], epoch=0}}
+INFO  2022-09-29 14:32:56[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [LogAccessor.java - info] [KafkaMessageListenerContainer:292] - RedTeam: partitions assigned: [redteam-0]
+ERROR 2022-09-29 14:33:06[task-1] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:180)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 35 common frames omitted
+WARN  2022-09-29 14:33:06[task-1] [JdbcEnvironmentInitiator.java - initiateService] [JdbcEnvironmentInitiator:132] - HHH000342: Could not obtain connection to query metadata : The connection attempt failed.
+WARN  2022-09-29 14:33:06[restartedMain] [AbstractApplicationContext.java - refresh] [AnnotationConfigApplicationContext:559] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.hanium.mer.repogitory.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 14:33:06[restartedMain] [AbstractEntityManagerFactoryBean.java - destroy] [LocalContainerEntityManagerFactoryBean:598] - Closing JPA EntityManagerFactory for persistence unit 'default'
+WARN  2022-09-29 14:33:06[restartedMain] [DisposableBeanAdapter.java - destroy] [DisposableBeanAdapter:267] - Invocation of destroy method failed on bean with name 'entityManagerFactory': org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 14:33:06[restartedMain] [ExecutorConfigurationSupport.java - shutdown] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 14:33:06[restartedMain] [ConditionEvaluationReportLoggingListener.java - logMessage] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+ERROR 2022-09-29 14:33:06[restartedMain] [SpringApplication.java - reportFailure] [SpringApplication:837] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.hanium.mer.repogitory.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:342)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:113)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1697)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1442)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:624)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:612)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:51)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:36)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:404)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:361)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:898)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:554)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1794)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:594)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:330)
+	... 30 common frames omitted
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:275)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100)
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:137)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	... 17 common frames omitted
+INFO  2022-09-29 14:33:26[restartedMain] [StartupInfoLogger.java - logStarting] [MerApplication:55] - Starting MerApplication on DESKTOP-AE75KI3 with PID 16008 (C:\Users\Taeho\go\src\redteam\springboot\mer_consumer\build\classes\java\main started by TaeHo in C:\Users\Taeho\go\src\redteam\springboot\mer_consumer)
+INFO  2022-09-29 14:33:26[restartedMain] [SpringApplication.java - logStartupProfileInfo] [MerApplication:651] - No active profile set, falling back to default profiles: default
+INFO  2022-09-29 14:33:26[restartedMain] [DeferredLog.java - logTo] [DevToolsPropertyDefaultsPostProcessor:225] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  2022-09-29 14:33:27[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:127] - Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+INFO  2022-09-29 14:33:27[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:187] - Finished Spring Data repository scanning in 68ms. Found 5 JPA repository interfaces.
+INFO  2022-09-29 14:33:27[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 14:33:27[restartedMain] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+ERROR 2022-09-29 14:33:38[restartedMain] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:158)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:116)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:79)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:324)
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:133)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:136)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:102)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:94)
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:132)
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:133)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:650)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:635)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1336)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1176)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:556)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1109)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:869)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:551)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 53 common frames omitted
+INFO  2022-09-29 14:33:39[task-1] [LogHelper.java - logPersistenceUnitInformation] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  2022-09-29 14:33:39[task-1] [Version.java - logVersion] [Version:44] - HHH000412: Hibernate ORM core version 5.4.21.Final
+INFO  2022-09-29 14:33:39[task-1] [JavaReflectionManager.java - <clinit>] [Version:49] - HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+INFO  2022-09-29 14:33:39[restartedMain] [OptionalLiveReloadServer.java - startServer] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  2022-09-29 14:33:39[task-1] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+INFO  2022-09-29 14:33:39[restartedMain] [AbstractConfig.java - logAll] [ConsumerConfig:347] - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = latest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = default
+	client.id = 
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = RedTeam
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2]
+	ssl.endpoint.identification.algorithm = https
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.2
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+WARN  2022-09-29 14:33:39[restartedMain] [AbstractConfig.java - logUnused] [ConsumerConfig:355] - The configuration 'spring.json.trusted.packages' was supplied but isn't a known config.
+INFO  2022-09-29 14:33:39[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:117] - Kafka version: 2.5.1
+INFO  2022-09-29 14:33:39[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:118] - Kafka commitId: 0efa8fb0f4c73d92
+INFO  2022-09-29 14:33:39[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:119] - Kafka startTimeMs: 1664429619463
+INFO  2022-09-29 14:33:39[restartedMain] [KafkaConsumer.java - subscribe] [KafkaConsumer:974] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Subscribed to topic(s): redteam
+INFO  2022-09-29 14:33:39[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskScheduler:181] - Initializing ExecutorService
+INFO  2022-09-29 14:33:39[restartedMain] [DeferredRepositoryInitializationListener.java - onApplicationEvent] [DeferredRepositoryInitializationListener:49] - Triggering deferred initialization of Spring Data repositories…
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [Metadata.java - update] [Metadata:277] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Cluster ID: CPAyjttoQpSWQB86UIIDaw
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:797] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Discovered group coordinator DESKTOP-AE75KI3.mshome.net:9092 (id: 2147483647 rack: null)
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - joinGroupIfNeeded] [AbstractCoordinator:455] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Join group failed with org.apache.kafka.common.errors.MemberIdRequiredException: The group member needs to have a valid member id before actually entering a consumer group
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - performAssignment] [ConsumerCoordinator:611] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Finished assignment for group at generation 5: {consumer-RedTeam-1-0c2addba-9648-464d-a8d8-dc19caf53dad=Assignment(partitions=[redteam-0])}
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:503] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Successfully joined group with generation 5
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - invokePartitionsAssigned] [ConsumerCoordinator:273] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Adding newly assigned partitions: redteam-0
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - refreshCommittedOffsetsIfNeeded] [ConsumerCoordinator:799] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Setting offset for partition redteam-0 to the committed offset FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[DESKTOP-AE75KI3.mshome.net:9092 (id: 0 rack: null)], epoch=0}}
+INFO  2022-09-29 14:33:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [LogAccessor.java - info] [KafkaMessageListenerContainer:292] - RedTeam: partitions assigned: [redteam-0]
+ERROR 2022-09-29 14:33:50[task-1] [HikariPool.java - throwPoolInitializationException] [HikariPool:593] - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:225)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at net.sf.log4jdbc.sql.jdbcapi.DriverSpy.connect(DriverSpy.java:401)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:358)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:477)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:560)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:180)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:81)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 35 common frames omitted
+WARN  2022-09-29 14:33:50[task-1] [JdbcEnvironmentInitiator.java - initiateService] [JdbcEnvironmentInitiator:132] - HHH000342: Could not obtain connection to query metadata : The connection attempt failed.
+WARN  2022-09-29 14:33:50[restartedMain] [AbstractApplicationContext.java - refresh] [AnnotationConfigApplicationContext:559] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'SMTPRepository' defined in com.hanium.mer.repogitory.SMTPRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 14:33:50[restartedMain] [AbstractEntityManagerFactoryBean.java - destroy] [LocalContainerEntityManagerFactoryBean:598] - Closing JPA EntityManagerFactory for persistence unit 'default'
+WARN  2022-09-29 14:33:50[restartedMain] [DisposableBeanAdapter.java - destroy] [DisposableBeanAdapter:267] - Invocation of destroy method failed on bean with name 'entityManagerFactory': org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+INFO  2022-09-29 14:33:50[restartedMain] [ExecutorConfigurationSupport.java - shutdown] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 14:33:50[restartedMain] [ConditionEvaluationReportLoggingListener.java - logMessage] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+ERROR 2022-09-29 14:33:50[restartedMain] [SpringApplication.java - reportFailure] [SpringApplication:837] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'SMTPRepository' defined in com.hanium.mer.repogitory.SMTPRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:342)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:113)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1697)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1442)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:624)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:612)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:51)
+	at org.springframework.data.repository.config.DeferredRepositoryInitializationListener.onApplicationEvent(DeferredRepositoryInitializationListener.java:36)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:404)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:361)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:898)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:554)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:758)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:750)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:315)
+	at com.hanium.mer.MerApplication.main(MerApplication.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1794)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:594)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:516)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:330)
+	... 30 common frames omitted
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:275)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:237)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:152)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:286)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:243)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:214)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:176)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:118)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1224)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1255)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100)
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:137)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	... 17 common frames omitted
+INFO  2022-09-29 14:34:10[restartedMain] [StartupInfoLogger.java - logStarting] [MerApplication:55] - Starting MerApplication on DESKTOP-AE75KI3 with PID 18908 (C:\Users\Taeho\go\src\redteam\springboot\mer_consumer\build\classes\java\main started by TaeHo in C:\Users\Taeho\go\src\redteam\springboot\mer_consumer)
+INFO  2022-09-29 14:34:10[restartedMain] [SpringApplication.java - logStartupProfileInfo] [MerApplication:651] - No active profile set, falling back to default profiles: default
+INFO  2022-09-29 14:34:10[restartedMain] [DeferredLog.java - logTo] [DevToolsPropertyDefaultsPostProcessor:225] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  2022-09-29 14:34:11[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:127] - Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+INFO  2022-09-29 14:34:11[restartedMain] [RepositoryConfigurationDelegate.java - registerRepositoriesIn] [RepositoryConfigurationDelegate:187] - Finished Spring Data repository scanning in 75ms. Found 5 JPA repository interfaces.
+INFO  2022-09-29 14:34:11[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  2022-09-29 14:34:11[restartedMain] [HikariDataSource.java - getConnection] [HikariDataSource:110] - HikariPool-1 - Starting...
+INFO  2022-09-29 14:34:12[restartedMain] [HikariDataSource.java - getConnection] [HikariDataSource:123] - HikariPool-1 - Start completed.
+INFO  2022-09-29 14:34:12[task-1] [LogHelper.java - logPersistenceUnitInformation] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  2022-09-29 14:34:12[task-1] [Version.java - logVersion] [Version:44] - HHH000412: Hibernate ORM core version 5.4.21.Final
+INFO  2022-09-29 14:34:12[task-1] [JavaReflectionManager.java - <clinit>] [Version:49] - HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+INFO  2022-09-29 14:34:12[restartedMain] [OptionalLiveReloadServer.java - startServer] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  2022-09-29 14:34:12[task-1] [Dialect.java - <init>] [Dialect:170] - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+INFO  2022-09-29 14:34:12[restartedMain] [AbstractConfig.java - logAll] [ConsumerConfig:347] - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.offset.reset = latest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = default
+	client.id = 
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = RedTeam
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2]
+	ssl.endpoint.identification.algorithm = https
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.2
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+WARN  2022-09-29 14:34:12[restartedMain] [AbstractConfig.java - logUnused] [ConsumerConfig:355] - The configuration 'spring.json.trusted.packages' was supplied but isn't a known config.
+INFO  2022-09-29 14:34:12[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:117] - Kafka version: 2.5.1
+INFO  2022-09-29 14:34:12[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:118] - Kafka commitId: 0efa8fb0f4c73d92
+INFO  2022-09-29 14:34:12[restartedMain] [AppInfoParser.java - <init>] [AppInfoParser:119] - Kafka startTimeMs: 1664429652750
+INFO  2022-09-29 14:34:12[restartedMain] [KafkaConsumer.java - subscribe] [KafkaConsumer:974] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Subscribed to topic(s): redteam
+INFO  2022-09-29 14:34:12[restartedMain] [ExecutorConfigurationSupport.java - initialize] [ThreadPoolTaskScheduler:181] - Initializing ExecutorService
+INFO  2022-09-29 14:34:12[restartedMain] [DeferredRepositoryInitializationListener.java - onApplicationEvent] [DeferredRepositoryInitializationListener:49] - Triggering deferred initialization of Spring Data repositories…
+INFO  2022-09-29 14:34:13[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [Metadata.java - update] [Metadata:277] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Cluster ID: CPAyjttoQpSWQB86UIIDaw
+INFO  2022-09-29 14:34:13[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:797] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Discovered group coordinator DESKTOP-AE75KI3.mshome.net:9092 (id: 2147483647 rack: null)
+INFO  2022-09-29 14:34:13[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:34:13[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - joinGroupIfNeeded] [AbstractCoordinator:455] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Join group failed with org.apache.kafka.common.errors.MemberIdRequiredException: The group member needs to have a valid member id before actually entering a consumer group
+INFO  2022-09-29 14:34:13[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - sendJoinGroupRequest] [AbstractCoordinator:552] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] (Re-)joining group
+INFO  2022-09-29 14:34:13[task-1] [JtaPlatformInitiator.java - initiateService] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+INFO  2022-09-29 14:34:13[task-1] [AbstractEntityManagerFactoryBean.java - buildNativeEntityManagerFactory] [LocalContainerEntityManagerFactoryBean:416] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+INFO  2022-09-29 14:34:13[restartedMain] [DeferredRepositoryInitializationListener.java - onApplicationEvent] [DeferredRepositoryInitializationListener:53] - Spring Data repositories initialized!
+INFO  2022-09-29 14:34:13[restartedMain] [StartupInfoLogger.java - logStarted] [MerApplication:61] - Started MerApplication in 3.305 seconds (JVM running for 4.199)
+INFO  2022-09-29 14:34:16[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - performAssignment] [ConsumerCoordinator:611] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Finished assignment for group at generation 6: {consumer-RedTeam-1-a140ca9c-a7ca-4613-a73b-1e6457eebd1a=Assignment(partitions=[redteam-0])}
+INFO  2022-09-29 14:34:16[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [AbstractCoordinator.java - onSuccess] [AbstractCoordinator:503] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Successfully joined group with generation 6
+INFO  2022-09-29 14:34:16[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - invokePartitionsAssigned] [ConsumerCoordinator:273] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Adding newly assigned partitions: redteam-0
+INFO  2022-09-29 14:34:16[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ConsumerCoordinator.java - refreshCommittedOffsetsIfNeeded] [ConsumerCoordinator:799] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Setting offset for partition redteam-0 to the committed offset FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[DESKTOP-AE75KI3.mshome.net:9092 (id: 0 rack: null)], epoch=0}}
+INFO  2022-09-29 14:34:16[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [LogAccessor.java - info] [KafkaMessageListenerContainer:292] - RedTeam: partitions assigned: [redteam-0]
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:34] - Consumed message : KafkaMessage(p_no=17, user_no=5, target_no=162, tmp_no=2)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getTemplate] [ProjectService:29] - get tmpNo 2
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:60] - consumer target TargetVo(targetNo=162, targetName=김태호, targetEmail=sjabber@naver.com, targetPhone=01098561765, targetOrganize=기술연구소, targetPosition=프로, createdTime=2022-09-29T14:30:06.003994, modifiedTime=2022-09-29T14:30:06.003994, userNo=5, tagFirst=19, tagSecond=0, tagThird=0)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:71] - smtp info SmtpVo(smtpNo=2, userNo=5, smtpHost=smtp.naver.com, smtpPort=587, smtpProtocol=1, smtpTls=1, smtpTimeOut=1000, smtpId=sjabber@naver.com, smtpPw=6LqCMwrwfsj6BKgbV6obWg==, createTime=2021-03-11T04:23:13.183428, modify=2022-09-29T14:28:47.865)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:82] - target Email sjabber@naver.com
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getProject] [ProjectService:24] - get Project p_no 17
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:34] - Consumed message : KafkaMessage(p_no=17, user_no=5, target_no=163, tmp_no=2)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getTemplate] [ProjectService:29] - get tmpNo 2
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:60] - consumer target TargetVo(targetNo=163, targetName=최신범, targetEmail=sb.choi@mongta.co.kr, targetPhone=01038003419, targetOrganize=개발본부, targetPosition=프로, createdTime=2022-09-29T14:31:16.166076, modifiedTime=2022-09-29T14:31:16.166076, userNo=5, tagFirst=19, tagSecond=0, tagThird=0)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:71] - smtp info SmtpVo(smtpNo=2, userNo=5, smtpHost=smtp.naver.com, smtpPort=587, smtpProtocol=1, smtpTls=1, smtpTimeOut=1000, smtpId=sjabber@naver.com, smtpPw=6LqCMwrwfsj6BKgbV6obWg==, createTime=2021-03-11T04:23:13.183428, modify=2022-09-29T14:28:47.865)
+INFO  2022-09-29 14:34:53[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:82] - target Email sb.choi@mongta.co.kr
+INFO  2022-09-29 14:34:54[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getProject] [ProjectService:24] - get Project p_no 17
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:34] - Consumed message : KafkaMessage(p_no=18, user_no=5, target_no=164, tmp_no=1)
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getTemplate] [ProjectService:29] - get tmpNo 1
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [KafkaConsumerService.java - consume] [KafkaConsumerService:60] - consumer target TargetVo(targetNo=164, targetName=김태호, targetEmail=th.kim@mongta.co.kr, targetPhone=01098561765, targetOrganize=기술연구소, targetPosition=프로, createdTime=2022-09-29T14:38:53.979136, modifiedTime=2022-09-29T14:38:53.979136, userNo=5, tagFirst=20, tagSecond=0, tagThird=0)
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:71] - smtp info SmtpVo(smtpNo=2, userNo=5, smtpHost=smtp.naver.com, smtpPort=587, smtpProtocol=1, smtpTls=1, smtpTimeOut=1000, smtpId=sjabber@naver.com, smtpPw=6LqCMwrwfsj6BKgbV6obWg==, createTime=2021-03-11T04:23:13.183428, modify=2022-09-29T14:28:47.865)
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [SMTPService.java - sendMail] [SMTPService:82] - target Email th.kim@mongta.co.kr
+INFO  2022-09-29 14:39:39[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [ProjectService.java - getProject] [ProjectService:24] - get Project p_no 18
+INFO  2022-09-29 15:01:18[kafka-coordinator-heartbeat-thread | RedTeam] [FetchSessionHandler.java - handleError] [FetchSessionHandler:481] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Error sending fetch request (sessionId=620405153, epoch=3167) to node 0: {}.
+org.apache.kafka.common.errors.DisconnectException: null
+INFO  2022-09-29 15:01:18[kafka-coordinator-heartbeat-thread | RedTeam] [AbstractCoordinator.java - markCoordinatorUnknown] [AbstractCoordinator:849] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Group coordinator DESKTOP-AE75KI3.mshome.net:9092 (id: 2147483647 rack: null) is unavailable or invalid, will attempt rediscovery
+WARN  2022-09-29 15:01:20[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [NetworkClient.java - processDisconnection] [NetworkClient:763] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Connection to node 0 (DESKTOP-AE75KI3.mshome.net/172.23.144.1:9092) could not be established. Broker may not be available.
+WARN  2022-09-29 15:01:22[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [NetworkClient.java - processDisconnection] [NetworkClient:763] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Connection to node 0 (DESKTOP-AE75KI3.mshome.net/172.23.144.1:9092) could not be established. Broker may not be available.
+INFO  2022-09-29 15:01:22[org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [FetchSessionHandler.java - handleError] [FetchSessionHandler:481] - [Consumer clientId=consumer-RedTeam-1, groupId=RedTeam] Error sending fetch request (sessionId=620405153, epoch=INITIAL) to node 0: {}.
+org.apache.kafka.common.errors.DisconnectException: null

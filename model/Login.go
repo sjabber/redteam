@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func (u *User) GetAuthToken() (string, string, error) {
 func (u *User) IsAuthenticated(conn *sql.DB) (error, int, int) {
 
 	loginCount := 0
-	//u.Email = strings.ToLower(u.Email)
+	u.Email = strings.ToLower(u.Email)
 
 	if u.Email == "" || u.Password == "" {
 		//SugarLogger.Info("login fail, Please enter your account information.")

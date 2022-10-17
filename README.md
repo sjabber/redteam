@@ -1,12 +1,4 @@
-<<<<<<< HEAD
 # redteam - 악성메일 대응 솔루션 (핵심 코드 제외됨)
-<<<<<<< HEAD
-=======
-- RedTeam 사이트 주소 : http://mert.koreacentral.cloudapp.azure.com:8080/ (서비스 중단)
->>>>>>> effcff6f03a5f9e171087f31acaae4c3ef588090
-=======
-# redteam - 악성메일 대응 솔루션
->>>>>>> 1c7502dbeb704c98c38ca9d42e11be5deef83ab8
 
 ## 프로젝트 개요
 

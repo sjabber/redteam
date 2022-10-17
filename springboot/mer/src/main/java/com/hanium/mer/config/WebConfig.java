@@ -2,17 +2,18 @@ package com.hanium.mer.config;
 
 import com.hanium.mer.interceptor.HttpHeaderNJWTInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@ComponentScan(basePackages = {"com.hanium.mer.interceptor"})
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     HttpHeaderNJWTInterceptor httpHeaderNJWTInterceptor;
-
 
 
     //@CrossOrigin(origins = "*", allowCredentials = "true", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})

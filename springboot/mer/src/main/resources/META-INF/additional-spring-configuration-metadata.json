@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.datasource.maximumPoolSize",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.maximumPoolSize."
+    }
+  ] }
